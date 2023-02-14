@@ -212,4 +212,5 @@
     <string name="MonetNickname">Monet for nicknames</string>
     <string name="MonetAlterOut">Alternative outgoing message style</string>
     <string name="AlwaysDestroyPhotoViewer">Always destroy PhotoViewer</string>
+    <string name="HideChannelBottomNotiToggle">Hide notification toggle in the bottom of channels</string>
 </resources>

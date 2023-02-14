@@ -198,6 +198,7 @@ public class NekoConfig {
     public static ConfigItem hideSponsoredMessage = addConfig(R.string.hideSponsoredMessage, "hideSponsoredMessage", configTypeBool, false);
     public static ConfigItem rememberAllBackMessages = addConfig(R.string.rememberAllBackMessages, "rememberAllBackMessages", configTypeBool, CHAT, false);
     public static ConfigItem hideSendAsChannel = addConfig(R.string.hideSendAsChannel, "hideSendAsChannel", configTypeBool, CHAT, false);
+    public static ConfigItem hideChannelBottomMuteUnmute = addConfig(R.string.HideChannelBottomNotiToggle, "HideChannelBottomNotiToggle", configTypeBool, CHAT, false);
     public static ConfigItem showSpoilersDirectly = addConfig(R.string.showSpoilersDirectly, "showSpoilersDirectly", configTypeBool, CHAT,false);
 
     public static ConfigItem alwaysUseSpoilerForMedia = addConfig(R.string.AlwaysUseSpoilerForMedia, "AlwaysUseSpoilerForMedia", configTypeString, CHAT, "");

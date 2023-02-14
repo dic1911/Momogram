@@ -96,6 +96,12 @@ public class UnreadCounterTextView extends View {
         invalidate();
     }
 
+    public CharSequence getText() {
+        if (textLayout != null) return textLayout.getText();
+        if (lastText != null) return lastText;
+        return null;
+    }
+
     public void setTextInfo(CharSequence text) {
         layoutPaint.setTypeface(null);
         layoutTextWidth = (int) Math.ceil(layoutPaint.measureText(text, 0, text.length()));

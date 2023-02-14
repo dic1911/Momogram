@@ -202,4 +202,5 @@
     <string name="AllowDupLoginInfo">重複登入帳號將導致各種問題, 請務必在事後登出重複的帳號並重新啟動本程式.</string>
     <string name="UseOldAppName">使用舊程式名稱 (NekoX)</string>
     <string name="UseOldAppNameDesc">變更此設定時會自動退回桌面, 且圖示將會被重設.</string>
+    <string name="HideChannelBottomNotiToggle">隱藏頻道底部通知開關</string>
 </resources>

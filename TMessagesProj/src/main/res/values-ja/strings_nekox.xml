@@ -203,4 +203,5 @@
     <string name="AppUpdateNekoX">Nekogram X を更新</string>
     <string name="UsePersiancalendarInfo">太陽ヒジュラ暦で日付を表示</string>
     <string name="repeatConfirmText">本当に繰り返しますか？</string>
+    <string name="HideChannelBottomNotiToggle">チャンネル下部の通知スイッチを隠す</string>
 </resources>
