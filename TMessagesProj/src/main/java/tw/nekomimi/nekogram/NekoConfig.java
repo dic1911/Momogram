@@ -56,6 +56,10 @@ public class NekoConfig {
     public static final String channelAliasPrefix = "channelAliasPrefix_";
     public static final String chatNameOverridePrefix = "chatNameOverride_";
 
+    public static final int TRANSCRIBE_AUTO = 0;
+    public static final int TRANSCRIBE_PREMIUM = 1;
+    public static final int TRANSCRIBE_WORKERSAI = 2;
+
     private static boolean configLoaded = false;
     private static final ArrayList<ConfigItem> configs = new ArrayList<>();
 
@@ -304,6 +308,11 @@ public class NekoConfig {
     public static ConfigItem unarchiveOnSwipe = addConfig(R.string.UnarchiveOnSwipe , "UnarchiveOnSwipe", configTypeBool, GENERAL, true);
     public static ConfigItem customCacheSize = addConfig("CustomCacheSize", configTypeInt, -1);
 
+    public static ConfigItem transcribeProvider = addConfig("TranscribeProvider", configTypeInt, CHAT, TRANSCRIBE_AUTO);
+    public static ConfigItem cfAccountID = addConfig("cfAccountID", configTypeString, CHAT, "");
+    public static ConfigItem cfApiToken = addConfig("cfApiToken", configTypeString, CHAT, "");
+    public static String[] transcribeOptions;
+
     public static ConfigItem profileShowLinkedChat = addConfig("profileShowLinkedChat", configTypeBool, CHAT, true);
     public static ConfigItem profileShowAddToFolder = addConfig("profileShowAddToFolder", configTypeBool, CHAT, true);
     public static ConfigItem profileShowRecentActions = addConfig("profileShowRecentActions", configTypeBool, CHAT, false);
@@ -361,7 +370,12 @@ public class NekoConfig {
                     o.value = preferences.getBoolean(o.key, (boolean) o.defaultValue);
                 }
                 if (o.type == configTypeInt) {
-                    o.value = preferences.getInt(o.key, (int) o.defaultValue);
+                    try {
+                        o.value = preferences.getInt(o.key, (int) o.defaultValue);
+                    } catch (Exception e) {
+                        Log.e("030-ex", String.format("error while loading %s : %s", String.valueOf(o.key), String.valueOf(o.defaultValue)), e);
+                        o.value = 0;
+                    }
                 }
                 if (o.type == configTypeLong) {
                     o.value = preferences.getLong(o.key, (Long) o.defaultValue);
@@ -659,6 +673,23 @@ public class NekoConfig {
                 getString(R.string.AutoDownloadMedium),
                 getString(R.string.AutoDownloadHigh),
         };
+        transcribeOptions = new String[]{
+                getString(R.string.TranscribeProviderAuto),
+                getString(R.string.TelegramPremium),
+                getString(R.string.TranscribeProviderWorkersAI),
+        };
+    }
+
+    public static void setTranscribeProvider(int provider) {
+        transcribeProvider.setConfigInt(provider);
+    }
+
+    public static void setCfAccountID(String accountID) {
+        cfAccountID.setConfigString(accountID);
+    }
+
+    public static void setCfApiToken(String apiToken) {
+        cfApiToken.setConfigString(apiToken);
     }
 
     public static void updateUseSpoilerMediaChatList() {

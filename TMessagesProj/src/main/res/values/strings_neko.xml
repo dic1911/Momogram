@@ -302,4 +302,13 @@
     <string name="EnhancedVideoBitrateInfo">Better quality with significantly larger file size</string>
     <string name="MarkdownCode">Code</string>
     <string name="UnarchiveOnSwipe">Unarchive chat on swipe</string>
+    <string name="TranscribeProvider">Transcribe provider</string>
+    <string name="TranscribeProviderAuto">Auto-select</string>
+    <string name="TranscribeProviderWorkersAI">Whisper (Workers AI)</string>
+    <string name="TranscribeProviderDesc">With the auto-select option, %s will be used when Telegram Premium is unavailable.</string>
+    <string name="CloudflareCredentials">Cloudflare credentials</string>
+    <string name="CloudflareCredentialsNotSet">Cloudflare credentials are not configured.</string>
+    <string name="CloudflareAccountID">Account ID</string>
+    <string name="CloudflareAPIToken">API Token</string>
+    <string name="CloudflareCredentialsDialog">Configure Cloudflare Account ID and API Token.\n**How to obtain?**</string>
 </resources>

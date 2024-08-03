@@ -61,6 +61,7 @@ import tw.nekomimi.nekogram.config.cell.ConfigCellSelectBox;
 import tw.nekomimi.nekogram.config.cell.ConfigCellTextCheck;
 import tw.nekomimi.nekogram.config.cell.ConfigCellTextDetail;
 import tw.nekomimi.nekogram.config.cell.ConfigCellTextInput;
+import tw.nekomimi.nekogram.helpers.WhisperHelper;
 
 @SuppressLint("RtlHardcoded")
 public class NekoChatSettingsActivity extends BaseFragment implements NotificationCenter.NotificationCenterDelegate {
@@ -77,6 +78,9 @@ public class NekoChatSettingsActivity extends BaseFragment implements Notificati
 
     private final AbstractConfigCell autoTranslateRow = cellGroup.appendCell(new ConfigCellTextCheck(NekoConfig.autoTranslate));
     private final AbstractConfigCell autoTranslateProviderRow = cellGroup.appendCell(new ConfigCellTextCheck(NekoConfig.useCustomProviderForAutoTranslate));
+    private final AbstractConfigCell transcribeProviderRow = cellGroup.appendCell(new ConfigCellSelectBox(LocaleController.getString(R.string.TranscribeProvider),
+            NekoConfig.transcribeProvider, NekoConfig.transcribeOptions, null));
+    private final AbstractConfigCell cfCredentialsRow = cellGroup.appendCell(new ConfigCellCustom(CellGroup.ITEM_TYPE_TEXT_SETTINGS_CELL, true));
     private final AbstractConfigCell unreadBadgeOnBackButton = cellGroup.appendCell(new ConfigCellTextCheck(NekoConfig.unreadBadgeOnBackButton));
     private final AbstractConfigCell sendCommentAfterForwardRow = cellGroup.appendCell(new ConfigCellTextCheck(NekoConfig.sendCommentAfterForward));
     private final AbstractConfigCell smallerEmojiInChooserRow = cellGroup.appendCell(new ConfigCellTextCheck(NekoConfig.smallerEmojiInChooser));
@@ -298,6 +302,8 @@ public class NekoChatSettingsActivity extends BaseFragment implements Notificati
                         return Unit.INSTANCE;
                     });
                     builder.show();
+                } else if (position == cellGroup.rows.indexOf(cfCredentialsRow)) {
+                    WhisperHelper.showCfCredentialsDialog(this);
                 }
             }
         });
@@ -745,6 +751,8 @@ public class NekoChatSettingsActivity extends BaseFragment implements Notificati
                             textCell.setTextAndValue(LocaleController.getString(R.string.maxRecentStickerCount), String.valueOf(NekoConfig.maxRecentStickerCount.Int()), true);
                         } else if (position == cellGroup.rows.indexOf(maxRecentEmojiCountRow)) {
                             textCell.setTextAndValue(LocaleController.getString(R.string.maxRecentEmojiCount), String.valueOf(NekoConfig.maxRecentEmojiCount.Int()), true);
+                        } else if (position == cellGroup.rows.indexOf(cfCredentialsRow)) {
+                            textCell.setTextAndValue(LocaleController.getString(R.string.CloudflareCredentials), "", true);
                         }
                     }
                 } else {
