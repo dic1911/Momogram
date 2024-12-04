@@ -51,16 +51,17 @@ object EnvUtil {
     // This is the only media path of NekoX, don't use other!
     @JvmStatic
     fun getTelegramPath(): File {
+        var defaultIndex = if (availableDirectories.size > 3) 2 else 0
 
         if (NekoConfig.cachePath.String() == "") {
             // https://github.com/NekoX-Dev/NekoX/issues/284
-            NekoConfig.cachePath.setConfigString(availableDirectories[2]);
+            NekoConfig.cachePath.setConfigString(availableDirectories[defaultIndex]);
         }
         var telegramPath = File(NekoConfig.cachePath.String())
         if (telegramPath.isDirectory || telegramPath.mkdirs()) {
             return telegramPath
         } else {
-            NekoConfig.cachePath.setConfigString(availableDirectories[2])
+            NekoConfig.cachePath.setConfigString(availableDirectories[defaultIndex])
         }
 
         // fallback
