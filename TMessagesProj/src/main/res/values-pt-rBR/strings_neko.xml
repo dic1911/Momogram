@@ -30,7 +30,7 @@
     <string name="ChristmasHat">Mostrar chapéu de Papai Noel todos os dias</string>
     <string name="ActionBarDecoration">Decoração da barra de título</string>
     <string name="DependsOnDate">Depende da data</string>
-    <string name="Christmas">Yule</string>
+    <string name="Christmas">Natal</string>
     <string name="Valentine">Dia dos namorados</string>
     <string name="Snowflakes">Flocos de neve</string>
     <string name="Fireworks">Fogo de artifício</string>
@@ -106,9 +106,9 @@
     <string name="AvatarAsBackground">Imagem do perfil como plano de fundo</string>
     <string name="BlurAvatarBackground">Desfocar foto de perfil</string>
     <string name="DarkenAvatarBackground">Escurecer foto de perfil</string>
-    <string name="ProviderDeepLTranslate">DeepL Translate</string>
-    <string name="ProviderMicrosoftTranslator">Microsoft Translator</string>
-    <string name="ProviderYouDao">YouDao Translate</string>
+    <string name="ProviderDeepLTranslate">Tradutor DeepL</string>
+    <string name="ProviderMicrosoftTranslator">Tradutor Microsoft</string>
+    <string name="ProviderYouDao">Tradutor YouDao</string>
     <string name="pressTitleToOpenAllChats">Toque e segure no título para abrir a guia \"Todos os Chats\"</string>
     <string name="HideTimeForSticker">Ocultar tempo para stickers</string>
     <string name="UseMediaStreamInVoip">Usar stream de mídia em VoIP</string>
@@ -255,7 +255,7 @@
     <string name="ReplyAsQuoteByDefault">Responder como citação por padrão</string>
     <string name="maxRecentEmojiCount">Máximo de emojis recentes</string>
     <string name="justOneEmoji">Somente selecionados</string>
-    <string name="ProviderLingva">Lingva Translate</string>
+    <string name="ProviderLingva">Tradutor Lingva</string>
     <string name="MarqueeForLongChatTitles">Usar Marquee para títulos de bate-papo longos</string>
     <string name="HideOriginalTextAfterTranslate">Ocultar o texto original após a tradução</string>
     <string name="DontAutoPlayNextMessage">Não reproduzir automaticamente a próxima mensagem de voz</string>
@@ -288,4 +288,14 @@
     <string name="SetupUnifiedPush">Configurar Push Unificado</string>
     <string name="SetupUnifiedPushInfo">O Push Unificado está habilitado, mas você precisa ter pelo menos um distribuidor instalado para que ele funcione.</string>
     <string name="OverridePerformanceClass">Substituir classe de desempenho do dispositivo</string>
+    <string name="AutoAttemptInstantView">Tentar abrir a visualização instantânea automaticamente quando disponível</string>
+    <string name="ProfileMenu">Menu de perfil</string>
+    <string name="SaveIVFailDomains">Não tente carregar a visualização instantânea de sites que falharam anteriormente</string>
+    <string name="DataCleared">Dados apagados</string>
+    <string name="OpenExternalOnInstantViewFail">Use um navegador externo quando a visualização instantânea não estiver disponível</string>
+    <string name="AlwaysLoadStickerSetFromServer">Carregar conjunto de stickers do servidor ao visualizar detalhes</string>
+    <string name="SpoilerOnAllMedia">Spoiler em todas as mídias</string>
+    <string name="LoadingInstantView">Tentando carregar a visualização instantânea…</string>
+    <string name="ResetIVFailDomains">Redefinir dados de falha da visualização instantânea</string>
+    <string name="ResetIVFailDomainsConfirm">Todos os dados de falha da visualização instantânea armazenados anteriormente serão apagados! Continuar?</string>
 </resources>
