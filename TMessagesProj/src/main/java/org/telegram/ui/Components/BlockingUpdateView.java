@@ -38,6 +38,8 @@ import org.telegram.ui.Components.voip.CellFlickerDrawable;
 
 import java.util.Locale;
 
+import tw.nekomimi.nekogram.MomoUpdater;
+
 public class BlockingUpdateView extends FrameLayout implements NotificationCenter.NotificationCenterDelegate {
 
     private TextView textView;
@@ -141,17 +143,12 @@ public class BlockingUpdateView extends FrameLayout implements NotificationCente
         addView(acceptButton, LayoutHelper.createFrame(LayoutHelper.WRAP_CONTENT, 46, Gravity.CENTER_HORIZONTAL | Gravity.BOTTOM, 0, 0, 0, 45));
         acceptButton.setOnClickListener(view1 -> {
             if (true || ApplicationLoader.isStandaloneBuild() || BuildVars.DEBUG_VERSION) {
-                if (!ApplicationLoader.applicationLoaderInstance.checkApkInstallPermissions(getContext())) {
-                    return;
-                }
-                if (appUpdate.document instanceof TLRPC.Document) {
-                    if (!ApplicationLoader.applicationLoaderInstance.openApkInstall((Activity) getContext(), appUpdate.document)) {
-                        FileLoader.getInstance(accountNum).loadFile(appUpdate.document, "update", FileLoader.PRIORITY_HIGH, 1);
-                        showProgress(true);
-                    }
-                } else if (appUpdate.url != null) {
+                if (appUpdate.url != null) {
                     setVisibility(View.GONE);
                     Browser.openUrl(getContext(), appUpdate.url);
+                } else {
+                    setVisibility(View.GONE);
+                    Browser.openUrl(getContext(), String.format("https://t.me/%s", MomoUpdater.CHANNEL_NAME));
                 }
             } else if (BuildVars.isHuaweiStoreApp()){
                 Browser.openUrl(context, BuildVars.HUAWEI_STORE_URL);

@@ -23,7 +23,7 @@ public class MomoUpdater {
     static final int UPDATE_METADATA_START_FROM = 0;
     static final int MAX_READ_COUNT = 20;
     static final long CHANNEL_ID = 2137047153;
-    static final String CHANNEL_NAME = "momogram_update";
+    public static final String CHANNEL_NAME = "momogram_update";
 
     static void retrieveUpdateMetadata(retrieveUpdateMetadataCallback callback) {
         final int localVersionCode = SharedConfig.buildVersion();
@@ -122,6 +122,7 @@ public class MomoUpdater {
                     Log.e("030-upd", "Retrieve update messages, size:" + res.messages.size());
                     final boolean isArm = FileUtil.getAbi().startsWith("arm");
                     final String versionStr = String.format("%s-%s", metadata.versionName, metadata.versionHash);
+                    Log.d("030-upd", String.format("searching for %s, isArm: %s", versionStr, isArm));
                     for (int i = 0; i < res.messages.size(); i++) {
                         if (res.messages.get(i).media == null) continue;
 
