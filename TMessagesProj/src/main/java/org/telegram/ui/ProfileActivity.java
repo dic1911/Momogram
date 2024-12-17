@@ -4360,7 +4360,6 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                                             .setPositiveButton(LocaleController.getString(R.string.OK), null)
                                             .show();
                                 } else {
-                                    SharedConfig.setNewAppVersionAvailable(resp);
                                     LaunchActivity.instance.showUpdateActivity(currentAccount, resp, false);
                                 }
                             });
