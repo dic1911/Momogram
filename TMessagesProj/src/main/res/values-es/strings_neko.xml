@@ -288,4 +288,16 @@
     <string name="SetupUnifiedPush">Configurar UnifiedPush</string>
     <string name="EnableUnifiedPush">Habilitar UnifiedPush</string>
     <string name="SetupUnifiedPushInfo">UnifiedPush está habilitado, pero necesita tener al menos un distribuidor instalado para que funcione.</string>
+    <string name="AutoCheckUpdateInfo">Versión de la actualización encontrada: %1$s</string>
+    <string name="ProfileMenu">Menú del perfil</string>
+    <string name="AlwaysLoadStickerSetFromServer">Cargar el conjunto de sticker desde el servidor al ver los detalles</string>
+    <string name="AutoAttemptInstantView">Intentar abrir la vista instantánea automáticamente cuando esté disponible</string>
+    <string name="ResetIVFailDomainsConfirm">¡Se borrarán todos los datos de los errores de visualización instantánea almacenados previamente! ¿Continuar?</string>
+    <string name="AutoCheckUpdate">Buscar actualizaciones automáticamente</string>
+    <string name="LoadingInstantView">Intentando cargar la vista instantánea…</string>
+    <string name="ResetIVFailDomains">Restablecer datos del error de la vista instantánea</string>
+    <string name="OpenExternalOnInstantViewFail">Utilizar el navegador externo cuando la vista instantánea no está disponible</string>
+    <string name="SaveIVFailDomains">No intente cargar la vista instantánea para las páginas fallidas previamente</string>
+    <string name="SpoilerOnAllMedia">Spoiler en todos los medios</string>
+    <string name="DataCleared">Datos borrados</string>
 </resources>
