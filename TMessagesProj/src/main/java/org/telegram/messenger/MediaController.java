@@ -2610,8 +2610,8 @@ public class MediaController implements AudioManager.OnAudioFocusChangeListener,
         ArrayList<MessageObject> currentPlayList = SharedConfig.shuffleMusic ? shuffledPlaylist : playlist;
 
         if (byStop && (SharedConfig.repeatMode == 2 || SharedConfig.repeatMode == 1 && currentPlayList.size() == 1) && !forceLoopCurrentPlaylist) {
+            MessageObject messageObject = playingMessageObject; // currentPlayList.get(currentIndex); // currentIndex points to wrong obj
             cleanupPlayer(false, false);
-            MessageObject messageObject = currentPlayList.get(currentPlaylistNum);
             messageObject.audioProgress = 0;
             messageObject.audioProgressSec = 0;
             playMessage(messageObject);
