@@ -19,7 +19,6 @@
     <string name="CustomApiTGX">טלגרם אנדרואיד</string>
     <string name="CustomApiInput">הזנה ידנית</string>
     <string name="CheckUpdate">בדוק עדכון</string>
-    <string name="SwitchVersion">החלף גרסה</string>
     <string name="NoUpdate">לא נמצא עדכון</string>
     <string name="UpdateAvailable">עדכון חדש זמין</string>
     <string name="UpdateUpdate">עדכון</string>

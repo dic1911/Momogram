@@ -19,7 +19,6 @@
     <string name="CustomApiTGX">テレグラムAndroid X</string>
     <string name="CustomApiInput">手動入力</string>
     <string name="CheckUpdate">アップデートを確認</string>
-    <string name="SwitchVersion">バージョンを切り替える</string>
     <string name="NoUpdate">アップデートは見つかりませんでした</string>
     <string name="UpdateAvailable">新しいアップデートが見つかりました</string>
     <string name="UpdateUpdate">アップデート</string>

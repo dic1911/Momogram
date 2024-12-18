@@ -4337,10 +4337,6 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                     updateListAnimated(false);
                     return Unit.INSTANCE;
                 });
-                builder.addItem(LocaleController.getString("SwitchVersion", R.string.SwitchVersion), R.drawable.baseline_replay_24, (it) -> {
-                    Browser.openUrl(ProfileActivity.this.getParentActivity(), "https://github.com/NekoX-Dev/NekoX/releases");
-                    return Unit.INSTANCE;
-                });
 
                 if (!BuildVars.isFdroid && !BuildVars.isPlay) {
                     builder.addItem(LocaleController.getString(R.string.CheckUpdate), R.drawable.baseline_search_24, (it) -> {

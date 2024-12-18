@@ -65,7 +65,6 @@
     <string name="Install">Installer</string>
     <string name="DownloadFailed">Nedlasting mislyktes</string>
     <string name="UpdateLater">Senere</string>
-    <string name="SwitchVersion">Bytt versjon</string>
     <string name="CustomApiTGX">Telegram Android X</string>
     <string name="CustomApiOfficial">Telegram Android</string>
     <string name="CustomApiNo">Ikke bruk egendefinert API</string>

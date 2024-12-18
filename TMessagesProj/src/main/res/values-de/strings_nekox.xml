@@ -16,7 +16,6 @@
     <string name="CustomApiTGX">Telegram Android X</string>
     <string name="CustomApiInput">Manuelle Eingabe</string>
     <string name="CheckUpdate">Update prüfen</string>
-    <string name="SwitchVersion">Version wechseln</string>
     <string name="NoUpdate">Kein Update gefunden</string>
     <string name="UpdateAvailable">Neues Update verfügbar</string>
     <string name="UpdateUpdate">Aktualisieren</string>

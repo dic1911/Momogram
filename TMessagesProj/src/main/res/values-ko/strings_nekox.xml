@@ -19,7 +19,6 @@
     <string name="CustomApiTGX">텔레그램 안드로이드 X</string>
     <string name="CustomApiInput">수동 입력</string>
     <string name="CheckUpdate">업데이트 확인</string>
-    <string name="SwitchVersion">스위치 버전</string>
     <string name="NoUpdate">업데이트 없음</string>
     <string name="UpdateAvailable">사용 가능한 업데이트 있음</string>
     <string name="UpdateUpdate">업데이트</string>

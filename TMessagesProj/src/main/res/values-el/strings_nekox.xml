@@ -8,7 +8,6 @@
 \nΣημείωση: το fcm δεν θα λειτουργήσει εάν χρησιμοποιείτε την έκδοση κυκλοφορίας.</string>
     <string name="NoUpdate">Δεν βρέθηκε ενημέρωση</string>
     <string name="CustomApiInput">Χειροκίνητη εισαγωγή</string>
-    <string name="SwitchVersion">Εναλλαγή έκδοσης</string>
     <string name="ChatAttachEnterMenuDisableLinkPreview">Απενεργ. προεπισκ. συνδέσμου</string>
     <string name="AccDescrChatAttachEnterMenu">Μενού εισόδου Συνομιλίας</string>
     <string name="CustomApiOfficial">Telegram Android</string>

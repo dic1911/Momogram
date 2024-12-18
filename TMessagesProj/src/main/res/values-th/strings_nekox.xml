@@ -8,7 +8,6 @@
     <string name="CustomApiOfficial">Telegram Android</string>
     <string name="CustomApiTGX">Telegram Android X</string>
     <string name="CustomApiInput">ป้อนข้อมูลด้วยตนเอง</string>
-    <string name="SwitchVersion">เปลี่ยนเวอร์ชัน</string>
     <string name="NoUpdate">ไม่พบการอัปเดต</string>
     <string name="UpdateAvailable">พบการอัพเดทใหม่</string>
     <string name="UpdateUpdate">อัพเดท</string>

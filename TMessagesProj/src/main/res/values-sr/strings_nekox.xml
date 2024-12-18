@@ -2,7 +2,6 @@
 <resources>
     <string name="CustomApiInput">Ručni unos</string>
     <string name="UpdateLater">Kasnije</string>
-    <string name="SwitchVersion">Zameni verziju</string>
     <string name="Ignore">Ignoriši</string>
     <string name="Install">Instaliraj</string>
     <string name="ChatAttachEnterMenuRecordAudio">Snjimi zvuk</string>

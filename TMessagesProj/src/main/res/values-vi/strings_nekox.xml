@@ -19,7 +19,6 @@
     <string name="CustomApiTGX">Telegram Android X</string>
     <string name="CustomApiInput">Nhập thủ công</string>
     <string name="CheckUpdate">Kiểm tra cập nhật</string>
-    <string name="SwitchVersion">Chuyển đổi phiên bản</string>
     <string name="NoUpdate">Không tìm thấy bản cập nhật</string>
     <string name="UpdateAvailable">Có bản cập nhật mới</string>
     <string name="UpdateUpdate">Cập nhật</string>

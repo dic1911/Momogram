@@ -66,7 +66,6 @@
     <string name="FilterNameUsersDescription">Endast meddelanden från privata chattar</string>
     <string name="CheckUpdate">Kontrollera Uppdatering</string>
     <string name="NoUpdate">Ingen uppdatering funnen</string>
-    <string name="SwitchVersion">Byt Version</string>
     <string name="Ignore">Ignorera</string>
     <string name="TapToDisable">Tryck för att inaktivera. Du behöver inte de här.</string>
     <string name="CustomBackendTestDC">Officiellt Testdatacenter</string>

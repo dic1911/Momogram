@@ -19,7 +19,6 @@
     <string name="CustomApiTGX">Հեռագիր Android X</string>
     <string name="CustomApiInput">Ձեռնարկի մուտքագրում</string>
     <string name="CheckUpdate">Ստուգեք թարմացումը</string>
-    <string name="SwitchVersion">Փոխել տարբերակը</string>
     <string name="NoUpdate">Թարմացում չի գտնվել</string>
     <string name="UpdateAvailable">Հասանելի է նոր թարմացում</string>
     <string name="UpdateUpdate">Թարմացնել</string>

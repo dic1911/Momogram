@@ -17,7 +17,6 @@
     <string name="CustomApiTGX">Telegram Android X</string>
     <string name="CustomApiInput">手動輸入</string>
     <string name="CheckUpdate">檢查更新</string>
-    <string name="SwitchVersion">切換版本</string>
     <string name="NoUpdate">沒有發現更新</string>
     <string name="UpdateAvailable">有可用的更新</string>
     <string name="UpdateUpdate">更新</string>

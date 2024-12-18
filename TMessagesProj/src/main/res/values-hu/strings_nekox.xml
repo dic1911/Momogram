@@ -19,7 +19,6 @@
     <string name="CustomApiTGX">Telegram Android X</string>
     <string name="CustomApiInput">Kézi bevitel</string>
     <string name="CheckUpdate">Frissítés ellenőrzése</string>
-    <string name="SwitchVersion">Váltson verziót</string>
     <string name="NoUpdate">Nem található frissítés</string>
     <string name="UpdateAvailable">Új frissítés elérhető</string>
     <string name="UpdateUpdate">Frissítés</string>
