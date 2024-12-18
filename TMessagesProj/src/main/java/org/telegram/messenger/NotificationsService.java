@@ -39,7 +39,7 @@ public class NotificationsService extends Service {
                     .setShowWhen(false)
                     .setOngoing(true)
                     .setSmallIcon(R.drawable.notification)
-                    .setContentText(LocaleController.getString("NekoXPushService", R.string.NekoXPushService))
+                    .setContentText(LocaleController.getString(R.string.NekoXPushService))
                     .build();
             startForeground(9999, notification);
         }

@@ -20,7 +20,6 @@
     <string name="Repeat">تکرار</string>
     <string name="AddToSavedMessages">ذخیره پیام</string>
     <string name="CreateMention">ساختن منشن</string>
-    <string name="ForceTabletMode">حالت تبلت اجباری</string>
     <string name="Prpr">پروپرو</string>
     <string name="TransparentStatusBar">نوار وضعیت شفاف</string>
     <string name="EnableResidentNotification">نشان دادن اعلان ساکن</string>
@@ -118,8 +117,6 @@
     <string name="UseMediaStreamInVoip">استفاده از حالت استریم در تماس صوتی</string>
     <string name="TakeGIFasVideo">نمایش گیف‌ها همانند ویدیو</string>
     <string name="DontSendGreetingSticker">نفرستادن چسبانک خوش‌آمد گویی</string>
-    <string name="enablePublicProxy">پروکسی همگانی NekoX</string>
-    <string name="autoUpdateSubInfo">بروزرسانی خودکار پروکسی‌های همگانی</string>
     <string name="hideSendAsChannel">پنهان کردن «فرستادن به نام درگاه»</string>
     <string name="disableSwipeToNextChannel">غیرفعال‌سازی پرش به کانال بعدی با کشیدن انگشت</string>
     <string name="disableChoosingSticker">فرستادن «در‌حال‌نوشتن...» بجای «در‌حال‌انتخاب‌استیکر...»</string>

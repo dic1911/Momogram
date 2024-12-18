@@ -87,13 +87,6 @@
     <string name="UnblockAll">모두 차단 해제</string>
     <string name="UnblockAllWarn">**모든 사용자와 봇** 을 차단 해제 하시겠습니까\?</string>
     <string name="BlockedListEmpty">아무도 차단하지 않았습니다.</string>
-    <string name="SSPluginConflictingName">여러 플러그인에서이 ID를 사용합니다 : %s.</string>
-    <string name="VmessTls">TLS 사용</string>
-    <string name="ProxyInfoSS">Shadowsocks 프록시 설정</string>
-    <string name="SSMethod">암호화 방법</string>
-    <string name="SSPlugin">플러그인</string>
-    <string name="SSPluginOpts">플러그인 구성</string>
-    <string name="ProxyRemarks">비고</string>
     <string name="ImportProxyList">프록시 서버 가져 오기</string>
     <string name="ExportStickers">스티커 내보내기</string>
     <string name="ImportStickersX">스티커를 파일에서 가져 오기</string>

@@ -24,7 +24,6 @@
     <string name="FirstLast">Όνομα Επίθετο</string>
     <string name="IgnoreBlocked">Απόκρυψη μηνυμ. αποκλεισμ. χρήστη</string>
     <string name="HidePhone">Απόκρυψη αριθμού τηλεφώνου μου</string>
-    <string name="ForceTabletMode">Αναγκαστική λειτουργία tablet</string>
     <string name="CreateMention">Δημιουργία αναφοράς</string>
     <string name="Prpr">Peropero</string>
     <string name="EnableResidentNotification">Εμφάνιση μόνιμης ειδοποίησης</string>
@@ -121,7 +120,6 @@
     <string name="ProviderLingocloud">Lingocloud</string>
     <string name="TabTitleTypeTip">Τα emoticon συγχρονίζονται μέσω cloud από το Telegram.</string>
     <string name="OfficialChannel">Επίσημο κανάλι</string>
-    <string name="autoUpdateSubInfo">Αυτόματη ενημέρωση proxies</string>
     <string name="Valentine">Valentine\'s day</string>
     <string name="Snowflakes">Snowflakes</string>
     <string name="Christmas">Yule</string>
@@ -140,7 +138,6 @@
     <string name="HideTimeForSticker">Απόκρυψη χρόνου για αυτοκόλλητα</string>
     <string name="useSystemDNS">Χρήση DNS συστήματος</string>
     <string name="disableSwipeToNextChannel">Απενεργ/ση σάρωσης στο επόμενο κανάλι</string>
-    <string name="enablePublicProxy">Δημόσιος Proxy NekoX</string>
     <string name="hideSendAsChannel">Απόκρυψη αποστολής ως κανάλι</string>
     <string name="SaveToDownloadCount_other">Αποθ. %1$d αρχείων σε λήψεις</string>
     <string name="customSavePath">Προσαρμοσμένη διαδρομή αποθήκευσης</string>

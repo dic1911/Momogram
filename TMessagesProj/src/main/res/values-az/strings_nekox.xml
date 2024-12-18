@@ -87,13 +87,6 @@
     <string name="UnblockAll">Hamısını blokdan çıxarın</string>
     <string name="UnblockAllWarn">** bütün istifadəçiləri və botları ** blokdan çıxarmaq istədiyinizə əminsiniz\?</string>
     <string name="BlockedListEmpty">Heç kəsi blok etməmisiniz :)</string>
-    <string name="SSPluginConflictingName">Bir neçə plagin bu iddən istifadə edir: %s.</string>
-    <string name="VmessTls">TLS istifadə edin</string>
-    <string name="ProxyInfoSS">Shadowsocks Proxy Ayarları</string>
-    <string name="SSMethod">Şifrələmə metodu</string>
-    <string name="SSPlugin">Plugin</string>
-    <string name="SSPluginOpts">Plugin Konfiqurasiyası</string>
-    <string name="ProxyRemarks">Qeydlər</string>
     <string name="ImportProxyList">Proxy serverləri idxal edin</string>
     <string name="ExportStickers">İxrac Etiketləri</string>
     <string name="ImportStickersX">Etiketləri fayldan idxal edin</string>

@@ -24,7 +24,6 @@
     <string name="Repeat">Repeat</string>
     <string name="AddToSavedMessages">Save message</string>
     <string name="CreateMention">Create Mention</string>
-    <string name="ForceTabletMode">Force tablet mode</string>
     <string name="Prpr">Peropero</string>
     <string name="TransparentStatusBar">Transparent status bar</string>
     <string name="EnableResidentNotification">Show a resident notification</string>
@@ -126,8 +125,6 @@
     <string name="disableSwipeToNextChannel">Disable swipe to next channel</string>
     <string name="disableChoosingSticker">Send typing instead of choosing sticker</string>
     <string name="disableRemoteEmojiInteractions">Disable emoji interactions from remote</string>
-    <string name="enablePublicProxy">NekoX Public Proxy</string>
-    <string name="autoUpdateSubInfo">Update proxies automatically</string>
     <string name="hideSendAsChannel">Hide send as channel</string>
     <string name="showSpoilersDirectly">Display Spoiler messages directly</string>
     <string name="SaveToDownloadCount_zero">Saving %1$d files to downloads</string>

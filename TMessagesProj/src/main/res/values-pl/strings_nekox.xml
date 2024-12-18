@@ -87,13 +87,6 @@
     <string name="UnblockAll">Odblokuj wszystkich</string>
     <string name="UnblockAllWarn">Czy na pewno chcesz odblokować **wszystkich użytkowników oraz wszystkie boty**\?</string>
     <string name="BlockedListEmpty">Nikogo nie zablokowałeś/aś :)</string>
-    <string name="SSPluginConflictingName">Kilka wtyczek używa tego ID: %s.</string>
-    <string name="VmessTls">Użyj TLS</string>
-    <string name="ProxyInfoSS">Ustawienia Shadowsocks Proxy</string>
-    <string name="SSMethod">Metoda szyfrowania</string>
-    <string name="SSPlugin">Wtyczka</string>
-    <string name="SSPluginOpts">Konfiguracja wtyczki</string>
-    <string name="ProxyRemarks">Uwagi</string>
     <string name="ImportProxyList">Importuj serwery proxy</string>
     <string name="ExportStickers">Eksportuj naklejki</string>
     <string name="ImportStickersX">Importuj naklejki z pliku</string>
@@ -139,10 +132,6 @@
     <string name="CCJP">Nowy japoński Kanji (Shinjitai)</string>
     <string name="TabletMode">Tryb tabletu</string>
     <string name="TabletModeDefault">Zależy od urządzenia</string>
-    <string name="AutoCheckUpdateRc">Kandydat do wydania</string>
-    <string name="AutoCheckUpdateStable">Stabilna</string>
-    <string name="AutoCheckUpdateSwitch">Automatyczna aktualizacja</string>
-    <string name="AutoCheckUpdateOFF">Wyłączona</string>
     <string name="VersionUpdateNoUpdate">Brak aktualizacji.</string>
     <string name="VersionUpdateNotNow">Nie teraz</string>
     <string name="VersionUpdateIgnore">Ignoruj</string>
@@ -155,8 +144,6 @@
     <string name="ImportSettings">Importuj ustawienia</string>
     <string name="BackupSettings">Eksportuj ustawienia</string>
     <string name="AutoLockImmediately">Natychmiast</string>
-    <string name="WsPayload">Ładunek</string>
-    <string name="ProxyInfoWS">Ustawienia przekazywania WebSocket</string>
     <string name="DisplayPersianCalendarByLatin">Wyświetlaj kalendarz perski po łacinie</string>
     <string name="UsePersiancalendarInfo">Wyświetl datę wraz z kalendarzem solarnym Hijri</string>
     <string name="UsePersiancalendar">Używaj kalendarza perskiego</string>
@@ -186,7 +173,6 @@
     <string name="DeleteDownloadedFileSucceed">Usunięto</string>
     <string name="useCustomEmoji">Użyj innego zestawu emotikon</string>
     <string name="hideSponsoredMessage">Ukryj sponsorowane wiadomości</string>
-    <string name="update_download_soucre">Wybierz źródło pobierania</string>
     <string name="DeleteDownloadedFileConfirm">Usunąć ten plik z lokalnej pamięci podręcznej\?</string>
     <string name="valuesLargeAvatarInDrawer">Domyślne Telegrama
 \nAwatar jako tło
@@ -194,7 +180,6 @@
     <string name="ShareMessages">Udostępnij</string>
     <string name="unreadBadgeOnBackButton">Licznik nieprzeczytanych na przycisku wstecz</string>
     <string name="AppUpdateNekoX">Aktualizacja Nekogram X</string>
-    <string name="AutoCheckUpdatePreview">Podglądowa (niestabilna)</string>
     <string name="Name">Nazwa</string>
     <string name="channelAlias">Alias kanału</string>
     <string name="setChannelAliasName">Ustaw alias kanału</string>

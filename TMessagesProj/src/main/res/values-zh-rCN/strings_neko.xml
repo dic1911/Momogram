@@ -25,7 +25,6 @@
     <string name="Repeat">复读</string>
     <string name="AddToSavedMessages">保存消息</string>
     <string name="CreateMention">创建@</string>
-    <string name="ForceTabletMode">强制启用平板模式</string>
     <string name="Prpr">ペロペロ</string>
     <string name="TransparentStatusBar">使用完全透明的状态栏</string>
     <string name="EnableResidentNotification">请让猫咪住在通知栏里吧</string>
@@ -127,8 +126,6 @@
     <string name="TakeGIFasVideo">GIF 显示为视频</string>
     <string name="DontSendGreetingSticker">不要发送问候贴纸</string>
     <string name="hideGroupSticker">隐藏群组贴纸</string>
-    <string name="enablePublicProxy">NekoX 公共代理</string>
-    <string name="autoUpdateSubInfo">自动更新代理</string>
     <string name="hideSendAsChannel">隐藏以频道身份发送</string>
     <string name="showSpoilersDirectly">直接显示剧透信息</string>
     <string name="SaveToDownloadCount_zero">正在保存%1$d个文件到下载</string>

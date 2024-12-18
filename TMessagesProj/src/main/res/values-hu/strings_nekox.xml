@@ -87,13 +87,6 @@
     <string name="UnblockAll">Összes feloldása</string>
     <string name="UnblockAllWarn">Biztosan fel akarja oldani ** az összes felhasználó és bot ** feloldását\?</string>
     <string name="BlockedListEmpty">Még senkit sem blokkoltál :)</string>
-    <string name="SSPluginConflictingName">Több plugin használja ezt az azonosítót: %s.</string>
-    <string name="VmessTls">Használja a TLS-t</string>
-    <string name="ProxyInfoSS">Shadowsocks Proxy beállítások</string>
-    <string name="SSMethod">Titkosítási módszer</string>
-    <string name="SSPlugin">Beépülő modul</string>
-    <string name="SSPluginOpts">A beépülő modul beállítása</string>
-    <string name="ProxyRemarks">Megjegyzések</string>
     <string name="ImportProxyList">Importálja a proxy szervereket</string>
     <string name="ExportStickers">Matricák exportálása</string>
     <string name="ImportStickersX">Matricák importálása fájlból</string>

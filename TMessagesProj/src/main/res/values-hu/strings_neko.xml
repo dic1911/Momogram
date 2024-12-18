@@ -19,7 +19,6 @@
     <string name="Repeat">Ismétlés</string>
     <string name="AddToSavedMessages">Üzenet mentése</string>
     <string name="CreateMention">Említés létrehozása</string>
-    <string name="ForceTabletMode">Táblagép-mód kényszerítése</string>
     <string name="Prpr">Peropero</string>
     <string name="TransparentStatusBar">Átlátszó állapotsor</string>
     <string name="EnableResidentNotification">Lakossági értesítés megjelenítése</string>
@@ -109,12 +108,10 @@
     <string name="customDoH">Egyéni DoH</string>
     <string name="customGroupVoipAudioBitrate">Csoportos VoIP hang bitráta</string>
     <string name="disableChoosingSticker">\"Gépel\" státusz jelzése \"Matricaválasztás\" helyett</string>
-    <string name="autoUpdateSubInfo">Proxyk automatikus frissítése</string>
     <string name="SaveToDownloadCount_few">%1$d fájl mentése a letöltésekbe</string>
     <string name="customSavePath">Egyéni tárhely útvonal</string>
     <string name="showBottomActionsWhenSelecting">Alsó lehetőségek mutatása kijelöléskor</string>
     <string name="disablePremiumStickerAnimation">Prémium matrica animáció letiltása</string>
-    <string name="enablePublicProxy">NekoX Nyilvános Proxy</string>
     <string name="ProviderDeepLTranslate">DeepL Translate</string>
     <string name="pressTitleToOpenAllChats">Nyomja meg a címet, hogy megnyissa az \"összes beszélgetés\" fület.</string>
     <string name="UseMediaStreamInVoip">Médiafolyam használata VoIP-ben</string>

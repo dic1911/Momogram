@@ -20,7 +20,6 @@
     <string name="Repeat">تكرار</string>
     <string name="AddToSavedMessages">حفظ الرسالة</string>
     <string name="CreateMention">إنشاء إشارة</string>
-    <string name="ForceTabletMode">فرض وضع الجهاز اللوحي</string>
     <string name="Prpr">تصريح</string>
     <string name="TransparentStatusBar">شريط الحالة الشفاف</string>
     <string name="EnableResidentNotification">إظهار إشعار المقيم</string>
@@ -122,8 +121,6 @@
     <string name="disableRemoteEmojiInteractions">تعطيل تفاعلات الرموز التعبيرية من جهاز الطرف الاخر</string>
     <string name="disableChoosingSticker">أرسل الكتابة بدلاً من اختيار الملصق</string>
     <string name="hideGroupSticker">إخفاء ملصق المجموعة</string>
-    <string name="enablePublicProxy">وكيل NekoX العام</string>
-    <string name="autoUpdateSubInfo">تحديث الوكلاء تلقائيًا</string>
     <string name="hideSendAsChannel">إخفاء الإرسال كقناة</string>
     <string name="SaveToDownloadCount_zero">حفظ ملف %1$d إلى التنزيلات</string>
     <string name="SaveToDownloadCount_few">حفظ ملفات %1$d إلى التنزيلات</string>

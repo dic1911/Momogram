@@ -2,7 +2,6 @@
 <resources>
     <string name="HidePhone">Sakrij moj broj telefona</string>
     <string name="Chat">Ćaskanje</string>
-    <string name="ForceTabletMode">Forsiraj mod za tablete</string>
     <string name="IPv6">Povezivanje kroz IPv6</string>
     <string name="MessageMenu">Meni za poruke</string>
     <string name="Hide">Sakrij</string>

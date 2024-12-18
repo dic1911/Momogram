@@ -20,7 +20,6 @@
     <string name="Repeat">Lặp lại tin nhắn</string>
     <string name="AddToSavedMessages">Lưu tin nhắn</string>
     <string name="CreateMention">Tạo đề cập</string>
-    <string name="ForceTabletMode">Bắt buộc bật chế độ máy tính bảng</string>
     <string name="Prpr">Xem Username</string>
     <string name="TransparentStatusBar">Thanh trạng thái trong suốt</string>
     <string name="EnableResidentNotification">Hiển thị thông báo cư dân</string>
@@ -122,8 +121,6 @@
     <string name="disableRemoteEmojiInteractions">Tắt tương tác emoji từ xa</string>
     <string name="disableChoosingSticker">Gửi tin nhắn được viết thay vì chọn nhãn dán</string>
     <string name="hideGroupSticker">Ẩn nhãn dán nhóm</string>
-    <string name="enablePublicProxy">Proxy NekoX công khai</string>
-    <string name="autoUpdateSubInfo">Cập nhật proxy tự động</string>
     <string name="hideSendAsChannel">Ẩn gửi với tư cách kênh</string>
     <string name="NekoGeneralNotification">Thông báo</string>
     <string name="disableNotificationBubbles">Tắt Bong bóng ở thông báo</string>

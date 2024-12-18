@@ -87,7 +87,6 @@
     <string name="DisableResidentNotification">Desativar notificação persistente</string>
     <string name="EnableResidentNotification">Exibir notificação persistente</string>
     <string name="TransparentStatusBar">Barra de status transparente</string>
-    <string name="ForceTabletMode">Forçar modo tablet</string>
     <string name="CreateMention">Criar Menção</string>
     <string name="AddToSavedMessages">Gravar mensagem</string>
     <string name="Repeat">Repetir</string>
@@ -127,8 +126,6 @@
     <string name="doubleTapShowReactions">Mostrar reações apenas ao tocar duas vezes</string>
     <string name="ReactionsDisabled">Desativar</string>
     <string name="StickerSizeDialogName">Duang</string>
-    <string name="enablePublicProxy">Proxy Público do NekoX</string>
-    <string name="autoUpdateSubInfo">Atualizar proxies automaticamente</string>
     <string name="hideSendAsChannel">Ocultar enviar como canal</string>
     <string name="customSavePath">Caminho de Armazenamento Personalizado</string>
     <string name="disablePremiumStickerAnimation">Desativar animação de sticker premium</string>

@@ -57,13 +57,6 @@
     <string name="ImportStickersX">Importar stickers do ficheiro</string>
     <string name="ExportStickers">Exportar Stickers</string>
     <string name="ImportProxyList">Importar servidores proxy</string>
-    <string name="ProxyRemarks">Observações</string>
-    <string name="SSPluginOpts">Configuração de Plugin</string>
-    <string name="SSPlugin">Plugin</string>
-    <string name="SSMethod">Método de Criptografia</string>
-    <string name="ProxyInfoSS">Configurações de Proxy Shadowsocks</string>
-    <string name="VmessTls">Usar TLS</string>
-    <string name="SSPluginConflictingName">Vários plugins usam esse ID: %s.</string>
     <string name="BlockedListEmpty">Não bloqueou ninguém :)</string>
     <string name="UnblockAllWarn">Tem certeza de que deseja desbloquear **todos os utilizadores e bots**\?</string>
     <string name="UnblockAll">Desbloquear Tudo</string>
@@ -144,10 +137,6 @@
     <string name="DisableLinkPreviewByDefault">Desativar a prévia de link por padrão</string>
     <string name="UseChatAttachEnterMenuNotice">Altera o botão de gravação para um menu de entrada e adiciona uma opção para obter a prévia de link.</string>
     <string name="DevModeTitle">** Sua conta do Telegram pode ser banida **</string>
-    <string name="AutoCheckUpdateRc">Candidato a Lançamento</string>
-    <string name="AutoCheckUpdateStable">Estável</string>
-    <string name="AutoCheckUpdateSwitch">Atualização Automática</string>
-    <string name="AutoCheckUpdateOFF">DESLIGADO</string>
     <string name="VersionUpdateNoUpdate">Nenhuma Atualização.</string>
     <string name="VersionUpdateNotNow">Agora não</string>
     <string name="VersionUpdateIgnore">Ignorar</string>
@@ -160,8 +149,6 @@
     <string name="ImportSettings">Configurações de importação</string>
     <string name="BackupSettings">Configurações de backup</string>
     <string name="AutoLockImmediately">Imediatamente</string>
-    <string name="WsPayload">Payload</string>
-    <string name="ProxyInfoWS">Configurações do WebSocket Relay</string>
     <string name="DisplayPersianCalendarByLatin">Exibir calendário Persa utilizando Latim</string>
     <string name="UsePersiancalendarInfo">Exibe a data de acordo com o calendário Solar Hijri</string>
     <string name="UsePersiancalendar">Usar calendário Persa</string>
@@ -184,7 +171,6 @@
     <string name="DeleteDownloadedFileSucceed">Excluído</string>
     <string name="DeleteDownloadedFileExternal">O ficheiro externo é ignorado.</string>
     <string name="repeatConfirmText">Tem certeza de que deseja repetir\?</string>
-    <string name="update_download_soucre">Selecione a fonte do download</string>
     <string name="useCustomEmoji">Usar emoji personalizado</string>
     <string name="useCustomEmojiInvalid">Ficheiro zip de emojis inválido.</string>
     <string name="repeatConfirm">Perguntar antes de repetir</string>
@@ -193,7 +179,6 @@
 \nAvatar grande como plano de fundo</string>
     <string name="hideSponsoredMessage">Ocultar mensagens patrocinadas</string>
     <string name="rememberAllBackMessages">Lembrar de todas as respostas clicadas</string>
-    <string name="AutoCheckUpdatePreview">Prévia (Instável)</string>
     <string name="AppUpdateNekoX">Atualizar Nekogram X</string>
     <string name="channelAlias">Apelidar canal</string>
     <string name="setChannelAliasName">Definir apelido</string>

@@ -87,13 +87,6 @@
     <string name="UnblockAll">Desbloquear Tudo</string>
     <string name="UnblockAllWarn">Tem certeza de que deseja desbloquear **todos os usuários e bots**\?</string>
     <string name="BlockedListEmpty">Você não bloqueou ninguém :)</string>
-    <string name="SSPluginConflictingName">Vários plugins usam esse ID: %s.</string>
-    <string name="VmessTls">Usar TLS</string>
-    <string name="ProxyInfoSS">Configurações de Proxy Shadowsocks</string>
-    <string name="SSMethod">Método de Criptografia</string>
-    <string name="SSPlugin">Plugin</string>
-    <string name="SSPluginOpts">Configuração de Plugin</string>
-    <string name="ProxyRemarks">Observações</string>
     <string name="ImportProxyList">Importar servidores proxy</string>
     <string name="ExportStickers">Exportar Stickers</string>
     <string name="ImportStickersX">Importar stickers do arquivo</string>
@@ -145,10 +138,6 @@
     <string name="ReplaceRegex">Usar regex</string>
     <string name="DisableTrending">Desativar tendências</string>
     <string name="ImportSettingsAlert">Tem certeza de que deseja substituir as configurações\? Importar configurações de fontes desconhecidas pode fazer com que o PIN seja sobrescrito e isso faça com que o aplicativo seja bloqueado.</string>
-    <string name="AutoCheckUpdateRc">Candidato a Lançamento</string>
-    <string name="AutoCheckUpdateStable">Estável</string>
-    <string name="AutoCheckUpdateSwitch">Atualização Automática</string>
-    <string name="AutoCheckUpdateOFF">DESLIGADO</string>
     <string name="VersionUpdateNoUpdate">Nenhuma Atualização.</string>
     <string name="VersionUpdateNotNow">Agora não</string>
     <string name="VersionUpdateIgnore">Ignorar</string>
@@ -160,8 +149,6 @@
     <string name="ImportSettings">Configurações de importação</string>
     <string name="BackupSettings">Configurações de backup</string>
     <string name="AutoLockImmediately">Imediatamente</string>
-    <string name="WsPayload">Payload</string>
-    <string name="ProxyInfoWS">Configurações do WebSocket Relay</string>
     <string name="DisplayPersianCalendarByLatin">Exibir calendário Persa utilizando Latim</string>
     <string name="UsePersiancalendarInfo">Exibe a data de acordo com o calendário Solar Hijri</string>
     <string name="UsePersiancalendar">Usar calendário Persa</string>
@@ -184,7 +171,6 @@
 \nAvatar como plano de fundo
 \nAvatar grande como plano de fundo</string>
     <string name="hideSponsoredMessage">Ocultar mensagens patrocinadas</string>
-    <string name="update_download_soucre">Selecione a fonte do download</string>
     <string name="useCustomEmoji">Usar emoji personalizado</string>
     <string name="useCustomEmojiInvalid">Arquivo zip de emojis inválido.</string>
     <string name="unreadBadgeOnBackButton">Selo de não lido no botão de voltar</string>
@@ -193,7 +179,6 @@
     <string name="DisableInstantCamera">Desativar câmera instantânea</string>
     <string name="DeleteDownloadedFileExternal">O arquivo externo é ignorado.</string>
     <string name="ShareMessages">Compartilhar</string>
-    <string name="AutoCheckUpdatePreview">Prévia (Instável)</string>
     <string name="AppUpdateNekoX">Atualizar Nekogram X</string>
     <string name="setChannelAliasName">Definir apelido</string>
     <string name="labelChannelUser">Rotular usuário do canal</string>

@@ -87,13 +87,6 @@
     <string name="UnblockAll">Очистить ЧС</string>
     <string name="UnblockAllWarn">Вы уверены, что хотите разблокировать **всех пользователей и ботов**\?</string>
     <string name="BlockedListEmpty">В вашем ЧС пусто, как у гоблина в голове :)</string>
-    <string name="SSPluginConflictingName">Некоторые плагины используют этот ID: %s.</string>
-    <string name="VmessTls">Использовать TLS</string>
-    <string name="ProxyInfoSS">Настройки Shadowsocks-прокси</string>
-    <string name="SSMethod">Метод шифрования</string>
-    <string name="SSPlugin">Дополнение</string>
-    <string name="SSPluginOpts">Параметры дополнения</string>
-    <string name="ProxyRemarks">Примечания</string>
     <string name="ImportProxyList">Импорт прокси</string>
     <string name="ExportStickers">Экспорт стикеров</string>
     <string name="ImportStickersX">Импорт стикеров</string>
@@ -163,13 +156,7 @@
     <string name="ImportSettings">Импорт настроек</string>
     <string name="BackupSettings">Экспорт настроек</string>
     <string name="AutoLockImmediately">Немедленно</string>
-    <string name="ProxyInfoWS">Настройки WebSocket Relay</string>
-    <string name="WsPayload">Payload</string>
     <string name="ImportSettingsAlert">Перезаписать настройки\? Импорт настроек из ненадежных источников может привести к блокировке приложения.</string>
-    <string name="AutoCheckUpdateRc">RC (сборки бета-версий)</string>
-    <string name="AutoCheckUpdateStable">Stable (стабильные сборки)</string>
-    <string name="AutoCheckUpdateSwitch">Автообновление</string>
-    <string name="AutoCheckUpdateOFF">Отключено</string>
     <string name="VersionUpdateNoUpdate">Обновлений не найдено.</string>
     <string name="VersionUpdateNotNow">Не сейчас</string>
     <string name="VersionUpdateIgnore">Игнорировать</string>
@@ -181,7 +168,6 @@
     <string name="DeleteDownloadedFileConfirm">Удалить загруженный файл\?</string>
     <string name="repeatConfirm">Подтверждать повтор сообщения</string>
     <string name="useCustomEmoji">Свой набор эмодзи</string>
-    <string name="update_download_soucre">Выбрать источник загрузки</string>
     <string name="DeleteDownloadedFileExternal">Внешний файл пропущен.</string>
     <string name="valuesLargeAvatarInDrawer">По умолчанию
 \nАватар
@@ -194,7 +180,6 @@
     <string name="rememberAllBackMessages">Запомнить все нажатые ответы</string>
     <string name="showSeconds">Время с секундами</string>
     <string name="AppUpdateNekoX">Обновить Nekogram X</string>
-    <string name="AutoCheckUpdatePreview">Preview (предварительные сборки)</string>
     <string name="Name">Имя</string>
     <string name="channelAlias">Свои личные сообщения для сообщений от каналов</string>
     <string name="setChannelAliasName">Добавить лычку</string>

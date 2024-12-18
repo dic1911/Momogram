@@ -87,13 +87,6 @@
     <string name="UnblockAll">בטל את חסימת הכל</string>
     <string name="UnblockAllWarn">האם אתה בטוח שברצונך לבטל את חסימת ** כל המשתמשים והבוטים **\?</string>
     <string name="BlockedListEmpty">לא חסמת אף אחד :)</string>
-    <string name="SSPluginConflictingName">מספר תוספים משתמשים במזהה זה: %s.</string>
-    <string name="VmessTls">להשתמש ב־TLS</string>
-    <string name="ProxyInfoSS">הגדרות מתווך Shadowsocks</string>
-    <string name="SSMethod">שיטת הצפנה</string>
-    <string name="SSPlugin">תוסף</string>
-    <string name="SSPluginOpts">הגדרות תוסף</string>
-    <string name="ProxyRemarks">הערות</string>
     <string name="ImportProxyList">ייבא שרתי פרוקסי</string>
     <string name="ExportStickers">ייצוא מדבקות</string>
     <string name="ImportStickersX">ייבא שרתים מקובץ</string>
@@ -165,14 +158,8 @@
     <string name="ImportSettingsAlert">לשכתב את ההגדרות\? ייבוא הגדרות ממקורות לא ידועים עלול לשכתב את הקוד הסודי ולהוביל לנעילת היישום.</string>
     <string name="BackupSettings">הגדרות גיבוי</string>
     <string name="AutoLockImmediately">מיידית</string>
-    <string name="WsPayload">מטען</string>
-    <string name="ProxyInfoWS">הגדרות ממסר WebSocket</string>
     <string name="DisplayPersianCalendarByLatin">הצגת לוח שנה פרסי בכתב לטיני</string>
     <string name="EnableStickerPinTip">יכולת זו עדיין בהליכי פיתוח, סנכרון מול הענן כנראה לא יעבוד כראוי.</string>
-    <string name="AutoCheckUpdateRc">מועמד להפצה</string>
-    <string name="AutoCheckUpdateStable">יציב</string>
-    <string name="AutoCheckUpdateSwitch">עדכון אוטומטי</string>
-    <string name="AutoCheckUpdateOFF">כבוי</string>
     <string name="VersionUpdateNoUpdate">אין עדכון.</string>
     <string name="VersionUpdateNotNow">לא עכשיו</string>
     <string name="VersionUpdateIgnore">התעלמות</string>
@@ -181,7 +168,6 @@
     <string name="DeleteDownloadedFileSucceed">נמחק</string>
     <string name="useCustomEmoji">להשתמש באמוג׳י משלך</string>
     <string name="DeleteDownloadedFileExternal">קובץ חיצוני לא עובד.</string>
-    <string name="update_download_soucre">נא לבחור מקור הורדה</string>
     <string name="rememberAllBackMessages">לזכור את כל התגובות עליהן לחצת</string>
     <string name="showSeconds">הצגת חותמת הזמן בשניות</string>
     <string name="DisableInstantCamera">השבתת מצלמה מיידית</string>
@@ -193,7 +179,6 @@
     <string name="repeatConfirmText">לחזור\?</string>
     <string name="hideSponsoredMessage">הסתרת הודעות פרסומיות</string>
     <string name="ShareMessages">שיתוף</string>
-    <string name="AutoCheckUpdatePreview">תצוגה מקדימה (לא יציב)</string>
     <string name="AppUpdateNekoX">עדכון Nekogram X</string>
     <string name="Name">שם</string>
     <string name="channelAlias">כינוי ערוץ</string>

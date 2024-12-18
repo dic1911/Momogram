@@ -72,9 +72,6 @@
     <string name="UnblockAll">Deblocați pe toți</string>
     <string name="UnblockAllWarn">Sigur doriți să deblocați ** toți utilizatorii și roboții **\?</string>
     <string name="BlockedListEmpty">Nu ai blocat pe nimeni :)</string>
-    <string name="ProxyInfoSS">Setări Proxyului Shadowsocks</string>
-    <string name="SSPlugin">Extensie</string>
-    <string name="SSPluginOpts">Configurarea extensiei</string>
     <string name="MinApi21Required">Ne pare rău, aveți nevoie de cel puțin Android 5 (API21).</string>
     <string name="BrokenLink">Link necunoscut / spart</string>
     <string name="ShareQRCode">Codul QR</string>

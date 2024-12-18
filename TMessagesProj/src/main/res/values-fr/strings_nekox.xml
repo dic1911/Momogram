@@ -75,13 +75,6 @@
     <string name="UnblockAll">Tout débloquer</string>
     <string name="UnblockAllWarn">Êtes-vous sûr(e) de vouloir débloquer **tous les utilisateurs et tous les bots** \?</string>
     <string name="BlockedListEmpty">Vous n\'avez bloqué personne :)</string>
-    <string name="SSPluginConflictingName">Plusieurs greffons utilisent cet ID : %s.</string>
-    <string name="VmessTls">Utiliser TLS</string>
-    <string name="ProxyInfoSS">Paramètres du proxy Shadowsocks</string>
-    <string name="SSMethod">Méthode de chiffrement</string>
-    <string name="SSPlugin">Greffon</string>
-    <string name="SSPluginOpts">Configuration du greffon</string>
-    <string name="ProxyRemarks">Remarques</string>
     <string name="ImportProxyList">Importer des serveurs proxy</string>
     <string name="ExportStickers">Exporter des autocollants</string>
     <string name="ImportStickersX">Importer des autocollants depuis un fichier</string>
@@ -156,7 +149,6 @@
     <string name="UsePersiancalendarInfo">Afficher la date avec le calendrier solaire Hijiri</string>
     <string name="VersionUpdateVariantNotMatch">Les variantes de version échouent à correspondre automatiquement.
 \nVeuillez télécharger manuellement depuis GitHub.</string>
-    <string name="WsPayload">Charge</string>
     <string name="ImportSettings">Importer les paramètres</string>
     <string name="VersionUpdateNoUpdate">Pas de Mise à jour.</string>
     <string name="DisplayPersianCalendarByLatin">Afficher le calendrier persan en caractères latins</string>
@@ -165,16 +157,10 @@
     <string name="AutoDownload">Téléchargement auto</string>
     <string name="UsePersiancalendar">Utiliser le calendrier persan</string>
     <string name="nekoXPaymentRemovedToast">La fonctionnalité de paiement a été retirée.</string>
-    <string name="ProxyInfoWS">Configuration du WebSocket Relay</string>
     <string name="AutoLockImmediately">Immédiatement</string>
-    <string name="AutoCheckUpdateOFF">DÉSACTIVÉ</string>
-    <string name="AutoCheckUpdateStable">Stable</string>
     <string name="unreadBadgeOnBackButton">Badge des non-lus sur le bouton retour</string>
     <string name="DeleteDownloadedFileExternal">Le fichier externe est ignoré.</string>
-    <string name="AutoCheckUpdateSwitch">Mise à jour Automatique</string>
-    <string name="AutoCheckUpdateRc">Candidat pour la publication</string>
     <string name="DeleteDownloadedFileSucceed">Supprimé</string>
-    <string name="update_download_soucre">Sélectionner la source de téléchargement</string>
     <string name="repeatConfirm">Demander avant de répéter</string>
     <string name="repeatConfirmText">Êtes-vous sûr de répéter \?</string>
     <string name="DeleteDownloadedFileConfirm">Supprimer ce fichier du cache local \?</string>
@@ -195,7 +181,6 @@
     <string name="ShareMessages">Partager</string>
     <string name="Name">Nom</string>
     <string name="channelAlias">Alias de la chaîne</string>
-    <string name="AutoCheckUpdatePreview">Aperçu (instable)</string>
     <string name="AppUpdateNekoX">Mettre à jour Nekogram X</string>
     <string name="setChannelAliasName">Définir un alias</string>
     <string name="labelChannelUser">Étiquette utilisateur de la chaîne</string>

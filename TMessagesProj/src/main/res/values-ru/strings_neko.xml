@@ -20,7 +20,6 @@
     <string name="Repeat">Повторить</string>
     <string name="AddToSavedMessages">Сохранить в облако</string>
     <string name="CreateMention">Упомянуть</string>
-    <string name="ForceTabletMode">Режим планшета</string>
     <string name="Prpr">Пероперо</string>
     <string name="TransparentStatusBar">Прозрачная полоска статуса</string>
     <string name="EnableResidentNotification">Отображать постоянное уведомление</string>
@@ -122,8 +121,6 @@
     <string name="disableChoosingSticker">Отправлять «печатает» вместо «выбирает стикер»</string>
     <string name="hideGroupSticker">Скрыть стикер группы</string>
     <string name="disableRemoteEmojiInteractions">Отключить удаленное взаимодействие с эмодзи</string>
-    <string name="enablePublicProxy">Публичный прокси NekoX</string>
-    <string name="autoUpdateSubInfo">Автоматическое обновление прокси-серверов</string>
     <string name="hideSendAsChannel">Скрыть «Отправить как канал»</string>
     <string name="showSpoilersDirectly">Раскрывать спойлеры сразу</string>
     <string name="SaveToDownloadCount_zero">Сохранение %1$d файлов для загрузки</string>

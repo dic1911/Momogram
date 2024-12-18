@@ -87,13 +87,6 @@
     <string name="UnblockAll">آنبلاک همه</string>
     <string name="UnblockAllWarn">آیا از آنبلاک**همه کاربران و ربات‌ها** اطمینان دارید؟</string>
     <string name="BlockedListEmpty">شما هیچ فردی را مسدود نکرده‌اید :)</string>
-    <string name="SSPluginConflictingName">چندین افزونه از این ID استفاده می کنند: %s.</string>
-    <string name="VmessTls">استفاده از TLS</string>
-    <string name="ProxyInfoSS">تنظیمات پروکسی Shadowsocks</string>
-    <string name="SSMethod">روش رمزنگاری</string>
-    <string name="SSPlugin">افزونه</string>
-    <string name="SSPluginOpts">پیکربندی افزونه</string>
-    <string name="ProxyRemarks">نام نمایشی دلخواه</string>
     <string name="ImportProxyList">وارد کردن سرورهای پروکسی</string>
     <string name="ExportStickers">استخراج استیکرها</string>
     <string name="ImportStickersX">وارد کردن استیکرها از فایل</string>
@@ -158,17 +151,11 @@
     <string name="UsePersiancalendarInfo">نمایش تاریخ با تقویم هجری‌شمسی</string>
     <string name="DisplayPersianCalendarByLatin">نمایش تقویم پارسی بصورت لاتین</string>
     <string name="UsePersiancalendar">استفاده از تقویم پارسی</string>
-    <string name="WsPayload">محموله</string>
-    <string name="ProxyInfoWS">تنظیمات رله WebSocket</string>
     <string name="BackupSettings">پشتیبان‌گیری از تنظیمات</string>
     <string name="AutoLockImmediately">بلافاصله</string>
     <string name="nekoXPaymentRemovedToast">سیستم پرداخت حذف شده است.</string>
     <string name="ImportSettingsAlert">آیا از بازنویسی تنظیمات اطمینان دارید؟ وارد کردن تنظیمات از منابع ناشناس ممکن است باعث بازنویسی پین کد، درنتیجه باعث قفل‌شدن برنامه شود.</string>
     <string name="ImportSettings">وارد کردن تنظیمات</string>
-    <string name="AutoCheckUpdateRc">کاندیدای انتشار</string>
-    <string name="AutoCheckUpdateStable">پایدار</string>
-    <string name="AutoCheckUpdateSwitch">به‌روزرسانی خودکار</string>
-    <string name="AutoCheckUpdateOFF">خاموش</string>
     <string name="VersionUpdateNoUpdate">به‌روزرسانی موجود نیست.</string>
     <string name="VersionUpdateNotNow">الان نه</string>
     <string name="VersionUpdateIgnore">نادیده بگیر</string>
@@ -182,7 +169,6 @@
     <string name="DeleteDownloadedFileConfirm">این فایل از حافظه‌نهان حذف شود؟</string>
     <string name="useCustomEmojiInvalid">فایل ایموجی معتبر نیست.</string>
     <string name="DeleteDownloadedFileExternal">فایل بیرونی رد شد.</string>
-    <string name="update_download_soucre">انتخاب منبع دانلود</string>
     <string name="hideSponsoredMessage">عدم نمایش پیامهای تبلیغاتی (کانالها)</string>
     <string name="rememberAllBackMessages">بخاطر داشتن همه ریپلای‌های کلیک شده</string>
     <string name="useCustomEmoji">استفاده از ایموجی سفارشی</string>
@@ -193,7 +179,6 @@
     <string name="repeatConfirmText">برای تکرار مطمئن هستید؟</string>
     <string name="repeatConfirm">پرسیدن قبل از تکرار پیام</string>
     <string name="showSeconds">نمایش ثانیه حین نمایش زمان</string>
-    <string name="AutoCheckUpdatePreview">پیش‌نمایش (ناپایدار)</string>
     <string name="AppUpdateNekoX">به‌روزرسانی نکوگرام ایکس</string>
     <string name="Name">نام</string>
     <string name="channelAlias">برچسب کانال</string>

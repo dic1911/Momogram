@@ -78,13 +78,6 @@
     <string name="UnblockAll">解除所有</string>
     <string name="UnblockAllWarn">您確定要解除屏蔽**所有用戶與機器人**嗎\?</string>
     <string name="BlockedListEmpty">您还没有屏蔽任何人 :)</string>
-    <string name="SSPluginConflictingName">多個插件使用此ID： %s。</string>
-    <string name="VmessTls">使用 TLS</string>
-    <string name="ProxyInfoSS">Shadowsocks 代理設定</string>
-    <string name="SSMethod">加密方法</string>
-    <string name="SSPlugin">插件</string>
-    <string name="SSPluginOpts">插件配置</string>
-    <string name="ProxyRemarks">別名</string>
     <string name="ImportProxyList">導入代理伺服器列表</string>
     <string name="ExportStickers">導出貼紙集</string>
     <string name="ImportStickersX">從文件導入貼紙集</string>

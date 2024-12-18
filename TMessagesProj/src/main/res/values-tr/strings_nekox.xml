@@ -87,13 +87,6 @@
     <string name="UnblockAll">Tümünün Engelini Kaldır</string>
     <string name="UnblockAllWarn">**Tüm kullanıcıların ve botların** engellemesini kaldırmak istediğinize emin misiniz\?</string>
     <string name="BlockedListEmpty">Kimseyi engellemedin :)</string>
-    <string name="SSPluginConflictingName">Birkaç eklenti bu ID\'yi kullanır: %s.</string>
-    <string name="VmessTls">TLS Kullan</string>
-    <string name="ProxyInfoSS">Shadowsocks Vekil Sunucu Ayarları</string>
-    <string name="SSMethod">Şifreleme Yöntemi</string>
-    <string name="SSPlugin">Eklenti</string>
-    <string name="SSPluginOpts">Eklenti Yapılandırması</string>
-    <string name="ProxyRemarks">Uyarılar</string>
     <string name="ImportProxyList">Vekil sunucuları içe aktar</string>
     <string name="ExportStickers">Çıkartmaları Dışa Aktar</string>
     <string name="ImportStickersX">Çıkartmaları dosyadan içe aktar</string>
@@ -148,7 +141,6 @@
     <string name="ArchiveFiles">Arşiv dosyaları</string>
     <string name="Win32ExecutableFiles">Win32 çalıştırılabilir dosyalar</string>
     <string name="AutoDownload">Otomatik İndirme</string>
-    <string name="ProxyInfoWS">WebSocket Relay Ayarları</string>
     <string name="UsePersiancalendarInfo">Güneş Hicri takvimi ile tarihi görüntüle</string>
     <string name="DisplayPersianCalendarByLatin">Farsça takvimini Latince olarak görüntüle</string>
     <string name="UsePersiancalendar">Farsça takvimi kullan</string>
@@ -157,7 +149,6 @@
     <string name="ImportSettings">Ayarları içe aktar</string>
     <string name="BackupSettings">Yedekleme ayarları</string>
     <string name="AutoLockImmediately">Hemen</string>
-    <string name="WsPayload">Yük</string>
     <string name="SetPinnedSuffix">(Sabitlendi)</string>
     <string name="UnpinSticker">Sabitlemeyi kaldır</string>
     <string name="PinSticker">Sabitle</string>
@@ -165,10 +156,6 @@
     <string name="EnableStickerPinAbout">Çıkartmaları sabitleyin ve yeni çıkartmalar eklerken bile bulut ile eşzamanlayın.
 \nSık Kullanılanları ve Son Kullanılanları Devre Dışı Bırak özellikleri ile eşleştirilir.</string>
     <string name="EnableStickerPin">Çıkartma sabitlemeyi etkinleştir</string>
-    <string name="AutoCheckUpdateRc">Sürüm Adayı</string>
-    <string name="AutoCheckUpdateStable">Kararlı</string>
-    <string name="AutoCheckUpdateSwitch">Otomatik Güncelleme</string>
-    <string name="AutoCheckUpdateOFF">KAPALI</string>
     <string name="VersionUpdateNoUpdate">Güncelleme Yok.</string>
     <string name="VersionUpdateNotNow">Şimdi değil</string>
     <string name="VersionUpdateIgnore">Görmezden gel</string>
@@ -176,11 +163,9 @@
     <string name="VersionUpdateVariantNotMatch">Sürüm türü otomatik olarak eşleşmiyor.
 \nLütfen GitHub\'tan elle indirin.</string>
     <string name="VersionUpdateTitle">Yeni Sürüm Var</string>
-    <string name="AutoCheckUpdatePreview">Önizleme (Kararsız)</string>
     <string name="ShareMessages">Paylaş</string>
     <string name="unreadBadgeOnBackButton">Geri tuşunda okunmamış mesaj sayısını göster</string>
     <string name="DeleteDownloadedFileConfirm">Bu dosyayı yerel önbellekten sil\?</string>
-    <string name="update_download_soucre">İndirme kaynağı seçin</string>
     <string name="useCustomEmoji">Özel emoji paketi kullan</string>
     <string name="showSeconds">Zaman bilgisini saniye türünde göster</string>
     <string name="AppUpdateNekoX">Nekogram X\'i güncelle</string>

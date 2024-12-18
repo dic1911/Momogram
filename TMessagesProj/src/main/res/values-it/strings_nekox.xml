@@ -87,13 +87,6 @@
     <string name="UnblockAll">Sblocca Tutto</string>
     <string name="UnblockAllWarn">Sei sicuro di voler sbloccare **tutti gli utenti e bot**\?</string>
     <string name="BlockedListEmpty">Non hai bloccato nessuno :)</string>
-    <string name="SSPluginConflictingName">Diversi plugin usano questo ID: %s.</string>
-    <string name="VmessTls">Usa TLS</string>
-    <string name="ProxyInfoSS">Impostazioni Proxy Shadowsocks</string>
-    <string name="SSMethod">Metodo di Crittografia</string>
-    <string name="SSPlugin">Plugin</string>
-    <string name="SSPluginOpts">Configurazione Plugin</string>
-    <string name="ProxyRemarks">Osservazioni</string>
     <string name="ImportProxyList">Importa i proxy dei server</string>
     <string name="ExportStickers">Esporta Stickers</string>
     <string name="ImportStickersX">Importa stickers da file</string>
@@ -148,8 +141,6 @@
     <string name="ImportSettings">Importa impostazioni</string>
     <string name="BackupSettings">Impostazioni backup</string>
     <string name="AutoLockImmediately">Immediatamente</string>
-    <string name="WsPayload">Payload</string>
-    <string name="ProxyInfoWS">Impostazioni Relay WebSocket</string>
     <string name="DisplayPersianCalendarByLatin">Mostra il calendario Persiano (Latino)</string>
     <string name="UsePersiancalendarInfo">Mostra data con il calendario Solare Hijri</string>
     <string name="UsePersiancalendar">Usa il calendario Persiano</string>
@@ -167,10 +158,6 @@
     <string name="VersionUpdateConfirm">AGGIORNA</string>
     <string name="VersionUpdateVariantNotMatch">La versione selezionata ha fallito nell\'abbinarsi automaticamente.
 \nPer favore scaricala manualmente da GitHub.</string>
-    <string name="AutoCheckUpdateRc">Candidato Per il Rilascio</string>
-    <string name="AutoCheckUpdateStable">Stabile</string>
-    <string name="AutoCheckUpdateSwitch">Aggiornamento Automatico</string>
-    <string name="AutoCheckUpdateOFF">OFF</string>
     <string name="VersionUpdateNoUpdate">Nessun Aggiornamento.</string>
     <string name="VersionUpdateNotNow">Non ora</string>
     <string name="VersionUpdateIgnore">Ignora</string>
@@ -185,14 +172,12 @@
     <string name="repeatConfirm">Chiedi prima di ripetere</string>
     <string name="hideSponsoredMessage">Nascondi messaggi sponsorizzati</string>
     <string name="useCustomEmoji">Usa emoji personalizzata</string>
-    <string name="update_download_soucre">Seleziona la fonte del download</string>
     <string name="DeleteDownloadedFileConfirm">Eliminare questo file dalla cache locale\?</string>
     <string name="repeatConfirmText">Sei sicuro di ripetere\?</string>
     <string name="DisableInstantCamera">Disabilita fotocamera istantanea</string>
     <string name="showSeconds">Mostra i secondi nell\'orario</string>
     <string name="rememberAllBackMessages">Ricorda tutte le risposte cliccate</string>
     <string name="ShareMessages">Condividi</string>
-    <string name="AutoCheckUpdatePreview">Anteprima (Instabile)</string>
     <string name="AppUpdateNekoX">Aggiorna Nekogram X</string>
     <string name="channelAlias">Alias del canale</string>
     <string name="setChannelAliasName">Imposta Alias</string>

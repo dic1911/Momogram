@@ -13,6 +13,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.telegram.messenger.AndroidUtilities;
 import org.telegram.messenger.FileLog;
+import org.telegram.messenger.R;
 import org.telegram.messenger.SharedConfig;
 import org.telegram.messenger.Utilities;
 import org.telegram.ui.LaunchActivity;
@@ -123,7 +124,7 @@ public class SearchEngine {
                     searchEngines.add(new SearchEngine(host, customSearchEngineUrl, null, null));
                 } catch (Exception ex) {
                     AndroidUtilities.runOnUIThread(() -> {
-                        Toast.makeText(LaunchActivity.instance, getString("CustomSearchEngineError"), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(LaunchActivity.instance, getString(R.string.CustomSearchEngineError), Toast.LENGTH_SHORT).show();
                     });
                 }
             }

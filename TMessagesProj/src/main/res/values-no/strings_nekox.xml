@@ -35,10 +35,6 @@
     <string name="ScanQRCode">Skann QR-kode</string>
     <string name="ShareQRCode">QR-kode</string>
     <string name="BrokenLink">Ukjent/feilaktig lenke</string>
-    <string name="SSPluginOpts">Programtilleggsoppsett</string>
-    <string name="SSPlugin">Programtillegg</string>
-    <string name="SSMethod">Krypteringsmetode</string>
-    <string name="VmessTls">Bruk TLS</string>
     <string name="DisableSystemAccount">Skru av systemkonto</string>
     <string name="DisableUndo">Skru av angring</string>
     <string name="NekoXPushService">NekoX-dyttingstjeneste</string>
@@ -104,7 +100,6 @@
     <string name="UpdateAvailable">Ny versjon tilgjengelig</string>
     <string name="UpdateDownloaded">En ny versjon har blitt lastet ned</string>
     <string name="CustomBackendNotice">Denne funksjonen tilbys kun for ekspertbrukere. Hvis du ikke vet hva valgene representerer kan du se bort fra dem.</string>
-    <string name="ProxyInfoSS">Shadowsocks-mellomtjenerinnstillinger</string>
     <string name="hideSponsoredMessage">Skjul sponsormeldinger</string>
     <string name="AppUpdateNekoX">Oppgrader Nekogram X</string>
     <string name="FilterNameGroupsDescription">Kun meldinger fra gruppechater</string>
@@ -115,14 +110,12 @@
     <string name="FilterNameUnmuted">Ikke forstummet</string>
     <string name="rememberAllBackMessages">Husk alle klikkede svar</string>
     <string name="FilterNameUnmutedAndUnreadDescription">Kun uleste meldinger fra kanaler som ikke er forstummet</string>
-    <string name="ProxyRemarks">Anmerkninger</string>
     <string name="FilterNameUnmutedAndUnread">Ikke forstummet og ulest</string>
     <string name="ImportProxyList">Importer mellomtjenere</string>
     <string name="Name">Navn</string>
     <string name="channelAlias">Kanalalias</string>
     <string name="setChannelAliasName">Sett alias</string>
     <string name="HideProxyByDefault">Skjul mellomtjenerinnstillinger som forvalg</string>
-    <string name="AutoCheckUpdatePreview">Forhåndsversjon (ustabil)</string>
     <string name="ApplySuggestion">OK, bruk</string>
     <string name="VersionUpdateNotNow">Ikke nå</string>
     <string name="UseProxyItem">Bruk mellomtjener fra sidefelt istedenfor fra knapp</string>
@@ -130,7 +123,6 @@
     <string name="repeatConfirmText">Er du sikker på at du vil gjenta\?</string>
     <string name="CustomBackendProduction">Offisielt produksjonsdatasenter</string>
     <string name="ShowIdAndDc">Vis ID/DC i profil</string>
-    <string name="WsPayload">Nyttelast</string>
     <string name="showSeconds">Vis tidsstempel i sekuder</string>
     <string name="UnblockAll">Avblokker alle</string>
     <string name="TabletMode">Nettbrett-modus</string>
@@ -139,7 +131,6 @@
     <string name="VersionUpdateTitle">Ny versjon tilgjengelig</string>
     <string name="useCustomEmoji">Bruk egendefinerte emoji-er</string>
     <string name="UnblockAllWarn">Avblokker **alle brukere og botter**\?</string>
-    <string name="SSPluginConflictingName">Flere programtillegg bruker denne ID-en: %s.</string>
     <string name="Win32ExecutableFiles">Kjørbare filer i Win32-variant</string>
     <string name="valuesLargeAvatarInDrawer">Telegramforvalg
 \nAvatar som bakgrunn
@@ -157,18 +148,12 @@
     <string name="TransInputToLang">Inndataspråk for oversettelse</string>
     <string name="CustomApiInput">Manuell innskriving</string>
     <string name="VersionUpdateIgnore">Ignorer</string>
-    <string name="AutoCheckUpdateOFF">Av</string>
-    <string name="AutoCheckUpdateSwitch">Automatisk oppgradering</string>
     <string name="DeleteDownloadedFileExternal">Hoppet over ekstern fil.</string>
     <string name="repeatConfirm">Spør før gjentagelse</string>
     <string name="DisableInstantCamera">Skru av umiddelbart kamera</string>
     <string name="useCustomEmojiInvalid">Ikke en gyldig emoji-ZIP-fil.</string>
     <string name="ProxyAutoSwitch">Automatisk bytte av mellomtjener</string>
     <string name="ArchiveFiles">Arkiver filer</string>
-    <string name="AutoCheckUpdateStable">Stabil</string>
-    <string name="AutoCheckUpdateRc">Utgivelseskandidat</string>
-    <string name="ProxyInfoWS">Innstillinger for WebSocket-videresendelse</string>
-    <string name="update_download_soucre">Velg nedlastingskilde</string>
     <string name="CCJP">Nye japanske Kanji (Shinjitai)</string>
     <string name="FCTitle">Om programoppgraderinger</string>
     <string name="DismissForYourself">Skru av for deg selv</string>

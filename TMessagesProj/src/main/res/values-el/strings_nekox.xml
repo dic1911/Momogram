@@ -71,7 +71,6 @@
     <string name="FilterNameContacts">Επαφές</string>
     <string name="FilterNameContactsDescription">Μόνο μηνύματα από αποθηκευμένους χρήστες</string>
     <string name="OpenPGPKey">Κλειδί OpenPGP</string>
-    <string name="ProxyRemarks">Παρατηρήσεις</string>
     <string name="OpenPGPApp">Πάροχος OpenPGP</string>
     <string name="ImportStickersList">Εισαγωγή αυτοκόλλητων</string>
     <string name="ImportStickersX">Εισαγωγή αυτοκόλλητων από αρχείο</string>
@@ -80,15 +79,12 @@
     <string name="SortByUnmuted">Κατά Μη σε Σίγαση</string>
     <string name="NekoXFaq">Συχνές ερωτήσεις</string>
     <string name="BrokenLink">Άγνωστο / Σφάλμα συνδέσμου</string>
-    <string name="ProxyInfoSS">Ρυθμίσεις Proxy Shadowsocks</string>
     <string name="Sign">Εγγραφή</string>
-    <string name="SSPluginOpts">Διαμόρφωση Προσθέτου</string>
     <string name="ShareQRCode">Κωδικός QR</string>
     <string name="StickerSets">Σετ αυτοκόλλητων</string>
     <string name="SortByUnread">Κατά Μη αναγνωσμένο</string>
     <string name="UnblockAllWarn">Είστε σίγουροι ότι θέλετε να ξεμπλοκάρετε **όλους τους χρήστες και τα bots**;</string>
     <string name="BlockedListEmpty">Δεν έχετε μπλοκάρει κανέναν :)</string>
-    <string name="VmessTls">Χρήση TLS</string>
     <string name="ShareMyKey">Κοινή χρήση του δημόσιου κλειδιού μου</string>
     <string name="DisableVibration">Απεν/ποίηση Δόνησης</string>
     <string name="IgnoreContentRestrictions">Παράβλεψη περιορισμών περιεχομένου</string>
@@ -99,10 +95,8 @@
     <string name="TransSite">Πλατφόρμα Μετάφρασης</string>
     <string name="OpenKayChain">Πελάτης OpenPGP</string>
     <string name="HideProxyByDefault">Απόκρυψη ρυθμίσεων proxy από προεπιλογή</string>
-    <string name="SSPlugin">Πρόσθετο</string>
     <string name="PGPVerify">Επαλήθευση μηνύματος</string>
     <string name="PGPImport">Εισαγωγή δημόσιου κλειδιού</string>
-    <string name="SSPluginConflictingName">Πολλά πρόσθετα χρησιμοποιούν αυτό το ID: %s.</string>
     <string name="ImportProxyList">Εισαγωγή διακομιστών μεσολάβησης</string>
     <string name="InvalidStickersFile">Μη έγκυρο αρχείο αυτοκόλλητων:</string>
     <string name="PGPDecrypt">Αποκρυπτογράφηση μηνύματος</string>
@@ -111,7 +105,6 @@
     <string name="ExportStickers">Εξαγωγή αυτοκόλλητων</string>
     <string name="DialogsSettings">Ρυθμίσεις διαλόγων</string>
     <string name="None">Χωρίς</string>
-    <string name="SSMethod">Μέθοδος κρυπτογράφησης</string>
     <string name="DisableUndo">Απενεργ/ση αναίρεσης</string>
     <string name="SendCommentAfterForward">Αποστολή σχολίου μετά την προώθηση</string>
     <string name="FilterNameUnmutedAndUnreadDescription">Μόνο μη αναγνωσμένα μηνύμ. από συνομ. χωρίς σίγαση</string>
@@ -129,7 +122,6 @@
     <string name="CCSC">Απλοποιημένα Κινέζικα</string>
     <string name="CCJP">Νέα ιαπωνικά Kanji (Shinjitai)</string>
     <string name="ArchiveFiles">Αρχειοθέτηση αρχείων</string>
-    <string name="update_download_soucre">Επιλέξτε πηγή λήψης</string>
     <string name="repeatConfirmText">Επανάληψη σίγουρα;</string>
     <string name="labelChannelUser">Ετικέτα καναλιού χρήστη</string>
     <string name="DismissForYourself">Απορρίψτε για τον εαυτό σας</string>
@@ -138,10 +130,8 @@
     <string name="CCTC">Παραδοσιακά Κινέζικα</string>
     <string name="TabletMode">Λειτουργία tablet</string>
     <string name="PinSticker">Καρφίτσωμα</string>
-    <string name="WsPayload">Payload</string>
     <string name="DisableInstantCamera">Απεν/ποίηση άμεσης κάμερας</string>
     <string name="showSeconds">Εμφάνιση χρονικής σήμανσης σε δευτ.</string>
-    <string name="AutoCheckUpdatePreview">Προεπισκόπηση (Ασταθής)</string>
     <string name="CCHK">Παραδοσιακά κινέζικα (Χονγκ Κονγκ)</string>
     <string name="AppLinkFDroid">F-Droid</string>
     <string name="FCTitle">Σχετικά με τις ενημερώσεις της εφαρμογής</string>
@@ -185,10 +175,8 @@
     <string name="DeleteDownloadedFileConfirm">Διαγραφή αυτού του αρχείου από την τοπική μνήμη cache;</string>
     <string name="labelChannelUserDetails">Εάν ο αποστολέας του μηνύματος είναι το \"Κανάλι\", θα έχει την ένδειξη \"Κανάλι\".</string>
     <string name="InteractionSettings">Αλληλεπίδραση</string>
-    <string name="AutoCheckUpdateOFF">OFF</string>
     <string name="CCSP">Απλοποιημένα κινέζικα (Κίνα)</string>
     <string name="SetPinnedSuffix">(Καρφιτσωμένο)</string>
-    <string name="ProxyInfoWS">Ρυθμίσεις αναμετάδοσης WebSocket</string>
     <string name="BackupSettings">Ρυθμίσεις αντιγράφων ασφαλείας</string>
     <string name="repeatConfirm">Ερώτηση πριν επαναλάβετε</string>
     <string name="ImportLogin">Σύνδεση QR</string>
@@ -199,9 +187,6 @@
     <string name="VersionUpdateIgnore">Αγνόηση</string>
     <string name="AutoLockImmediately">Άμεσα</string>
     <string name="VersionUpdateNotNow">Όχι τώρα</string>
-    <string name="AutoCheckUpdateSwitch">Αυτόματη ενημέρωση</string>
-    <string name="AutoCheckUpdateStable">Σταθερή</string>
-    <string name="AutoCheckUpdateRc">Υποψήφια έκδοση</string>
     <string name="nekoXPaymentRemovedToast">Η λειτουργία πληρωμής έχει αφαιρεθεί.</string>
     <string name="DisableCustomWallpaperUser">Απενεργ/ση προσαρμογής ταπετσαρίας χρήστη</string>
     <string name="FasterReconnectHackAbout">Αυτό το hack λειτουργεί μόνο με καλό περιβάλλον δικτύου.</string>

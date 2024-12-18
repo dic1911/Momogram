@@ -20,7 +20,6 @@
     <string name="Repeat">Wiederholen</string>
     <string name="AddToSavedMessages">Nachricht speichern</string>
     <string name="CreateMention">Erwähnung erstellen</string>
-    <string name="ForceTabletMode">Tablet-Modus erzwingen</string>
     <string name="Prpr">Peropero</string>
     <string name="TransparentStatusBar">Transparente Statusleiste</string>
     <string name="EnableResidentNotification">Ständig bleibende Benachrichtigung anzeigen</string>
@@ -109,8 +108,6 @@
     <string name="ProviderMicrosoftTranslator">Microsoft Translator</string>
     <string name="ProviderYouDao">YouDao Translate</string>
     <string name="AutoPauseVideoAbout">Beim Bildschirmsperren/umschalten auf Hintergrund.</string>
-    <string name="enablePublicProxy">Öffentlicher NekoX-Proxy</string>
-    <string name="autoUpdateSubInfo">Proxys automatisch aktualisieren</string>
     <string name="pressTitleToOpenAllChats">Auf Titel tippen, um den \"Alle Chats\"-Tab zu öffnen</string>
     <string name="hideGroupSticker">Gruppensticker ausblenden</string>
     <string name="hideSendAsChannel">Als Kanal senden ausblenden</string>

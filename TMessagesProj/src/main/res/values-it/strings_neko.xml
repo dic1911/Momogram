@@ -20,7 +20,6 @@
     <string name="Repeat">Ripeti</string>
     <string name="AddToSavedMessages">Salva messaggio</string>
     <string name="CreateMention">Crea Menzione</string>
-    <string name="ForceTabletMode">Forza modalità tablet</string>
     <string name="Prpr">Peropero</string>
     <string name="TransparentStatusBar">Barra di stato trasparente</string>
     <string name="EnableResidentNotification">Mostra notifica persistente</string>
@@ -122,8 +121,6 @@
     <string name="disableRemoteEmojiInteractions">Disabilita interazioni emoji da remoto</string>
     <string name="disableChoosingSticker">Invia sta scrivendo invece che sta scegliendo uno sticker</string>
     <string name="hideGroupSticker">Nascondi sticker gruppo</string>
-    <string name="autoUpdateSubInfo">Aggiorna i proxy automaticamente</string>
-    <string name="enablePublicProxy">Proxy Pubblico NekoX</string>
     <string name="hideSendAsChannel">Nascondi invia come canale</string>
     <string name="showSpoilersDirectly">Visualizza direttamente i messaggi Spoiler</string>
     <string name="SaveToDownloadCount_zero">Salvataggio di %1$d file nei download</string>

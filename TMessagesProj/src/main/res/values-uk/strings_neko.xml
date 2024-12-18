@@ -20,7 +20,6 @@
     <string name="Repeat">Повторити</string>
     <string name="AddToSavedMessages">Зберегти повідомлення</string>
     <string name="CreateMention">Створити згадку</string>
-    <string name="ForceTabletMode">Примусовий режим планшета</string>
     <string name="Prpr">Пероперо</string>
     <string name="TransparentStatusBar">Прозорий рядок стану</string>
     <string name="EnableResidentNotification">Показувати сповіщення редактора</string>
@@ -110,8 +109,6 @@
     <string name="ProviderMicrosoftTranslator">Microsoft Translator</string>
     <string name="ProviderYouDao">YouDao Translate</string>
     <string name="pressTitleToOpenAllChats">Натисніть на заголовок, щоб відкрити теку \"Всі чати\"</string>
-    <string name="enablePublicProxy">Загальнодоступний проксі NekoX</string>
-    <string name="autoUpdateSubInfo">Оновлювати проксі автоматично</string>
     <string name="hideSendAsChannel">Сховати надсилання як канал</string>
     <string name="DontSendGreetingSticker">Не слати вітальної наліпки</string>
     <string name="TakeGIFasVideo">Прокручувати GIF як відео</string>

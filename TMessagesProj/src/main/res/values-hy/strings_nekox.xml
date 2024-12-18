@@ -87,13 +87,6 @@
     <string name="UnblockAll">Արգելափակել բոլորը</string>
     <string name="UnblockAllWarn">Վստա՞հ եք, որ ցանկանում եք ապաբլոկավորել ** բոլոր օգտվողներին և բոտերին **:</string>
     <string name="BlockedListEmpty">Դուք ոչ մեկին չեք արգելափակել :)</string>
-    <string name="SSPluginConflictingName">Մի քանի ներդիրներ օգտագործում են այս ID- ն ՝ %s:</string>
-    <string name="VmessTls">Օգտագործեք TLS</string>
-    <string name="ProxyInfoSS">Shadowsocks վստահված անձի կարգավորումները</string>
-    <string name="SSMethod">Գաղտնագրման մեթոդը</string>
-    <string name="SSPlugin">Միացնել</string>
-    <string name="SSPluginOpts">Պլագինի կազմաձևում</string>
-    <string name="ProxyRemarks">Դիտողություններ</string>
     <string name="ImportProxyList">Ներմուծեք վստահված սերվերներ</string>
     <string name="ExportStickers">Արտահանեք պիտակները</string>
     <string name="ImportStickersX">Ներմուծեք պիտակները ֆայլից</string>
@@ -149,8 +142,6 @@
     <string name="ImportSettings">Ներմուծման կարգավորումներ</string>
     <string name="BackupSettings">Պահուստավորման կարգավորումներ</string>
     <string name="AutoLockImmediately">Անմիջապես</string>
-    <string name="WsPayload">Payանրաբեռնվածություն</string>
-    <string name="ProxyInfoWS">WebSocket ռելեի կարգավորումներ</string>
     <string name="DisplayPersianCalendarByLatin">Persianուցադրել պարսկական օրացույցը լատիներենով</string>
     <string name="UsePersiancalendarInfo">ցուցադրել ամսաթիվը Solar Hijri օրացույցով</string>
     <string name="UsePersiancalendar">Օգտագործեք պարսկական օրացույց</string>

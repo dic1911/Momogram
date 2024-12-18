@@ -85,7 +85,6 @@
     <string name="Fireworks">Fyrverkeri</string>
     <string name="ChristmasHat">Vis nisselue hver dag</string>
     <string name="DarkenAvatarBackground">Formørk profilbilde</string>
-    <string name="ForceTabletMode">Påtving nettbrett-modus</string>
     <string name="customGroupVoipAudioBitrate">VoIP-lydbitrate for gruppe</string>
     <string name="DeleteAllFromSelfAlert">Dette vil **slette alle meldinger fra deg** i denne sludringen for **alle** deltagere.</string>
     <string name="Chat">Sludring</string>
@@ -136,8 +135,6 @@
     <string name="forceBlurInChat">Påtving sludretilsløring</string>
     <string name="SaveToDownloadCount_one">Lagrer %1$d fil i nedlastinger</string>
     <string name="channelLabel">kanal</string>
-    <string name="enablePublicProxy">Offentlig NekoX-mellomtjener</string>
-    <string name="autoUpdateSubInfo">Oppdater mellomtjenere automatisk</string>
     <string name="pressTitleToOpenAllChats">Trykk på tittel for å åpne «Alle sludringer»-fane</string>
     <string name="maxRecentStickerCount">Maks. nylige klistremerker</string>
     <string name="showBottomActionsWhenSelecting">Vis knappehandling ved utvelgelse</string>

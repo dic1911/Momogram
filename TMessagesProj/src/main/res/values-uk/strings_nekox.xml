@@ -87,13 +87,6 @@
     <string name="UnblockAll">Розблокувати всіх</string>
     <string name="UnblockAllWarn">Ви дійсно хочете розблокувати **всіх користувачів і ботів**\?</string>
     <string name="BlockedListEmpty">Ви нікого не блокуєте :)</string>
-    <string name="SSPluginConflictingName">Кілька плагінів використовують цей ідентифікатор: %s.</string>
-    <string name="VmessTls">Використовувати TLS</string>
-    <string name="ProxyInfoSS">Параметри проксі Shadowsocks</string>
-    <string name="SSMethod">Метод шифрування</string>
-    <string name="SSPlugin">Плагін</string>
-    <string name="SSPluginOpts">Конфігурація плагінів</string>
-    <string name="ProxyRemarks">Зауваження</string>
     <string name="ImportProxyList">Імпортувати проксі-сервери</string>
     <string name="ExportStickers">Експорт наліпок</string>
     <string name="ImportStickersX">Імпорт наліпок із файлу</string>
@@ -153,8 +146,6 @@
     <string name="ImportSettings">Імпортувати налаштування</string>
     <string name="BackupSettings">Експортувати налаштування</string>
     <string name="AutoLockImmediately">Негайно</string>
-    <string name="WsPayload">Навантаження</string>
-    <string name="ProxyInfoWS">Параметри реле WebSocket</string>
     <string name="DisplayPersianCalendarByLatin">Показувати перський календар латиницею</string>
     <string name="UsePersiancalendarInfo">Показувати дату у форматі Solar Hijri (перський календар)</string>
     <string name="UsePersiancalendar">Перський календар</string>
@@ -181,19 +172,13 @@
     <string name="VersionUpdateTitle">Доступна нова версія</string>
     <string name="VersionUpdateIgnore">Ігнорувати</string>
     <string name="VersionUpdateNoUpdate">Оновлень нема.</string>
-    <string name="AutoCheckUpdateOFF">Вимкнено</string>
-    <string name="AutoCheckUpdateStable">Стабільна</string>
     <string name="VersionUpdateVariantNotMatch">Не вдається зіставити варіанти версій.
 \nБудь ласка, завантажте вручну з GitHub.</string>
     <string name="VersionUpdateNotNow">Не зараз</string>
     <string name="VersionUpdateConfirm">ОНОВИТИ</string>
-    <string name="AutoCheckUpdateSwitch">Автооновлення</string>
-    <string name="AutoCheckUpdateRc">Кандидат на випуск</string>
     <string name="DeleteDownloadedFileExternal">Зовнішній файл пропущено.</string>
     <string name="hideSponsoredMessage">Ховати рекламні повідомлення</string>
-    <string name="update_download_soucre">Оберіть джерело завантаження</string>
     <string name="rememberAllBackMessages">Пам\'ятати натиснені відповіді</string>
-    <string name="AutoCheckUpdatePreview">Випробувальна (нестабільна)</string>
     <string name="AppUpdateNekoX">Оновити Nekogram X</string>
     <string name="Name">Ім\'я</string>
     <string name="channelAlias">Псевдонім каналу</string>

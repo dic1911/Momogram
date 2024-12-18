@@ -63,12 +63,6 @@
     <string name="SkipOpenLinkConfirm">ഓപ്പൺ ലിങ്ക് സ്ഥിതീകരണം ഒഴിവാക്കുക</string>
     <string name="UnblockAll">എല്ലാം അൺബ്ലോക്ക് ചെയ്യുക</string>
     <string name="BlockedListEmpty">നിങ്ങൾ ആരെയും ബ്ലോക്ക് ചെയ്തിട്ടില്ല :)</string>
-    <string name="SSPluginConflictingName">നിരവധി പ്ലഗിനുകൾ ഈ ഐഡി ഉപയോഗിക്കുന്നു: %s.</string>
-    <string name="VmessTls">ടി ൽ സ് ഉപയോഗിക്കുക</string>
-    <string name="ProxyInfoSS">ഷാഡോസോക്സ് പ്രോക്സി ക്രമീകരണങ്ങൾ</string>
-    <string name="SSMethod">എൻക്രിപ്റ്റ് രീതി</string>
-    <string name="SSPlugin">അനുബന്ധം</string>
-    <string name="SSPluginOpts">അനുബന്ധ രൂപരേഖ</string>
     <string name="AccDescrChatAttachEnterMenu">ചാറ്റ് ഇൻപുട്ട് മെനു</string>
     <string name="Locked">ലോക് ചെയ്തു</string>
     <string name="CustomApiTGX">ടെലിഗ്രാം ആൻഡ്രോയിഡ് എക്സ്</string>

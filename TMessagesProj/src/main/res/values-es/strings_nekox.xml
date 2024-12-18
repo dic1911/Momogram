@@ -87,13 +87,6 @@
     <string name="UnblockAll">Desbloquear todo</string>
     <string name="UnblockAllWarn">¿Estás seguro de que quieres desbloquear **todos los usuarios y bots**\?</string>
     <string name="BlockedListEmpty">No has bloqueado a nadie :)</string>
-    <string name="SSPluginConflictingName">Varios plugins utilizan esta ID: %s.</string>
-    <string name="VmessTls">Usar TLS</string>
-    <string name="ProxyInfoSS">Configuración del proxy Shadowsocks</string>
-    <string name="SSMethod">Método de cifrado</string>
-    <string name="SSPlugin">Complemento</string>
-    <string name="SSPluginOpts">Configuración del complemento</string>
-    <string name="ProxyRemarks">Comentarios</string>
     <string name="ImportProxyList">Importar servidores proxy</string>
     <string name="ExportStickers">Exportar Stickers</string>
     <string name="ImportStickersX">Importar stickers desde archivo</string>
@@ -150,7 +143,6 @@
     <string name="VersionUpdateVariantNotMatch">Las variantes de la versión no coincidieron automáticamente.
 \nPor favor descargar manualmente desde GitHub.</string>
     <string name="UsePersiancalendarInfo">Mostrar la fecha con el calendario Solar Hijri</string>
-    <string name="AutoCheckUpdateSwitch">Actualización Automática</string>
     <string name="DisableTrending">Deshabilitar tendencia</string>
     <string name="ImportSettings">Importar ajustes</string>
     <string name="Win32ExecutableFiles">Archivos Win32 ejecutables</string>
@@ -167,18 +159,13 @@
     <string name="unreadBadgeOnBackButton">Indicador de no leído sobre el botón de retroceso</string>
     <string name="DeleteDownloadedFileSucceed">Eliminado</string>
     <string name="DeleteDownloadedFileExternal">El archivo externo se omitió.</string>
-    <string name="update_download_soucre">Seleccionar el origen de la descarga</string>
     <string name="valuesLargeAvatarInDrawer">Telegram por defecto
 \nAvatar como fondo
 \nAvatar grande como fondo</string>
     <string name="ReplaceText">Reemplazar texto</string>
-    <string name="ProxyInfoWS">Configuración del relevo WebSocket</string>
-    <string name="WsPayload">Carga útil</string>
     <string name="VersionUpdateNotNow">Ahora no</string>
     <string name="VersionUpdateTitle">Nueva Versión Disponible</string>
-    <string name="AutoCheckUpdateStable">Estable</string>
     <string name="useCustomEmoji">Usar emoji personalizado</string>
-    <string name="AutoCheckUpdateRc">Candidato de lanzamiento</string>
     <string name="ImportSettingsAlert">¿Está seguro de sobrescribir las configuraciones\? Importar configuraciones de fuentes desconocidas puede ocasionar que el pin sea sobre sobreescrito y causar bloqueo de la aplicación.</string>
     <string name="VersionUpdateConfirm">ACTUALIZAR</string>
     <string name="VersionUpdateIgnore">Ignorar</string>
@@ -186,8 +173,6 @@
     <string name="VersionUpdateNoUpdate">No actualizar.</string>
     <string name="EnableStickerPinAbout">Fijar stickers y sincronizarlos con la nube aún cuando se agreguen nuevos stickers.\nRelacionado con Desactivar Favoritos y Recientes.</string>
     <string name="EnableStickerPinTip">Esta función todavía está en desarrollo. La sincronización con la nube puede no funcionar.</string>
-    <string name="AutoCheckUpdateOFF">Desactivado</string>
-    <string name="AutoCheckUpdatePreview">Vista Previa (Inestable)</string>
     <string name="AppUpdateNekoX">Actualización de Nekogram X</string>
     <string name="showSeconds">Mostar el formato de tiempo con segundos</string>
     <string name="ShareMessages">Compartir</string>

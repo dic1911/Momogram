@@ -20,7 +20,6 @@
     <string name="Repeat">Repetir</string>
     <string name="AddToSavedMessages">Guardar mensaje</string>
     <string name="CreateMention">Crear mención</string>
-    <string name="ForceTabletMode">Forzar modo tableta</string>
     <string name="Prpr">Peropero</string>
     <string name="TransparentStatusBar">Barra de estado transparente</string>
     <string name="EnableResidentNotification">Mostrar una notificación permanente</string>
@@ -119,11 +118,9 @@
     <string name="hideGroupSticker">Ocultar sticker del grupo</string>
     <string name="customGroupVoipAudioBitrate">Tasa de bits de audio VoIP del grupo</string>
     <string name="disableRemoteEmojiInteractions">Desactivar interacciones remotas de emoji</string>
-    <string name="enablePublicProxy">Proxy Público de NekoX</string>
     <string name="useSystemDNS">Usar DNS del sistema</string>
     <string name="customDoH">DoH personalizado</string>
     <string name="disableChoosingSticker">Mostrar escribiendo en lugar de eligiendo sticker</string>
-    <string name="autoUpdateSubInfo">Actualizar los proxys automáticamente</string>
     <string name="NekoGeneralNotification">Notificación</string>
     <string name="disableNotificationBubbles">Deshabilitar burbujas en la notificación</string>
     <string name="ReactionsDisabled">Deshabilitar</string>

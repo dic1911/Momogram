@@ -83,14 +83,7 @@
     <string name="IgnoreMutedCount">Ignorera tystat oläst antal i mappfliken</string>
     <string name="FilterNameUnmutedAndUnreadDescription">Endast olästa meddelanden från otystade chattar</string>
     <string name="BlockedListEmpty">Du har inte blockerat någon :)</string>
-    <string name="VmessTls">Använd TLS</string>
-    <string name="SSPluginOpts">Plugin Konfiguration</string>
-    <string name="SSPluginConflictingName">Ett flertal plugins använder denna ID: %s.</string>
-    <string name="ProxyRemarks">Anmärkningar</string>
     <string name="NekoXPushService">NekoX Push Service</string>
-    <string name="SSPlugin">Plugin</string>
-    <string name="ProxyInfoSS">Shadowsocks Proxy Inställningar</string>
-    <string name="SSMethod">Krypteringsmetod</string>
     <string name="CustomApiOfficial">Telegram Android</string>
     <string name="CustomApiTGX">Telegram Android X</string>
     <string name="ProviderYandexTranslate">Yandex.Translate</string>

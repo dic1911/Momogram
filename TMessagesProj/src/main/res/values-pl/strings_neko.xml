@@ -20,7 +20,6 @@
     <string name="Repeat">Powtórz</string>
     <string name="AddToSavedMessages">Zapisz wiadomość</string>
     <string name="CreateMention">Utwórz wzmiankę</string>
-    <string name="ForceTabletMode">Wymuś tryb tabletu</string>
     <string name="Prpr">Dźwięk lizania</string>
     <string name="TransparentStatusBar">Przezroczysty pasek stanu</string>
     <string name="EnableResidentNotification">Pokaż stałe powiadomienie</string>
@@ -122,8 +121,6 @@
     <string name="hideGroupSticker">Ukryj naklejki grupy</string>
     <string name="disableChoosingSticker">Wyślij wpisując zamiast wybierać naklejkę</string>
     <string name="disableRemoteEmojiInteractions">Wyłącz zdalne interakcje emoji</string>
-    <string name="enablePublicProxy">Publiczne Proxy NekoX</string>
-    <string name="autoUpdateSubInfo">Aktualizuj serwery proxy automatycznie</string>
     <string name="SaveToDownloadCount_other">Zapisywanie %1$d plików do pobranych</string>
     <string name="NekoGeneralNotification">Powiadomienia</string>
     <string name="disableNotificationBubbles">Wyłącz bąbelki w powiadomieniu</string>

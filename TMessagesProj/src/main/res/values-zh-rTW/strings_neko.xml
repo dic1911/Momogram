@@ -21,7 +21,6 @@
     <string name="Repeat">復讀</string>
     <string name="AddToSavedMessages">儲存訊息</string>
     <string name="CreateMention">建立@</string>
-    <string name="ForceTabletMode">強制啟用平板模式</string>
     <string name="Prpr">ペロペロ</string>
     <string name="TransparentStatusBar">使用完全透明的狀態列</string>
     <string name="EnableResidentNotification">請讓貓咪住在通知欄裡吧</string>
@@ -123,8 +122,6 @@
     <string name="disableSwipeToNextChannel">停用滑動到下個未讀頻道</string>
     <string name="disableChoosingSticker">選擇貼圖時輸入狀態為輸入中</string>
     <string name="disableRemoteEmojiInteractions">停用遠端 Emoji 符號互動</string>
-    <string name="enablePublicProxy">NekoX 公共代理</string>
-    <string name="autoUpdateSubInfo">自動更新代理</string>
     <string name="hideSendAsChannel">忽略以頻道發送</string>
     <string name="showSpoilersDirectly">直接顯示爆雷訊息</string>
     <string name="SaveToDownloadCount_zero">正在儲存 %1$d 個檔案到下載</string>

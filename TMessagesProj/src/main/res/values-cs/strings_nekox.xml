@@ -73,9 +73,7 @@
     <string name="SortMenu">Nastavení Seřazení Dialogu</string>
     <string name="FilterNameUnmutedDescription">Pouze zprávy z neztlumených chatů</string>
     <string name="SortByUnmuted">Seřadit Podle Neztlumených</string>
-    <string name="AutoCheckUpdateSwitch">Automatická Aktualizace</string>
     <string name="DeleteDownloadedFileSucceed">Smazáno</string>
-    <string name="SSPlugin">Plugin</string>
     <string name="ImportProxyList">Importovat proxy servery</string>
     <string name="ShareQRCode">QR Code</string>
     <string name="TransToLang">Cílový jazyk překladu</string>
@@ -95,14 +93,12 @@
     <string name="repeatConfirm">Zeptat se před zopakováním</string>
     <string name="hideSponsoredMessage">Skrýt sponzorovanou zprávu</string>
     <string name="VersionUpdateNotNow">Nyní ne</string>
-    <string name="update_download_soucre">Vyberte zdroj ke stažení</string>
     <string name="useCustomEmoji">Použít Vlastní Emoji</string>
     <string name="valuesLargeAvatarInDrawer">Telegram Výchozí
 \nAvatar jako pozadí
 \nVelký avatar jako pozadí</string>
     <string name="DisableInstantCamera">Vypnout instantní kameru</string>
     <string name="VersionUpdateNoUpdate">Žádná Aktualizace.</string>
-    <string name="AutoCheckUpdateStable">Stabilní</string>
     <string name="DeleteDownloadedFileConfirm">Smazat tento soubor z místní mezipaměti\?</string>
     <string name="FilterNameUnmutedAndUnread">Neztlumené &amp; Nepřečtené</string>
     <string name="DisableSystemAccount">Vypnout Systémový Účet</string>
@@ -119,7 +115,6 @@
     <string name="OpenPGPKey">OpenPGP Klíč</string>
     <string name="FilterNameBotsDescription">Pouze zprávy od robotů</string>
     <string name="SortByContacts">Seřadit Podle Kontaktů</string>
-    <string name="SSPluginConflictingName">Několik pluginů používá tuto ID: %s.</string>
     <string name="TransSite">Překládací Platforma</string>
     <string name="UnblockAllWarn">Jste si jisti že chcete odblokovat **všechny uživatele a roboty**\?</string>
     <string name="BackupSettings">Nastavení zálohy</string>
@@ -129,14 +124,11 @@
     <string name="SortByUnread">Seřadit Podle Nepřečtených</string>
     <string name="None">Žádný</string>
     <string name="PrivacyNoticeP2p">Zjistili jsme, že jste nevypnuli \"Povolit P2P volání\" nastavení, které by mohlo způsobit že hacker kontrolovaný vládou najde vaší pravou identitu, prosíme vypněte jej!</string>
-    <string name="SSMethod">Metoda Šifrování</string>
-    <string name="ProxyInfoSS">Nastavení Shadowsocks Proxy</string>
     <string name="StickerSets">Balíčky Samolepek</string>
     <string name="ShareMyKey">Sdílet Můj Veřejný Klíč</string>
     <string name="CCHK">Tradiční Čínština (Hong Kong)</string>
     <string name="CCSP">Zjednodušená Čínština (Čína)</string>
     <string name="FilterNameContactsDescription">Pouze zprávy od uložených uživatelů</string>
-    <string name="VmessTls">Použít TLS</string>
     <string name="DeveloperSettings">Vývojářské Nastavení</string>
     <string name="FilterNameUsers">Uživatelé</string>
     <string name="ExportStickers">Exportovat Samolepky</string>
@@ -147,17 +139,14 @@
     <string name="DisableVibration">Vypnout Vibraci</string>
     <string name="VersionUpdateIgnore">Ignorovat</string>
     <string name="VersionUpdateTitle">Je Dostupná Nová Verze</string>
-    <string name="SSPluginOpts">Konfigurace Pluginu</string>
     <string name="HideProxyByDefault">Schovat nastavení proxy ve výchozím nastavení</string>
     <string name="FilterNameUnread2">Nepřečteno</string>
     <string name="CCNo">Žádný</string>
-    <string name="AutoCheckUpdateOFF">VYPNUTO</string>
     <string name="FilterNameUnmuted">Neztlumený</string>
     <string name="ImportStickersX">Importovat samolepky ze souboru</string>
     <string name="ArchiveFiles">Archivované soubory</string>
     <string name="FilterNameUnmutedAndUnreadDescription">Pouze nepřečtené zprávy od neztlumených chatů</string>
     <string name="ImportLogin">QR Přihlášení</string>
-    <string name="ProxyRemarks">Poznámky</string>
     <string name="InvalidStickersFile">Neplatný soubor samolepek:</string>
     <string name="ImportedProxies">Vložené proxy servery:</string>
 </resources>

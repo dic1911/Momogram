@@ -63,15 +63,11 @@ public class NekoConfig {
     public static ConfigItem useOldName = addConfig(R.string.UseOldAppName, "UseOldAppName", configTypeBool, GENERAL, false);
     public static ConfigItem largeAvatarInDrawer = addConfig(R.string.AvatarAsBackground, "AvatarAsBackground", configTypeInt, GENERAL, 0); // 0:TG Default 1:NekoX Default 2:Large Avatar
     public static ConfigItem unreadBadgeOnBackButton = addConfig(R.string.unreadBadgeOnBackButton, "unreadBadgeOnBackButton", configTypeBool, CHAT, false);
-//    public static ConfigItem customPublicProxyIP = addConfig("customPublicProxyIP", configTypeString, "");
-//    public static ConfigItem update_download_soucre = addConfig(R.string.update_download_soucre, "update_download_soucre", configTypeInt, 0); // 0: Github 1: Channel 2:CDNDrive, removed
     public static ConfigItem useCustomEmoji = addConfig(R.string.useCustomEmoji, "useCustomEmoji", configTypeBool, false);
     public static ConfigItem repeatConfirm = addConfig(R.string.repeatConfirm, "repeatConfirm", configTypeBool, CHAT, false);
     public static ConfigItem disableInstantCamera = addConfig(R.string.DisableInstantCamera, "DisableInstantCamera", configTypeBool, CHAT, false);
     public static ConfigItem showSeconds = addConfig(R.string.showSeconds, "showSeconds", configTypeBool, CHAT, false);
 
-//    public static ConfigItem enablePublicProxy = addConfig(R.string.enablePublicProxy, "enablePublicProxy", configTypeBool, false);
-//    public static ConfigItem autoUpdateSubInfo = addConfig(R.string.autoUpdateSubInfo, "autoUpdateSubInfo", configTypeBool, true);
     public static ConfigItem nextPromptUpdateTime = addConfig("nextPromptUpdateTime", configTypeLong, 0L);
     public static ConfigItem checkUpdate = addConfig(R.string.AutoCheckUpdate, "AutoCheckUpdate", configTypeBool, GENERAL, true);
 

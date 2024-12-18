@@ -87,13 +87,6 @@
     <string name="UnblockAll">解禁所有</string>
     <string name="UnblockAllWarn">您确定要解除屏蔽**所有用户和机器人**吗？</string>
     <string name="BlockedListEmpty">您还没有屏蔽任何人 :)</string>
-    <string name="SSPluginConflictingName">多个插件使用此ID： %s.</string>
-    <string name="VmessTls">使用 TLS</string>
-    <string name="ProxyInfoSS">Shadowsocks 代理设置</string>
-    <string name="SSMethod">加密方法</string>
-    <string name="SSPlugin">插件</string>
-    <string name="SSPluginOpts">插件配置</string>
-    <string name="ProxyRemarks">别名</string>
     <string name="ImportProxyList">导入代理服务器列表</string>
     <string name="ExportStickers">导出贴纸集</string>
     <string name="ImportStickersX">从文件导入贴纸集</string>
@@ -158,16 +151,10 @@
     <string name="UsePersiancalendar">使用伊朗历</string>
     <string name="UsePersiancalendarInfo">用太阳回历显示日期</string>
     <string name="DisplayPersianCalendarByLatin">以拉丁字母显示波斯日历</string>
-    <string name="ProxyInfoWS">WebSocket 中继设置</string>
-    <string name="WsPayload">负载</string>
     <string name="AutoLockImmediately">立即</string>
     <string name="ImportSettings">导入设置</string>
     <string name="BackupSettings">备份设置</string>
     <string name="ImportSettingsAlert">确定要覆盖设置吗？从未知来源导入设置可能导致PIN被覆盖从而导致应用被锁定。</string>
-    <string name="AutoCheckUpdateRc">候选版</string>
-    <string name="AutoCheckUpdateStable">稳定版</string>
-    <string name="AutoCheckUpdateSwitch">自动更新</string>
-    <string name="AutoCheckUpdateOFF">关闭</string>
     <string name="VersionUpdateNoUpdate">无更新。</string>
     <string name="VersionUpdateNotNow">以后再说</string>
     <string name="VersionUpdateIgnore">忽略</string>
@@ -180,7 +167,6 @@
     <string name="DeleteDownloadedFileConfirm">从本地缓存中删除此文件？</string>
     <string name="DeleteDownloadedFileSucceed">已删除</string>
     <string name="DeleteDownloadedFileExternal">外部文件被跳过。</string>
-    <string name="update_download_soucre">选择更新源</string>
     <string name="useCustomEmoji">使用自定义 emoji</string>
     <string name="useCustomEmojiInvalid">非有效 emoji ZIP文件。</string>
     <string name="repeatConfirm">复读前确认</string>
@@ -193,7 +179,6 @@
     <string name="showSeconds">以秒为单位显示时间戳</string>
     <string name="rememberAllBackMessages">记住已点击的回复</string>
     <string name="ShareMessages">分享</string>
-    <string name="AutoCheckUpdatePreview">预览版(不稳定)</string>
     <string name="AppUpdateNekoX">更新 Nekogram X</string>
     <string name="channelAlias">频道别名</string>
     <string name="labelChannelUser">标记频道匿名身份别名</string>
