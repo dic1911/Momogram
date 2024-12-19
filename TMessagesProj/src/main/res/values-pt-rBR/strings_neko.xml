@@ -298,4 +298,6 @@
     <string name="LoadingInstantView">Tentando carregar a visualização instantânea…</string>
     <string name="ResetIVFailDomains">Redefinir dados de falha da visualização instantânea</string>
     <string name="ResetIVFailDomainsConfirm">Todos os dados de falha da visualização instantânea armazenados anteriormente serão apagados! Continuar?</string>
+    <string name="AutoCheckUpdate">Procurar por atualizações automaticamente</string>
+    <string name="AutoCheckUpdateInfo">Atualização de versão encontrada: %1$s</string>
 </resources>
