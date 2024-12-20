@@ -828,6 +828,7 @@ public class PhotoViewer implements NotificationCenter.NotificationCenterDelegat
     private ActionBarMenuSubItem sendNoQuoteItem;
     private ActionBarMenuSlider.SpeedSlider speedItem;
     private ActionBarMenuSubItem loopItem;
+    private ActionBarMenuSubItem muteVideoItem;
     private ActionBarMenuSubItem galleryButton;
     private ActionBarPopupWindow.GapView galleryGap;
     private ActionBarMenuItem pipItem;
@@ -2087,6 +2088,7 @@ public class PhotoViewer implements NotificationCenter.NotificationCenterDelegat
     // nekox stuff
     private final static int gallery_menu_scan = 1001;
     private final static int gallery_menu_send_noquote = 1002;
+    private final static int gallery_menu_mute_video = 1003;
 
     private final static int ads_sponsor_info = 101;
     private final static int ads_about = 102;
@@ -5656,6 +5658,10 @@ public class PhotoViewer implements NotificationCenter.NotificationCenterDelegat
                         videoPlayer.setLooping(playerLooping);
                     }
                     loopItem.setEnabledByColor(playerLooping, 0xFFFFFFFF, 0xFF73B4EC);
+                } else if (id == gallery_menu_mute_video) {
+                    boolean muted = videoPlayer.isMuted();
+                    videoPlayer.setMute(!muted);
+                    muteVideoItem.setEnabledByColor(!muted, 0xFFFFFFFF, 0xFF73B4EC);
                 }
             }
 
@@ -5712,6 +5718,7 @@ public class PhotoViewer implements NotificationCenter.NotificationCenterDelegat
         videoQualityLayout.setOrientation(LinearLayout.VERTICAL);
         videoItem.getPopupLayout().addView(videoQualityLayout);
         loopItem = videoItem.addSubItem(gallery_menu_loop, R.drawable.menu_video_loop, LocaleController.getString(R.string.VideoPlayerLoop));
+        muteVideoItem = videoItem.addSubItem(gallery_menu_mute_video, R.drawable.msg_mute, LocaleController.getString(R.string.Mute));
         videoItem.redrawPopup(0xf9222222);
         videoItem.setOnMenuDismiss(byClick -> checkProgress(0, false, false));
 
@@ -10293,6 +10300,8 @@ public class PhotoViewer implements NotificationCenter.NotificationCenterDelegat
         videoPlayerControlFrameLayout.setSeekBarTransitionEnabled(playerLooping);
         videoPlayer.setLooping(playerLooping);
         loopItem.setEnabledByColor(playerLooping, 0xFFFFFFFF, 0xFF73B4EC);
+
+        muteVideoItem.setEnabledByColor(videoPlayer.isMuted(), 0xFFFFFFFF, 0xFF73B4EC);
 
         if (currentMessageObject != null && currentMessageObject.forceSeekTo >= 0) {
             seekToProgressPending = currentMessageObject.forceSeekTo;
