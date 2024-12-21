@@ -204,4 +204,22 @@
     <string name="ConfirmSettings">Confirmação</string>
     <string name="InteractionSettings">Interação</string>
     <string name="Name">Nome</string>
+    <string name="ReactionSettings">Reação</string>
+    <string name="UnsupportedProxy">Proxy não suportado</string>
+    <string name="ShowSelfInsteadOfSavedMessages">Exibir como eu mesmo em vez de Mensagens Salvas</string>
+    <string name="FasterReconnectHack">Reconexão mais rápida ao ativar/desativar o proxy</string>
+    <string name="FasterReconnectHackAbout">Este hack só funciona em um bom ambiente de rede.</string>
+    <string name="UseOldAppName">Usar o nome antigo do aplicativo (NekoX)</string>
+    <string name="UseOldAppNameDesc">O aplicativo pode ser fechado ao alternar, e o ícone pode ser redefinido para o padrão.</string>
+    <string name="CustomApiId">ID de API personalizada</string>
+    <string name="CustomApiHash">Hash de API personalizado</string>
+    <string name="AllowDupLogin">Permitir login em conta(s) existentes</string>
+    <string name="AllowDupLoginInfo">Isso pode causar vários problemas, certifique-se de manter apenas uma das sessões após a conclusão do trabalho.</string>
+    <string name="doubleTapAndReactions">Toque duplo</string>
+    <string name="doubleTapShowReactionsMenu">Mostrar menu de reações</string>
+    <string name="DisableCustomWallpaperChannel">Desativar papel de parede personalizado do canal</string>
+    <string name="doubleTapSendReaction">Enviar reação</string>
+    <string name="doubleTapDisable">Desabilitar</string>
+    <string name="disableReactionsWhenSelecting">Ocultar reações ao selecionar</string>
+    <string name="DisableCustomWallpaperUser">Desativar papel de parede personalizado do usuário</string>
 </resources>
