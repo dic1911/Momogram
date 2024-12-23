@@ -4,7 +4,7 @@ apply plugin: "com.android.application"
 apply plugin: "kotlin-android"
 
 def verName = APP_VERSION_NAME
-def verCode = 10619
+def verCode = 10629
 
 verName += "-" + RuntimeUtil.execForStr("git log --pretty=format:'%h' -n 1").trim().replace('\'','')
 
@@ -98,25 +98,17 @@ android {
     splits {
 
         abi {
-            if (targetTask.contains("fdroid")) {
+            if (nativeTarget.isBlank()) {
+                enable true
+                reset()
+                include 'armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64'
+                universalApk false
+            } else if (nativeTarget.toLowerCase().equals("universal")) {
                 enable false
                 universalApk true
             } else if (!archs.contains(nativeTarget.toLowerCase())) {
                 enable false
                 universalApk false
-            } else {
-                if (nativeTarget.toLowerCase().equals("universal")) {
-                    enable false
-                    universalApk true
-                } else if (!nativeTarget.isBlank()) {
-                    enable true
-                    universalApk false
-                    reset()
-                    include nativeTarget
-                } else {
-                    enable true
-                    universalApk false
-                }
             }
         }
 
