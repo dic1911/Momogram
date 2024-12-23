@@ -108,7 +108,7 @@ public class MomoUpdater {
 
             TLRPC.TL_messages_getHistory req = new TLRPC.TL_messages_getHistory();
             req.peer = accountInstance.getMessagesController().getInputPeer(-CHANNEL_ID);
-            req.min_id = metadata.messageID - 4;
+            req.min_id = metadata.messageID - 7;
             req.limit = MAX_READ_COUNT;
 
             Runnable sendReq = () -> accountInstance.getConnectionsManager().sendRequest(req, (response, error) -> {
@@ -120,16 +120,16 @@ public class MomoUpdater {
                 try {
                     TLRPC.messages_Messages res = (TLRPC.messages_Messages) response;
                     Log.e("030-upd", "Retrieve update messages, size:" + res.messages.size());
-                    final boolean isArm = FileUtil.getAbi().startsWith("arm");
+                    final String arch = String.format("-%s", FileUtil.getAbi());
                     final String versionStr = String.format("%s-%s", metadata.versionName, metadata.versionHash);
-                    Log.d("030-upd", String.format("searching for %s, isArm: %s", versionStr, isArm));
+                    Log.d("030-upd", String.format("searching for %s, arch: %s", versionStr, arch));
                     for (int i = 0; i < res.messages.size(); i++) {
                         if (res.messages.get(i).media == null) continue;
 
                         TLRPC.Document apkDocument = res.messages.get(i).media.document;
                         if (apkDocument.attributes == null) continue;
                         String fileName = apkDocument.attributes.size() == 0 ? "" : apkDocument.attributes.get(0).file_name;
-                        if (!fileName.contains(versionStr) || (isArm && fileName.contains("x86")) || (!isArm && !fileName.contains("x86")))
+                        if (!fileName.contains(versionStr) || !fileName.contains(arch))
                             continue;
                         TLRPC.TL_help_appUpdate update = new TLRPC.TL_help_appUpdate();
                         update.version = metadata.versionName;

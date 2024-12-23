@@ -335,7 +335,7 @@ android {
 
     applicationVariants.all { variant ->
         variant.outputs.all { output ->
-            outputFileName = outputFileName.replace("-mini-releaseNoGcm", "").replace("TMessagesProj", "Momo-v" + versionName)
+            outputFileName = outputFileName.replace("-mini", "").replace("-releaseNoGcm", "").replace("TMessagesProj", "Momo-v" + versionName)
         }
     }
 
