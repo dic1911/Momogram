@@ -277,4 +277,5 @@
     <string name="KeepBlockedBotChatHistory">Διατήρηση ιστορικού bot μετά το μπλοκάρισμα</string>
     <string name="DontSendStartCmdOnUnblockBot">Χωρίς αποστολή /start μετά την άρση αποκλεισμού</string>
     <string name="DisableAutoWebLogin">Απενεργοποιήστε την αυτόματη σύνδεση με το λογαριασμό Telegram</string>
+    <string name="MomoSettings">Ρυθμίσεις Momo</string>
 </resources>
