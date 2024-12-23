@@ -100,7 +100,7 @@
     <string name="ScanQRCode">Escanear Código QR</string>
     <string name="NoQrFound">Nenhum Código QR encontrado</string>
     <string name="DeveloperSettings">Configurações de Desenvolvedor</string>
-    <string name="NekoXFaq">Perguntas Frequentes</string>
+    <string name="NekoXFaq">Perguntas Frequentes (FAQ)</string>
     <string name="TransSite">Plataforma de Tradução</string>
     <string name="OpenKayChain">Cliente OpenPGP</string>
     <string name="OpenPGPApp">Provedor OpenPGP</string>
