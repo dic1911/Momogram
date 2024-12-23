@@ -16071,6 +16071,11 @@ public class ChatMessageCell extends BaseCell implements SeekBar.SeekBarDelegate
         } else {
             currentTimeString = timeString;
         }
+
+        if (messageObject.messageOwner.forwards > 0 && NekoConfig.showChannelMsgFwdCount.Bool()) {
+            currentTimeString = "\uD83D\uDD4A" + LocaleController.formatShortNumber(messageObject.messageOwner.forwards, null) + " " + currentTimeString;
+        }
+
         timeTextWidth = timeWidth = (int) Math.ceil(Theme.chat_timePaint.measureText(currentTimeString, 0, currentTimeString == null ? 0 : currentTimeString.length()));
         if (currentMessageObject.scheduled && currentMessageObject.messageOwner.date == 0x7FFFFFFE || currentMessageObject.notime) {
             timeWidth -= AndroidUtilities.dp(8);
@@ -16363,7 +16368,7 @@ public class ChatMessageCell extends BaseCell implements SeekBar.SeekBarDelegate
                 adminWidth = (int) staticLayout.getLineWidth(0);
                 nameWidth -= adminWidth;
             } else if (NekoConfig.labelChannelUser.Bool() && isMegagroup && currentChat != null && currentMessageObject.isSenderChannel()) {
-                final String channelStr = LocaleController.getString("channelLabel", R.string.channelLabel);
+                final String channelStr = LocaleController.getString(R.string.channelLabel);
                 if (NekoConfig.channelAlias.Bool()) {
                     String aliasName = NekoXConfig.getChannelAlias(currentMessageObject.messageOwner.from_id.channel_id);
                     if (aliasName != null) {

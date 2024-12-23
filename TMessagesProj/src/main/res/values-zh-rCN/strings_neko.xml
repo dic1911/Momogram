@@ -293,4 +293,5 @@
     <string name="SpoilerOnAllMedia">为所有媒体套用防剧透</string>
     <string name="ProfileMenu">个人页面菜单</string>
     <string name="DataCleared">删除完成</string>
+    <string name="ShowChannelMsgFwdCount">显示频道讯息被转发次数</string>
 </resources>

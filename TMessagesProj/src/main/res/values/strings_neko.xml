@@ -296,4 +296,5 @@
     <string name="DataCleared">Data cleared</string>
     <string name="AutoCheckUpdate">Check for updates automatically</string>
     <string name="AutoCheckUpdateInfo">Found update version: %1$s</string>
+    <string name="ShowChannelMsgFwdCount">Show channel message forward count</string>
 </resources>

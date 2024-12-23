@@ -294,4 +294,5 @@
     <string name="SpoilerOnAllMedia">全メディアにネタバレ効果</string>
     <string name="ProfileMenu">プロフィールメニュー</string>
     <string name="DataCleared">削除しました</string>
+    <string name="ShowChannelMsgFwdCount">チャンネルメッセージの転送数を表示する</string>
 </resources>
