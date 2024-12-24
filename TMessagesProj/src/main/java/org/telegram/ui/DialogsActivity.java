@@ -6941,6 +6941,7 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
     public void onResume() {
         super.onResume();
 
+        // momo start
         BottomSheetTabsOverlay overlay = LaunchActivity.instance.getBottomSheetTabsOverlay();
         BottomSheetTabs tabs = overlay.tabsView;
         if (tabs != null) {
@@ -6953,6 +6954,8 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
                 tabsWasHidden = false;
             }
         }
+        PhotoViewer.muteVideoForChatId = -1L;
+        // momo end
 
         chatOpened = false;
         if (viewPages.length > 0 && viewPages[0] != null) {

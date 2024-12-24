@@ -348,6 +348,8 @@ public class PhotoViewer implements NotificationCenter.NotificationCenterDelegat
     private boolean bestVideoQualityChosenByNekoConfig = !NekoConfig.chooseBestVideoQualityByDefault.Bool();
     public static boolean tempDisableGifAsVideo = false;
 
+    public static long muteVideoForChatId = -1L;
+
     public boolean waitingForTranslation = false;
     public boolean createMessagesList = false;
 
@@ -5662,6 +5664,9 @@ public class PhotoViewer implements NotificationCenter.NotificationCenterDelegat
                     boolean muted = videoPlayer.isMuted();
                     videoPlayer.setMute(!muted);
                     muteVideoItem.setEnabledByColor(!muted, 0xFFFFFFFF, 0xFF73B4EC);
+                    if (currentMessageObject != null) {
+                        muteVideoForChatId = (muted ? -1L : currentMessageObject.getFromChatId());
+                    }
                 }
             }
 
@@ -10102,6 +10107,15 @@ public class PhotoViewer implements NotificationCenter.NotificationCenterDelegat
                 @Override
                 public void onStateChanged(boolean playWhenReady, int playbackState) {
                     if (firstState && videoPlayer != null && videoPlayer.getDuration() != C.TIME_UNSET) {
+                        // 030 mark setMute here?
+                        if (currentMessageObject != null) {
+                            if (currentMessageObject.getFromChatId() == muteVideoForChatId) {
+                                videoPlayer.setMute(true);
+                            } else {
+                                muteVideoForChatId = -1L;
+                            }
+                            muteVideoItem.setEnabledByColor(videoPlayer.isMuted(), 0xFFFFFFFF, 0xFF73B4EC);
+                        }
                         firstState = false;
                         if (imagesArr.isEmpty() && secureDocuments.isEmpty() && imagesArrLocations.isEmpty() && !imagesArrLocals.isEmpty() && switchingToIndex >= 0 && switchingToIndex < imagesArrLocals.size()) {
                             Object object = imagesArrLocals.get(switchingToIndex);
