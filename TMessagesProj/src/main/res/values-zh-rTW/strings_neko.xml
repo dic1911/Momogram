@@ -172,6 +172,7 @@
     <string name="Blacklist">加入黑名單</string>
     <string name="BlacklistedQuery">已將選取的參數加入黑名單</string>
     <string name="BlacklistedQueryAllAdded">選取連結內的所有參數都已加入黑名單.</string>
+    <string name="BlacklistedQueryRemoved">已將解除選取的參數從黑名單移除.</string>
     <string name="MarqueeForLongChatTitles">為較長聊天標題使用捲動效果</string>
     <string name="DontSendRightAfterTranslated">翻譯訊息後不直接送出</string>
     <string name="BlacklistUrlQueryTitle">移除特定網址參數</string>

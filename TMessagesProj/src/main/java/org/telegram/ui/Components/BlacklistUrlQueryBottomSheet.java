@@ -43,12 +43,14 @@ public class BlacklistUrlQueryBottomSheet extends BottomSheetWithRecyclerListVie
 
     private ArrayList<Action> queries = new ArrayList<>();
 
+    private Set<String> queryKeys, existingKeys = getCurrentBlacklistedStrings();
+
     private class Action {
         int id;
         String query;
 
         ArrayList<TLObject> options;
-        boolean[] checks;
+        boolean checked;
         boolean[] filter;
         boolean collapsed;
         int totalCount;
@@ -133,6 +135,15 @@ public class BlacklistUrlQueryBottomSheet extends BottomSheetWithRecyclerListVie
         buttonContainer.addView(actionButton, LayoutHelper.createLinear(LayoutHelper.MATCH_PARENT, 48, Gravity.BOTTOM | Gravity.FILL_HORIZONTAL));
         containerView.addView(buttonContainer, LayoutHelper.createFrameMarginPx(LayoutHelper.MATCH_PARENT, LayoutHelper.WRAP_CONTENT, Gravity.BOTTOM | Gravity.FILL_HORIZONTAL, backgroundPaddingLeft, 0, backgroundPaddingLeft, 0));
 
+        Uri uri = null;
+        try {
+            uri = Uri.parse(url);
+        } catch (Exception ex) {
+            Log.e("030-url", "Error parsing url", ex);
+            return;
+        }
+        queryKeys = uri.getQueryParameterNames();
+
         adapter.fillItems = this::fillItems;
         adapter.update(false);
         actionBar.setTitle(getTitle());
@@ -160,60 +171,32 @@ public class BlacklistUrlQueryBottomSheet extends BottomSheetWithRecyclerListVie
         return !(child instanceof CollapseTextCell);
     }
 
-    private void fillAction(ArrayList<UItem> items, Action action) {
-        if (!action.isExpandable()) {
-            items.add(UItem.asRoundCheckbox(action.id, action.query)
-                    .setChecked(action.selectedCount > 0));
-        } else {
-            items.add(UItem.asUserGroupCheckbox(action.id, action.query, String.valueOf(action.selectedCount > 0 ? action.selectedCount : action.getCount()))
-                    .setChecked(action.selectedCount > 0)
-                    .setCollapsed(action.collapsed)
-                    .setClickCallback((v) -> {
-                        saveScrollPosition();
-                        action.collapseOrExpand();
-                        applyScrolledPosition(true);
-                    }));
-            if (!action.collapsed) {
-                action.forEach((userOrChat, i) -> {
-                    items.add(UItem.asUserCheckbox(action.id << 24 | i, userOrChat)
-                            .setChecked(action.checks[i])
-                            .setPad(1));
-                });
+    private void fillItems(ArrayList<UItem> items, UniversalAdapter adapter) {
+        if (queries.isEmpty()) {
+            for (String q : queryKeys) {
+                Action a = new Action(queries.size(), q);
+                a.checked = existingKeys.contains(q);
+                queries.add(a);
+            }
+        }
+
+        boolean first = (checks == null);
+
+        for (int i = 0; i < queries.size(); ++i){
+            Action a = queries.get(i);
+            if (!first) a.checked = checks[i];
+            items.add(UItem.asRoundCheckbox(a.id, a.query).setChecked(a.checked));
+        }
+
+        if (first) {
+            checks = new boolean[items.size()];
+            for (int i = 0; i < queries.size(); ++i) {
+                checks[i] = queries.get(i).checked;
             }
         }
     }
 
-    private void fillItems(ArrayList<UItem> items, UniversalAdapter adapter) {
-        Uri uri = null;
-        try {
-            uri = Uri.parse(url);
-        } catch (Exception ex) {
-            Log.e("030-url", "Error parsing url", ex);
-            return;
-        }
-
-        Set<String> queryKeys = uri.getQueryParameterNames(), existingKeys = getCurrentBlacklistedStrings();
-        for (String q : queryKeys) {
-            if (existingKeys.contains(q)) continue;
-            Action a = new Action(queries.size(), q);
-            queries.add(a);
-            fillAction(items, a);
-        }
-        if (queries.isEmpty()) {
-            AndroidUtilities.runOnUIThread(() -> {
-                dismiss();
-                BulletinFactory.of(getBaseFragment()).createSimpleBulletin(R.raw.info, getString(R.string.BlacklistedQueryAllAdded)).show();
-            }, 100);
-            return;
-        }
-        if (checks == null) checks = new boolean[items.size()];
-        for (int i = 0; i < checks.length; ++i) {
-            items.get(i).setChecked(checks[i]);
-        }
-    }
-
     private void onClick(UItem item, View view, int position, float x, float y) {
-        item.checked = !item.checked;
         checks[position - 1] = !checks[position - 1];
         adapter.update(false);
     }
@@ -233,15 +216,24 @@ public class BlacklistUrlQueryBottomSheet extends BottomSheetWithRecyclerListVie
         StringBuilder sb = new StringBuilder();
         Set<String> newBlacklistSet = getCurrentBlacklistedStrings();
 
+        int added = 0, removed = 0;
+
         for (int i = 0; i < checks.length; ++i) {
             String q = queries.get(i).query.trim();
-            if (!checks[i] || q.isEmpty()) continue;
-            sb.append(q).append(", ");
-            newBlacklistSet.add(q);
+            if (q.isEmpty()) continue;
+            if (checks[i]) {
+                sb.append(q).append(", ");
+                if (newBlacklistSet.add(q)) ++added;
+            } else if (newBlacklistSet.remove(q)) {
+                ++removed;
+            }
         }
         if (sb.indexOf(", ") > -1) sb.setLength(sb.length() - 2);
 
         NekoConfig.replaceCustomGetQueryBlacklist(newBlacklistSet);
-        BulletinFactory.of(getBaseFragment()).createSimpleBulletin(R.raw.done, getString(R.string.BlacklistedQuery), sb.toString()).show();
+        if (added > 0)
+            BulletinFactory.of(getBaseFragment()).createSimpleBulletin(R.raw.done, getString(R.string.BlacklistedQuery), sb.toString()).show();
+        else if (removed > 0)
+            BulletinFactory.of(getBaseFragment()).createSimpleBulletin(R.raw.done, getString(R.string.BlacklistedQueryRemoved)).show();
     }
 }

@@ -197,6 +197,7 @@
     <string name="Blacklist">ブロックする</string>
     <string name="BlacklistedQuery">選択したクエリはブロックしました</string>
     <string name="BlacklistedQueryAllAdded">現在のリンクのすべてのクエリは既にブロックされています.</string>
+    <string name="BlacklistedQueryRemoved">選択していないのクエリはブロック解除しました.</string>
     <string name="SearchByMessageType">メッセージタイプで探す</string>
     <string name="MarqueeForLongChatTitles">長いチャットタイトルにマーキーを使用する</string>
     <string name="DontSendRightAfterTranslated">メッセージが翻訳された直後に送信しない</string>

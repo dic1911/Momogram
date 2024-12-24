@@ -231,6 +231,7 @@
     <string name="MarqueeForLongChatTitles">為较长聊天标题使用卷动效果</string>
     <string name="BlacklistedQuery">已将选取的参数加入黑名单</string>
     <string name="BlacklistedQueryAllAdded">选取连结内的所有参数都已加入黑名单.</string>
+    <string name="BlacklistedQueryRemoved">已将解除选取的参数从黑名单移除.</string>
     <string name="CustomSearchEngineError">指定的自订搜索引擎无效!</string>
     <string name="NoStarsForReaction">您的帐号没有星星, 但还是可以享受界面特效 :)</string>
     <string name="RemovePremiumAnnoyanceDesc">并防止显示 premium 预览</string>
