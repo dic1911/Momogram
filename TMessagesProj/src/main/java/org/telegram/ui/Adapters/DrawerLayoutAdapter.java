@@ -286,28 +286,26 @@ public class DrawerLayoutAdapter extends RecyclerListView.SelectionAdapter imple
             return;
         }
 
-        // TODO: NekoX: Fix icon here
-        int newGroupIcon = R.drawable.baseline_group_24;
-//        int newSecretIcon = R.drawable.baseline_lock_24;
-//        int newChannelIcon = R.drawable.baseline_chat_bubble_24;
-        int contactsIcon = R.drawable.baseline_perm_contact_calendar_24;
-        int savedIcon = R.drawable.baseline_bookmark_24;
-        int settingsIcon = R.drawable.baseline_settings_24;
-        int callsIcon = R.drawable.baseline_call_24;
-
-        int eventType = Theme.getEventType();;
+        int eventType = Theme.getEventType();
+        int newGroupIcon;
+        int newSecretIcon;
+        int newChannelIcon;
+        int contactsIcon;
+        int callsIcon;
+        int savedIcon;
+        int settingsIcon;
         int inviteIcon;
         int helpIcon;
         if (eventType == 0) {
-//            newGroupIcon = R.drawable.msg_groups_ny;
+            newGroupIcon = R.drawable.msg_groups_ny;
             //newSecretIcon = R.drawable.msg_secret_ny;
             //newChannelIcon = R.drawable.msg_channel_ny;
-//            contactsIcon = R.drawable.msg_contacts_ny;
-//            callsIcon = R.drawable.msg_calls_ny;
-//            savedIcon = R.drawable.msg_saved_ny;
-//            settingsIcon = R.drawable.msg_settings_ny;
-//            inviteIcon = R.drawable.msg_invite_ny;
-//            helpIcon = R.drawable.msg_help_ny;
+            contactsIcon = R.drawable.msg_contacts_ny;
+            callsIcon = R.drawable.msg_calls_ny;
+            savedIcon = R.drawable.msg_saved_ny;
+            settingsIcon = R.drawable.msg_settings_ny;
+            inviteIcon = R.drawable.msg_invite_ny;
+            helpIcon = R.drawable.msg_help_ny;
         } else if (eventType == 1) {
             newGroupIcon = R.drawable.msg_groups_14;
             //newSecretIcon = R.drawable.msg_secret_14;
