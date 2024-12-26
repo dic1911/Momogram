@@ -413,7 +413,7 @@ public class VideoPlayer implements Player.Listener, VideoListener, AnalyticsLis
         isStreaming = true;
 
         if (NekoConfig.chooseBestVideoQualityByDefault.Bool()) {
-            this.videoQualityToSelect = getHighestQuality(null);
+            select = this.videoQualityToSelect = getHighestQuality(null);
         }
 
         ensurePlayerCreated();
