@@ -157,7 +157,7 @@
     <string name="VersionUpdateNotNow">Tidak sekarang</string>
     <string name="VersionUpdateIgnore">Abaikan</string>
     <string name="VersionUpdateConfirm">PERBARUI</string>
-    <string name="VersionUpdateVariantNotMatch">\"Tidak dapat mencocokkan versi secara otomatis.\nSilakan unduh manual dari GitHub.</string>
+    <string name="VersionUpdateVariantNotMatch">Tidak dapat mencocokkan varian versi secara otomatis.\nSilakan unduh secara manual dari GitHub.</string>
     <string name="VersionUpdateTitle">Tersedia Versi Baru</string>
     <string name="rememberAllBackMessages">Ingat semua balasan yang diklik</string>
     <string name="AppUpdateNekoX">Perbarui Nekogram X</string>
@@ -196,4 +196,10 @@
     <string name="UnsupportedProxy">Proksi Tidak Didukung</string>
     <string name="DisableCustomWallpaperUser">Nonaktifkan wallpaper khusus pengguna</string>
     <string name="DisableCustomWallpaperChannel">Nonaktifkan wallpaper khusus saluran</string>
+    <string name="UseOldAppName">Gunakan nama aplikasi lama (NekoX)</string>
+    <string name="UseOldAppNameDesc">Aplikasi mungkin ditutup setelah diubah, dan ikon mungkin diatur ulang ke default.</string>
+    <string name="CustomApiId">ID API Kustom</string>
+    <string name="AllowDupLogin">Izinkan login ke akun yang ada</string>
+    <string name="AllowDupLoginInfo">Hal ini dapat menyebabkan berbagai masalah, pastikan Anda hanya menjalankan satu sesi setelah pekerjaan selesai.</string>
+    <string name="CustomApiHash">Hash API khusus</string>
 </resources>
