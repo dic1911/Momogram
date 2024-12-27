@@ -48,10 +48,19 @@ public class TelegramUtil {
         return state == ConnectionsManager.ConnectionStateConnecting;
     }
 
+    private static int proxyToggleCount = 0;
     private static Thread toggleProxyOnOffThread = null;
     private static final Runnable toggleProxyOnOffRunnable = new Runnable() {
         @Override
         public void run() {
+            // too many tries, assume bad network condition, stop trying for better chance of connecting
+            if (proxyToggleCount > 10) {
+                proxyToggleCount = 0;
+                if (SharedConfig.getProxyEnable())
+                    SharedConfig.setProxyEnable(false);
+
+                return;
+            }
             boolean suc = false;
             while (!suc) {
                 try {
@@ -72,8 +81,10 @@ public class TelegramUtil {
     };
     public static void toggleProxyOnOff(boolean cancel) {
         if (toggleProxyOnOffThread != null) {
-            if (cancel) toggleProxyOnOffThread.interrupt();
-            else {
+            if (cancel) {
+                toggleProxyOnOffThread.interrupt();
+                proxyToggleCount = 0;
+            } else {
                 try {
                     toggleProxyOnOffThread.join(350);
                 } catch (InterruptedException e) {
@@ -82,9 +93,11 @@ public class TelegramUtil {
             }
             toggleProxyOnOffThread = null;
             return;
+        } else if (cancel || !NekoConfig.fasterReconnectHack.Bool() || !isConnecting()) {
+            proxyToggleCount = 0;
+            return;
         }
-        else if (cancel || !NekoConfig.fasterReconnectHack.Bool()) return;
-        else if (!isConnecting()) return;
+        ++proxyToggleCount;
         toggleProxyOnOffThread = new Thread(toggleProxyOnOffRunnable);
         toggleProxyOnOffThread.start();
     }
