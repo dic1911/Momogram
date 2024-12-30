@@ -7026,10 +7026,15 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
         };
         editText.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 18);
         editText.setTextColor(getThemedColor(Theme.key_dialogTextBlack));
-        editText.setHintText(
-                LocaleController.getString(R.string.Name));
-        if (NekoXConfig.getChatNameOverride(getCurrentChat().id) != null) {
-            editText.setText(NekoXConfig.getChatNameOverride(getCurrentChat().id));
+        editText.setHintText(LocaleController.getString(R.string.Name));
+        String value = NekoXConfig.getChatNameOverride(getCurrentChat().id);
+        if (value == null) {
+            TLRPC.Chat chat = getMessagesController().getChat(chatId);
+            value = (chat.title == null) ? "" : chat.title;
+        }
+        if (value != null) {
+            editText.setText(value);
+            editText.setHintText(value);
         }
         editText.setHeaderHintColor(getThemedColor(Theme.key_windowBackgroundWhiteBlueHeader));
         editText.setSingleLine(true);
