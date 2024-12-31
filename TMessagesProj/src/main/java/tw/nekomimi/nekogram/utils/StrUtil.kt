@@ -76,20 +76,31 @@ object StrUtil {
         return "030-${obj.javaClass.simpleName}"
     }
 
+    val appNames = listOf(
+        LocaleController.getString(R.string.NekoX),
+        LocaleController.getString(R.string.AppNameShort),
+        LocaleController.getString(R.string.Momogram),
+    )
+
     @JvmStatic
     fun getAppName(): String {
         if (NekoConfig.useOldName.Bool())
-            return LocaleController.getString(R.string.NekoX)
+            return appNames[0]
 
-        return LocaleController.getString(R.string.Momogram)
+        return appNames[2]
     }
 
     @JvmStatic
     fun getShortAppName(): String {
         if (NekoConfig.useOldName.Bool())
-            return LocaleController.getString(R.string.AppNameShort)
+            return appNames[1]
 
-        return LocaleController.getString(R.string.Momogram)
+        return appNames[2]
+    }
+
+    @JvmStatic
+    fun isAppName(s: String): Boolean {
+        return appNames.contains(s)
     }
 
 }

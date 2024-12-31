@@ -45,6 +45,8 @@ import tw.nekomimi.nekogram.utils.FileUtil;
 import tw.nekomimi.nekogram.utils.ShareUtil;
 
 import static tw.nekomimi.nekogram.config.ConfigItem.*;
+import static tw.nekomimi.nekogram.utils.StrUtil.getAppName;
+import static tw.nekomimi.nekogram.utils.StrUtil.isAppName;
 
 @SuppressLint("ApplySharedPref")
 public class NekoConfig {
@@ -246,7 +248,7 @@ public class NekoConfig {
     public static ConfigItem appendOriginalTimestamp = addConfig(R.string.AppendOriginalTimestamp, "AppendOriginalTimestamp", ConfigItem.configTypeBool, CHAT, false);
     public static ConfigItem alwaysShowDownloads = addConfig(R.string.AlwaysShowDownloads, "AlwaysShowDownloads", ConfigItem.configTypeBool, GENERAL, false);
     public static ConfigItem openAvatarInsteadOfExpand = addConfig(R.string.OpenAvatarInsteadOfExpand, "OpenAvatarInsteadOfExpand", ConfigItem.configTypeBool, GENERAL, false);
-    public static ConfigItem customTitleText = addConfig(R.string.CustomTitleText, "CustomTitleText", configTypeString, GENERAL, "Nekogram X");
+    public static ConfigItem customTitleText = addConfig(R.string.CustomTitleText, "CustomTitleText", configTypeString, GENERAL, getAppName());
     public static ConfigItem forceAllowChooseBrowser = addConfig(R.string.ForceAllowChooseBrowser, "ForceAllowChooseBrowser", configTypeBool, CHAT, false);
     public static ConfigItem patchAndCleanupLinks = addConfig(R.string.PatchAndCleanupLinks, "PatchAndCleanupLinks", configTypeBool, CHAT, false);
     public static ConfigItem showSharedMediaOnOpeningProfile = addConfig(R.string.ShowSharedMediaOnOpeningProfile, "ShowSharedMediaOnOpeningProfile", configTypeBool, GENERAL, false);
@@ -401,6 +403,11 @@ public class NekoConfig {
     }
 
     public static void checkMigrate(boolean force) {
+        String title = customTitleText.String();
+        if (isAppName(title) && !title.equals(getAppName())) {
+            customTitleText.setConfigString(getAppName());
+        }
+
         if (migrate030.Int() < 1) {
             // fix tablet mode not applied properly when tablet mode is already on by default
             if ((NekoConfig.tabletMode.Int() < 2 && SharedConfig.forceDisableTabletMode) ||
