@@ -296,4 +296,6 @@
     <string name="ProfileMenu">個人頁面選單</string>
     <string name="DataCleared">刪除完畢</string>
     <string name="ShowChannelMsgFwdCount">顯示頻道訊息被轉發次數</string>
+    <string name="EnhancedVideoBitrate">改善上傳影片畫質</string>
+    <string name="EnhancedVideoBitrateInfo">分享影片的畫質會變得更好, 但檔案大小將大幅增加</string>
 </resources>

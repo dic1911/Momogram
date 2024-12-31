@@ -296,4 +296,6 @@
     <string name="ProfileMenu">プロフィールメニュー</string>
     <string name="DataCleared">削除しました</string>
     <string name="ShowChannelMsgFwdCount">チャンネルメッセージの転送数を表示する</string>
+    <string name="EnhancedVideoBitrate">より良いアップロードビデオの画質</string>
+    <string name="EnhancedVideoBitrateInfo">大幅にファイルサイズが大きくなるが、より高画質で</string>
 </resources>

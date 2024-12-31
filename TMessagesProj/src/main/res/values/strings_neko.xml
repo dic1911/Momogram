@@ -298,4 +298,6 @@
     <string name="AutoCheckUpdate">Check for updates automatically</string>
     <string name="AutoCheckUpdateInfo">Found update version: %1$s</string>
     <string name="ShowChannelMsgFwdCount">Show channel message forward count</string>
+    <string name="EnhancedVideoBitrate">Enhanced shared video bitrate</string>
+    <string name="EnhancedVideoBitrateInfo">Better quality with significantly larger file size</string>
 </resources>

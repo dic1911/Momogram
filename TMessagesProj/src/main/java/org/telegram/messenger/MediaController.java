@@ -676,10 +676,12 @@ public class MediaController implements AudioManager.OnAudioFocusChangeListener,
         }
     };
 
-    public final static int VIDEO_BITRATE_1080 = 6800_000;
-    public final static int VIDEO_BITRATE_720 = 2621_440;
-    public final static int VIDEO_BITRATE_480 = 1000_000;
-    public final static int VIDEO_BITRATE_360 = 750_000;
+    public static int VIDEO_BITRATE_2160 = 28400_000;
+    public static int VIDEO_BITRATE_1440 = 14000_000;
+    public static int VIDEO_BITRATE_1080 = 6800_000;
+    public static int VIDEO_BITRATE_720 = 2621_440;
+    public static int VIDEO_BITRATE_480 = 1000_000;
+    public static int VIDEO_BITRATE_360 = 750_000;
 
     public final static String VIDEO_MIME_TYPE = "video/avc";
     public final static String AUDIO_MIME_TYPE = "audio/mp4a-latm";
@@ -5772,16 +5774,26 @@ public class MediaController implements AudioManager.OnAudioFocusChangeListener,
         float compressFactor;
         float minCompressFactor;
         int maxBitrate;
-        if (Math.min(height, width) >= 1080) {
-            maxBitrate = 6800_000;
+        int size = Math.min(height, width);
+        boolean betterBitrate = NekoConfig.enhancedVideoBitrate.Bool();
+        if (size >= 2160) {
+            VIDEO_BITRATE_2160 = maxBitrate = (betterBitrate ? 51200_000 : 28400_000);
             compressFactor = 1f;
             minCompressFactor = 1f;
-        } else if (Math.min(height, width) >= 720) {
-            maxBitrate = 3200_000;
+        } else if (size >= 1440) {
+            VIDEO_BITRATE_1440 = maxBitrate = (betterBitrate ? 24000_000 : 14000_000);
+            compressFactor = 1f;
+            minCompressFactor = 1f;
+        } else if (size >= 1080) {
+            VIDEO_BITRATE_1080 = maxBitrate = (betterBitrate ? 14000_000 : 6800_000);
+            compressFactor = 1f;
+            minCompressFactor = 1f;
+        } else if (size >= 720) {
+            VIDEO_BITRATE_720 = maxBitrate = (betterBitrate ? 6800_000 : 3200_000);
             compressFactor = 1.0f;
             minCompressFactor = 1.0f;
-        } else if (Math.min(height, width) >= 480) {
-            maxBitrate = 1000_000;
+        } else if (size >= 480) {
+            maxBitrate = (betterBitrate ? 2400_000 : 1000_000);
             compressFactor = 0.75f;
             minCompressFactor = 0.9f;
         } else {
