@@ -799,7 +799,7 @@ public class NekoConfig {
                             })
                             .setPositiveButton(LocaleController.getString(R.string.Send), (__, ___) -> {
                                 String timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd_HHmmss"));
-                                File cacheFile = new File(ApplicationLoader.applicationContext.getCacheDir(), timestamp + ".nekox-crash.txt");
+                                File cacheFile = new File(ApplicationLoader.applicationContext.getCacheDir(), timestamp + ".m0m0-crash.txt");
                                 FileUtil.writeUtf8String(errStr + getNekoConfigValuesAsString(), cacheFile);
                                 ShareUtil.shareFile(context, cacheFile);
                             })
