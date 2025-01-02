@@ -270,7 +270,7 @@
     <string name="AlwaysTranslateBeforeSend">Traducir siempre</string>
     <string name="AlwaysTranslateBeforeSendNote">Solo se conservará el texto de los mensajes reenviados</string>
     <string name="ChooseBestVideoQualityByDefault">Elige la mejor calidad de vídeo por defecto</string>
-    <string name="MapMobileDataSaverToRoaming">Utilizar la itinerancia preestablecida cuando el ahorro de datos está activado</string>
+    <string name="MapMobileDataSaverToRoaming">Usar ajuste de roaming predeterminado con ahorro de datos activado</string>
     <string name="KeepBlockedBotChatHistory">Mantener el historial de bots tras el bloqueo</string>
     <string name="DontSendStartCmdOnUnblockBot">No enviar/iniciar después de desbloquear</string>
     <string name="OverridePerformanceClass">Anular la clase de rendimiento del dispositivo</string>
@@ -288,13 +288,15 @@
     <string name="AutoCheckUpdateInfo">Versión de la actualización encontrada: %1$s</string>
     <string name="ProfileMenu">Menú del perfil</string>
     <string name="AlwaysLoadStickerSetFromServer">Cargar el conjunto de sticker desde el servidor al ver los detalles</string>
-    <string name="AutoAttemptInstantView">Intentar abrir la vista instantánea automáticamente cuando esté disponible</string>
+    <string name="AutoAttemptInstantView">Intentar abrir la vista rapida automáticamente cuando esté disponible</string>
     <string name="ResetIVFailDomainsConfirm">¡Se borrarán todos los datos de los errores de visualización instantánea almacenados previamente! ¿Continuar?</string>
     <string name="AutoCheckUpdate">Buscar actualizaciones automáticamente</string>
-    <string name="LoadingInstantView">Intentando cargar la vista instantánea…</string>
-    <string name="ResetIVFailDomains">Restablecer datos del error de la vista instantánea</string>
-    <string name="OpenExternalOnInstantViewFail">Utilizar el navegador externo cuando la vista instantánea no está disponible</string>
-    <string name="SaveIVFailDomains">No intente cargar la vista instantánea para las páginas fallidas previamente</string>
+    <string name="LoadingInstantView">Intentando cargar la vista rápida…</string>
+    <string name="ResetIVFailDomains">Restablecer datos del error de la vista rápida</string>
+    <string name="OpenExternalOnInstantViewFail">Utilizar el navegador externo cuando la vista rápida no está disponible</string>
+    <string name="SaveIVFailDomains">No intentar cargar la vista rápida para las páginas fallidas previamente</string>
     <string name="SpoilerOnAllMedia">Spoiler en todos los medios</string>
     <string name="DataCleared">Datos borrados</string>
+    <string name="BlacklistedQueryRemoved">La consulta/consultas deseleccionadas se ha eliminado de la lista negra.</string>
+    <string name="ShowChannelMsgFwdCount">Mostrar el recuento de reenvíos de mensajes del canal</string>
 </resources>

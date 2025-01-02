@@ -274,4 +274,27 @@
     <string name="OverridePerformanceClass">Pilihan kinerja perangkat</string>
     <string name="KeepBlockedBotChatHistory">Simpan riwayat bot setelah diblokir</string>
     <string name="DontSendStartCmdOnUnblockBot">Jangan kirim mulai setelah dibuka blokirnya</string>
+    <string name="AutoCheckUpdate">Periksa pembaruan secara otomatis</string>
+    <string name="AutoCheckUpdateInfo">Versi pembaruan yang ditemukan: %1$s</string>
+    <string name="ChatNameOverrideDesc">Gunakan Ganti nama di menu profil obrolan</string>
+    <string name="ChatNameOverrideMenu">Ganti nama</string>
+    <string name="AlwaysLoadStickerSetFromServer">Muat set stiker dari server saat melihat detail</string>
+    <string name="LoadingInstantView">Mencoba memuat tampilan instan…</string>
+    <string name="SaveIVFailDomains">Jangan mencoba memuat tampilan instan untuk situs yang sebelumnya gagal</string>
+    <string name="ResetIVFailDomains">Setel ulang data kegagalan tampilan instan</string>
+    <string name="SpoilerOnAllMedia">Spoiler pada semua media</string>
+    <string name="ProfileMenu">Menu profil</string>
+    <string name="DataCleared">Data dihapus</string>
+    <string name="MomoSettings">Pengaturan Momo</string>
+    <string name="CrashDialogMomoTitle">Momogram Eror!</string>
+    <string name="SmallerEmojisInChooser">Emoji yang lebih kecil di pemilih</string>
+    <string name="ChatNameOverride">Ganti nama obrolan</string>
+    <string name="NameAsTitleText">Gunakan nama sebagai teks judul</string>
+    <string name="EnableUnifiedPush">Gunakan UnifiedPush</string>
+    <string name="RestartApp">Mulai Ulang Aplikasi</string>
+    <string name="SetupUnifiedPush">Siapkan UnifiedPush</string>
+    <string name="AutoAttemptInstantView">Cobalah untuk membuka tampilan instan secara otomatis saat tersedia</string>
+    <string name="SetupUnifiedPushInfo">UnifiedPush diaktifkan, tetapi Anda harus menginstal setidaknya satu distributor agar dapat berfungsi.</string>
+    <string name="OpenExternalOnInstantViewFail">Gunakan browser eksternal saat tampilan instan tidak tersedia</string>
+    <string name="ResetIVFailDomainsConfirm">Semua data kegagalan tampilan instan yang disimpan sebelumnya akan dihapus! Lanjutkan?</string>
 </resources>
