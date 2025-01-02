@@ -285,4 +285,11 @@
     <string name="ChatNameOverride">Sohbet adının üzerine yaz</string>
     <string name="MomoSettings">Momo Ayarları</string>
     <string name="ChatNameOverrideMenu">İsmin üzerine yaz</string>
+    <string name="SaveIVFailDomains">Geçmişte hızlı görüntüleme yüklemesi başarısız olan siteler için tekrar deneme yapma</string>
+    <string name="ResetIVFailDomains">Hızlı görüntüleme başarısızlık listesini sıfırla</string>
+    <string name="AutoAttemptInstantView">Mevcutsa otomatik olarak hızlı görüntülemeyi açmaya çalış</string>
+    <string name="AlwaysLoadStickerSetFromServer">Çıkartma paketini görüntülerken detayları sunucudan yükle</string>
+    <string name="LoadingInstantView">Hızlı görüntüleme yüklenmeye çalışılıyor…</string>
+    <string name="BlacklistedQueryRemoved">Seçili olmayan sorgular karalisteden kaldırıldı.</string>
+    <string name="OpenExternalOnInstantViewFail">Hızlı görüntüleme mevcut değilken harici tarayıcı kullan</string>
 </resources>
