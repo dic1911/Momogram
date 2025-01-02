@@ -4370,9 +4370,9 @@ public class PhotoViewer implements NotificationCenter.NotificationCenterDelegat
         builder.setPositiveButton(getString("OK", R.string.OK), null);
         boolean alreadyDownloading = currentMessageObject != null && currentMessageObject.isVideo() && FileLoader.getInstance(currentMessageObject.currentAccount).isLoadingFile(currentFileNames[0]);
         if (alreadyDownloading) {
-            builder.setMessage(getString("PleaseStreamDownload", R.string.PleaseStreamDownload));
+            builder.setMessage(getString(R.string.PleaseStreamDownload));
         } else {
-            builder.setMessage(getString("PleaseDownload", R.string.PleaseDownload));
+            builder.setMessage(getString(R.string.PleaseDownload));
         }
         showAlertDialog(builder);
     }
