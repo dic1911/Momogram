@@ -32,6 +32,7 @@ import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.Parcelable;
 import android.text.Editable;
 import android.text.InputType;
@@ -105,6 +106,7 @@ import org.telegram.ui.LaunchActivity;
 import org.telegram.ui.PhotoViewer;
 import org.telegram.ui.PremiumPreviewFragment;
 import org.telegram.ui.ProfileActivity;
+import org.telegram.ui.Stars.StarsReactionsSheet;
 import org.telegram.ui.Stories.recorder.StoryEntry;
 
 import java.io.File;
@@ -175,6 +177,7 @@ public class StickersAlert extends BottomSheet implements NotificationCenter.Not
     private boolean isEditModeEnabled;
     private int menu_archive = 6;
     private int menu_qrcode = 7;
+    private int menu_owner = 8;
     public TLRPC.TL_messages_stickerSet stickerSet;
     private TLRPC.Document selectedSticker;
     private SendMessagesHelper.ImportingSticker selectedStickerPath;
@@ -199,6 +202,8 @@ public class StickersAlert extends BottomSheet implements NotificationCenter.Not
     private boolean showTooltipWhenToggle = true;
     private int buttonTextColorKey;
     private final StickersShaker stickersShaker = new StickersShaker();
+
+    private long ownerId = -1L;
 
     private ContentPreviewViewer.ContentPreviewViewerDelegate previewDelegate = new ContentPreviewViewer.ContentPreviewViewerDelegate() {
         @Override
@@ -440,7 +445,7 @@ public class StickersAlert extends BottomSheet implements NotificationCenter.Not
                 } else if (vector.objects.size() == 1) {
                     TLRPC.StickerSetCovered set = (TLRPC.StickerSetCovered) vector.objects.get(0);
                     inputStickerSet = new TLRPC.TL_inputStickerSetID();
-                    inputStickerSet.id = set.set.id;
+                    getOwnerId(inputStickerSet.id = set.set.id);
                     inputStickerSet.access_hash = set.set.access_hash;
                     loadStickerSet(false);
                 } else {
@@ -478,7 +483,7 @@ public class StickersAlert extends BottomSheet implements NotificationCenter.Not
         } else if (vector.objects.size() == 1) {
             TLRPC.StickerSetCovered set = (TLRPC.StickerSetCovered) vector.objects.get(0);
             inputStickerSet = new TLRPC.TL_inputStickerSetID();
-            inputStickerSet.id = set.set.id;
+            getOwnerId(inputStickerSet.id = set.set.id);
             inputStickerSet.access_hash = set.set.access_hash;
             loadStickerSet(false);
             init(context);
@@ -1033,7 +1038,7 @@ public class StickersAlert extends BottomSheet implements NotificationCenter.Not
                     dismiss();
                     TLRPC.TL_inputStickerSetID inputStickerSetID = new TLRPC.TL_inputStickerSetID();
                     inputStickerSetID.access_hash = pack.set.access_hash;
-                    inputStickerSetID.id = pack.set.id;
+                    getOwnerId(inputStickerSetID.id = pack.set.id);
                     StickersAlert alert = new StickersAlert(parentActivity, parentFragment, inputStickerSetID, null, null, resourcesProvider, false);
                     if (masterDismissListener != null) {
                         alert.setOnDismissListener(di -> masterDismissListener.run());
@@ -1131,6 +1136,7 @@ public class StickersAlert extends BottomSheet implements NotificationCenter.Not
         optionsButton.addSubItem(2, R.drawable.baseline_link_24, LocaleController.getString(R.string.CopyLink));
         optionsButton.addSubItem(menu_archive, R.drawable.baseline_archive_24, LocaleController.getString(R.string.Archive));
         optionsButton.addSubItem(menu_qrcode, R.drawable.wallet_qr, LocaleController.getString(R.string.ShareQRCode));
+        optionsButton.addSubItem(menu_owner, R.drawable.msg_openprofile, LocaleController.getString(R.string.ChannelCreator));
 
         optionsButton.setOnClickListener(v -> {
             checkOptions();
@@ -1445,6 +1451,35 @@ public class StickersAlert extends BottomSheet implements NotificationCenter.Not
                 }
             }
             ProxyUtil.showQrDialog(getContext(), stickersUrl);
+        } else if (id == menu_owner) {
+            if (ownerId == -1L) {
+                getOwnerId(stickerSet.set.id);
+                if (ownerId == -1L) {
+                    AndroidUtilities.runOnUIThread(() -> BulletinFactory.of(parentFragment)
+                            .createSimpleBulletin(R.raw.error, LocaleController.getString(R.string.DialogNotAvailable)).show(), 250);
+                    dismiss();
+                    return;
+                }
+            }
+            TLRPC.User user = MessagesController.getInstance(currentAccount).getUser(ownerId);
+            if (user != null) {
+                Bundle args = new Bundle();
+                args.putLong("user_id", ownerId);
+                if (ownerId == UserConfig.getInstance(currentAccount).getClientUserId()) {
+                    args.putBoolean("my_profile", true);
+                }
+                parentFragment.presentFragment(new ProfileActivity(args));
+                dismiss();
+            } else {
+                FileLog.w(String.format("%d is not a known user, copy id instead", ownerId));
+                if (AndroidUtilities.addToClipboard(String.valueOf(ownerId)) && AndroidUtilities.shouldShowClipboardToast()) {
+                    AndroidUtilities.runOnUIThread(() ->
+                            BulletinFactory.of(parentFragment).createSimpleBulletin(R.raw.copy,
+                                LocaleController.formatString(R.string.ExactTextCopied, ownerId)).show(),
+                    250);
+                    dismiss();
+                }
+            }
         }
     }
 
@@ -2470,6 +2505,16 @@ public class StickersAlert extends BottomSheet implements NotificationCenter.Not
             return;
         }
         super.onBackPressed();
+    }
+
+    private void getOwnerId(long setId) {
+        ownerId = setId >> 32;
+        if ((setId >> 16 & 0xff) == 0x3f) {
+            ownerId |= 0x80000000L;
+        }
+        if (((setId >> 24) & 0xff) != 0) {
+            ownerId += 0x100000000L;
+        }
     }
 
     private boolean ignoreMasterDismiss;
