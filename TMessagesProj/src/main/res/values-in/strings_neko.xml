@@ -297,4 +297,6 @@
     <string name="SetupUnifiedPushInfo">UnifiedPush diaktifkan, tetapi Anda harus menginstal setidaknya satu distributor agar dapat berfungsi.</string>
     <string name="OpenExternalOnInstantViewFail">Gunakan browser eksternal saat tampilan instan tidak tersedia</string>
     <string name="ResetIVFailDomainsConfirm">Semua data kegagalan tampilan instan yang disimpan sebelumnya akan dihapus! Lanjutkan?</string>
+    <string name="ShowChannelMsgFwdCount">Tampilkan jumlah penerusan pesan saluran</string>
+    <string name="BlacklistedQueryRemoved">Kueri yang tidak dipilih telah dihapus dari daftar hitam.</string>
 </resources>
