@@ -57,6 +57,7 @@ import org.telegram.ui.ActionBar.AlertDialog;
 import org.telegram.ui.ActionBar.AlertDialogDecor;
 import org.telegram.ui.ActionBar.Theme;
 
+import java.text.MessageFormat;
 import java.util.List;
 import java.util.Locale;
 
@@ -185,6 +186,26 @@ public class EditTextCaption extends EditTextBoldCursor {
         TextStyleSpan.TextStyleRun run = new TextStyleSpan.TextStyleRun();
         run.flags |= TextStyleSpan.FLAG_STYLE_UNDERLINE;
         applyTextStyleToSelection(new TextStyleSpan(run));
+    }
+
+    public void makeSelectedCode() {
+        TextStyleSpan.TextStyleRun run = new TextStyleSpan.TextStyleRun();
+        run.flags |= TextStyleSpan.FLAG_STYLE_CODE;
+        applyTextStyleToSelection(new TextStyleSpan(run));
+        Editable txt = getText();
+        int start = getSelectionStart(), end = getSelectionEnd(), len = txt.length();
+        String fmt;
+        if (start == 0 && end == len) {
+            fmt = "{0}```\n{1}```{2}";
+        } else if (start == 0) {
+            fmt = "{0}```\n{1}```\n{2}";
+        } else if (end == (len - 1)) {
+            fmt = "{0}\n```\n{1}```";
+        } else {
+            fmt = "{0}\n```\n{1}```\n{2}";
+        }
+        setText(MessageFormat.format(fmt, txt.subSequence(0, start),
+                txt.subSequence(start, end), txt.subSequence(end, len)));
     }
 
     private String replaceAt(String origin, int start, int end, String translation) {
@@ -705,6 +726,9 @@ public class EditTextCaption extends EditTextBoldCursor {
         } else if (itemId == R.id.menu_quote) {
             makeSelectedQuote();
             return true;
+        } else if (itemId == R.id.menu_code) {
+            makeSelectedCode();
+            return true;
         }
         return false;
     }
@@ -815,6 +839,7 @@ public class EditTextCaption extends EditTextBoldCursor {
             infoCompat.addAction(new AccessibilityNodeInfoCompat.AccessibilityActionCompat(R.id.menu_bold, LocaleController.getString(R.string.Bold)));
             infoCompat.addAction(new AccessibilityNodeInfoCompat.AccessibilityActionCompat(R.id.menu_italic, LocaleController.getString(R.string.Italic)));
             infoCompat.addAction(new AccessibilityNodeInfoCompat.AccessibilityActionCompat(R.id.menu_mono, LocaleController.getString(R.string.Mono)));
+            infoCompat.addAction(new AccessibilityNodeInfoCompat.AccessibilityActionCompat(R.id.menu_code, LocaleController.getString(R.string.MarkdownCode)));
             infoCompat.addAction(new AccessibilityNodeInfoCompat.AccessibilityActionCompat(R.id.menu_strike, LocaleController.getString(R.string.Strike)));
             infoCompat.addAction(new AccessibilityNodeInfoCompat.AccessibilityActionCompat(R.id.menu_underline, LocaleController.getString(R.string.Underline)));
             infoCompat.addAction(new AccessibilityNodeInfoCompat.AccessibilityActionCompat(R.id.menu_link, LocaleController.getString(R.string.CreateLink)));

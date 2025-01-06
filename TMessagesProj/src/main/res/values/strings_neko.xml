@@ -300,4 +300,5 @@
     <string name="ShowChannelMsgFwdCount">Show channel message forward count</string>
     <string name="EnhancedVideoBitrate">Enhanced shared video bitrate</string>
     <string name="EnhancedVideoBitrateInfo">Better quality with significantly larger file size</string>
+    <string name="MarkdownCode">Code</string>
 </resources>

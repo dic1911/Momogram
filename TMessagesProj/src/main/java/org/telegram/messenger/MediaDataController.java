@@ -6799,6 +6799,7 @@ public class MediaDataController extends BaseController {
                     if (textStyleRun == null) {
                         continue;
                     }
+                    boolean isCode = ((textStyleRun.flags & TextStyleSpan.FLAG_STYLE_CODE) != 0);
                     int spanStart = editable.getSpanStart(oldSpan);
                     int spanEnd = editable.getSpanEnd(oldSpan);
                     editable.removeSpan(oldSpan);

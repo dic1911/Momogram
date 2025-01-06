@@ -298,4 +298,5 @@
     <string name="ShowChannelMsgFwdCount">チャンネルメッセージの転送数を表示する</string>
     <string name="EnhancedVideoBitrate">より良いアップロードビデオの画質</string>
     <string name="EnhancedVideoBitrateInfo">大幅にファイルサイズが大きくなるが、より高画質で</string>
+    <string name="MarkdownCode">コード</string>
 </resources>
