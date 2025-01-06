@@ -301,6 +301,7 @@ public class NekoConfig {
     public static ConfigItem saveIVFailDomains = addConfig(R.string.SaveIVFailDomains , "SaveIVFailDomains", configTypeBool, CHAT, true);
     public static ConfigItem showChannelMsgFwdCount = addConfig(R.string.ShowChannelMsgFwdCount , "ShowChannelMsgFwdCount", configTypeBool, CHAT, true);
     public static ConfigItem enhancedVideoBitrate = addConfig(R.string.EnhancedVideoBitrate , "EnhancedVideoBitrate", configTypeBool, CHAT, false);
+    public static ConfigItem unarchiveOnSwipe = addConfig(R.string.UnarchiveOnSwipe , "UnarchiveOnSwipe", configTypeBool, GENERAL, true);
 
     public static ConfigItem profileShowLinkedChat = addConfig("profileShowLinkedChat", configTypeBool, CHAT, true);
     public static ConfigItem profileShowAddToFolder = addConfig("profileShowAddToFolder", configTypeBool, CHAT, true);

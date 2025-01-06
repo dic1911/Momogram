@@ -1387,7 +1387,7 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
                             ) && (
                             initialDialogsType == DIALOGS_TYPE_FORWARD ||
                                     SharedConfig.getChatSwipeAction(currentAccount) == SwipeGestureSettingsView.SWIPE_GESTURE_FOLDERS ||
-                                    SharedConfig.getChatSwipeAction(currentAccount) == SwipeGestureSettingsView.SWIPE_GESTURE_ARCHIVE &&
+                                    SharedConfig.getChatSwipeAction(currentAccount) == SwipeGestureSettingsView.SWIPE_GESTURE_ARCHIVE && NekoConfig.unarchiveOnSwipe.Bool() &&
                                             viewPages[0] != null && (viewPages[0].dialogsAdapter.getDialogsType() == 7 || viewPages[0].dialogsAdapter.getDialogsType() == 8))
             ) {
                 if (ev != null) {
@@ -2501,6 +2501,10 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
                     }
                     swipeFolderBack = false;
                     swipingFolder = (canSwipeBack && !DialogObject.isFolderDialogId(dialogCell.getDialogId())) || (SharedConfig.archiveHidden && DialogObject.isFolderDialogId(dialogCell.getDialogId()));
+                    if (folderId == 1 && !NekoConfig.unarchiveOnSwipe.Bool()) {
+                        dialogCell.setSliding(false);
+                        return 0;
+                    }
                     dialogCell.setSliding(true);
                     return makeMovementFlags(0, ItemTouchHelper.LEFT);
                 }

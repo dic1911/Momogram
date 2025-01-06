@@ -299,4 +299,5 @@
     <string name="EnhancedVideoBitrate">改善上傳影片畫質</string>
     <string name="EnhancedVideoBitrateInfo">分享影片的畫質會變得更好, 但檔案大小將大幅增加</string>
     <string name="MarkdownCode">程式碼</string>
+    <string name="UnarchiveOnSwipe">使用滑動解除封存對話</string>
 </resources>

@@ -301,4 +301,5 @@
     <string name="EnhancedVideoBitrate">Enhanced shared video bitrate</string>
     <string name="EnhancedVideoBitrateInfo">Better quality with significantly larger file size</string>
     <string name="MarkdownCode">Code</string>
+    <string name="UnarchiveOnSwipe">Unarchive chat on swipe</string>
 </resources>

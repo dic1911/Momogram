@@ -144,6 +144,7 @@ public class NekoGeneralSettingsActivity extends BaseFragment {
     private final AbstractConfigCell headerFolder = cellGroup.appendCell(new ConfigCellHeader(LocaleController.getString(R.string.Folder)));
     private final AbstractConfigCell showTabsOnForwardRow = cellGroup.appendCell(new ConfigCellTextCheck(NekoConfig.showTabsOnForward));
     private final AbstractConfigCell openArchiveOnPullRow = cellGroup.appendCell(new ConfigCellTextCheck(NekoConfig.openArchiveOnPull));
+    private final AbstractConfigCell unarchiveOnSwipeRow = cellGroup.appendCell(new ConfigCellTextCheck(NekoConfig.unarchiveOnSwipe));
     private final AbstractConfigCell ignoreMutedCountRow = cellGroup.appendCell(new ConfigCellTextCheck(NekoConfig.ignoreMutedCount));
     private final AbstractConfigCell ignoreFilterEmoticonUpdateRow = cellGroup.appendCell(new ConfigCellTextCheck(NekoConfig.ignoreFilterEmoticonUpdate));
     private final AbstractConfigCell hideUnreadCounterOnFolderTabsRow = cellGroup.appendCell(new ConfigCellTextCheck(NekoConfig.hideUnreadCounterOnFolderTabs));
