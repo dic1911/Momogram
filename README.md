@@ -72,9 +72,10 @@ Built with unique customization and features, get ready and let Momogram take yo
 
 Momogram has basic UnifiedPush support(enabled by default), but you need to install distributor in order to get it working.
 
-Here are two easy choices for you:
+Here are 3 easy choices for you:
 
 - [ntfy](https://github.com/binwiederhier/ntfy-android/releases/latest)
+- [Sunup](https://unifiedpush.org/users/distributors/sunup/)
 - [UP-FCM Distributor (relies on Google, but faster)](https://codeberg.org/UnifiedPush/fcm-distributor/releases)
 
 Just choose one of the distributor from above, install and open it at least once to finish setup, then choose it in the notification settings page of Momogram and you're good to go!
