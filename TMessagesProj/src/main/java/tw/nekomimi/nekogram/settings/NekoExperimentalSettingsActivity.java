@@ -78,7 +78,6 @@ public class NekoExperimentalSettingsActivity extends BaseFragment {
 
 //    private final AbstractConfigCell smoothKeyboardRow = cellGroup.appendCell(new ConfigCellTextCheck(NekoConfig.smoothKeyboard));
     private final AbstractConfigCell enhancedFileLoaderRow = cellGroup.appendCell(new ConfigCellTextCheck(NekoConfig.enhancedFileLoader));
-    private final AbstractConfigCell mediaPreviewRow = cellGroup.appendCell(new ConfigCellTextCheck(NekoConfig.mediaPreview));
     private final AbstractConfigCell proxyAutoSwitchRow = cellGroup.appendCell(new ConfigCellTextCheck(NekoConfig.proxyAutoSwitch));
     private final AbstractConfigCell disableFilteringRow = cellGroup.appendCell(new ConfigCellCustom(CellGroup.ITEM_TYPE_TEXT_CHECK, true));
     //    private final NekomuraTGCell ignoreContentRestrictionsRow = addNekomuraTGCell(nkmrCells.new NekomuraTGTextCheck(NekoConfig.ignoreContentRestrictions, LocaleController.getString("IgnoreContentRestrictionsNotice")));
@@ -87,13 +86,10 @@ public class NekoExperimentalSettingsActivity extends BaseFragment {
     private final AbstractConfigCell enableStickerPinRow = cellGroup.appendCell(new ConfigCellTextCheck(NekoConfig.enableStickerPin, LocaleController.getString(R.string.EnableStickerPinAbout)));
     private final AbstractConfigCell useMediaStreamInVoipRow = cellGroup.appendCell(new ConfigCellTextCheck(NekoConfig.useMediaStreamInVoip));
     private final AbstractConfigCell customAudioBitrateRow = cellGroup.appendCell(new ConfigCellCustom(CellGroup.ITEM_TYPE_TEXT_SETTINGS_CELL, true));
-    private final AbstractConfigCell increasedMaxPhotoResolutionRow = cellGroup.appendCell(new ConfigCellTextCheck(NekoConfig.increasedMaxPhotoResolution));
     private final AbstractConfigCell fasterReconnectHackRow = cellGroup.appendCell(new ConfigCellTextCheck(NekoConfig.fasterReconnectHack, LocaleController.getString(R.string.FasterReconnectHackAbout)));
     private final AbstractConfigCell autoArchiveAndMuteRow = cellGroup.appendCell(new ConfigCellTextCheck(NekoConfig.autoArchiveAndMute, LocaleController.getString(R.string.AutoArchiveAndMuteAbout)));
     private final AbstractConfigCell autoArchiveAndMuteNoCommonGroupOnlyRow = cellGroup.appendCell(new ConfigCellTextCheck(NekoConfig.autoArchiveAndMuteNoCommonGroupOnly, LocaleController.getString(R.string.AutoArchiveAndMuteNoCommonGroupOnlyAbout)));
     private final AbstractConfigCell removePremiumAnnoyanceRow = cellGroup.appendCell(new ConfigCellTextCheck(NekoConfig.removePremiumAnnoyance, LocaleController.getString(R.string.RemovePremiumAnnoyanceDesc)));
-    private final AbstractConfigCell autoTranslateRow = cellGroup.appendCell(new ConfigCellTextCheck(NekoConfig.autoTranslate));
-    private final AbstractConfigCell autoTranslateProviderRow = cellGroup.appendCell(new ConfigCellTextCheck(NekoConfig.useCustomProviderForAutoTranslate));
     private final AbstractConfigCell chatListFontSizeFollowChatRow = cellGroup.appendCell(new ConfigCellTextCheck(NekoConfig.chatListFontSizeFollowChat));
     private final AbstractConfigCell divider0 = cellGroup.appendCell(new ConfigCellDivider());
 

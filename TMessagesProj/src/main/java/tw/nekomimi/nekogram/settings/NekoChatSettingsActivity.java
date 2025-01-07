@@ -74,6 +74,9 @@ public class NekoChatSettingsActivity extends BaseFragment implements Notificati
 
     // Chats
     private final AbstractConfigCell header1 = cellGroup.appendCell(new ConfigCellHeader(LocaleController.getString(R.string.Chat)));
+
+    private final AbstractConfigCell autoTranslateRow = cellGroup.appendCell(new ConfigCellTextCheck(NekoConfig.autoTranslate));
+    private final AbstractConfigCell autoTranslateProviderRow = cellGroup.appendCell(new ConfigCellTextCheck(NekoConfig.useCustomProviderForAutoTranslate));
     private final AbstractConfigCell unreadBadgeOnBackButton = cellGroup.appendCell(new ConfigCellTextCheck(NekoConfig.unreadBadgeOnBackButton));
     private final AbstractConfigCell sendCommentAfterForwardRow = cellGroup.appendCell(new ConfigCellTextCheck(NekoConfig.sendCommentAfterForward));
     private final AbstractConfigCell smallerEmojiInChooserRow = cellGroup.appendCell(new ConfigCellTextCheck(NekoConfig.smallerEmojiInChooser));
@@ -81,6 +84,7 @@ public class NekoChatSettingsActivity extends BaseFragment implements Notificati
     private final AbstractConfigCell disableLinkPreviewByDefaultRow = cellGroup.appendCell(new ConfigCellTextCheck(NekoConfig.disableLinkPreviewByDefault, LocaleController.getString(R.string.DisableLinkPreviewByDefaultNotice)));
     private final AbstractConfigCell takeGIFasVideoRow = cellGroup.appendCell(new ConfigCellTextCheck(NekoConfig.takeGIFasVideo));
     private final AbstractConfigCell chooseBestVideoQualityByDefaultRow = cellGroup.appendCell(new ConfigCellTextCheck(NekoConfig.chooseBestVideoQualityByDefault));
+    private final AbstractConfigCell mediaPreviewRow = cellGroup.appendCell(new ConfigCellTextCheck(NekoConfig.mediaPreview));
     private final AbstractConfigCell showSeconds = cellGroup.appendCell(new ConfigCellTextCheck(NekoConfig.showSeconds));
     private final AbstractConfigCell showBottomActionsWhenSelectingRow = cellGroup.appendCell(new ConfigCellTextCheck(NekoConfig.showBottomActionsWhenSelecting));
     private final AbstractConfigCell labelChannelUserRow = cellGroup.appendCell(new ConfigCellTextCheck(NekoConfig.labelChannelUser, LocaleController.getString(R.string.labelChannelUserDetails)));
@@ -122,6 +126,8 @@ public class NekoChatSettingsActivity extends BaseFragment implements Notificati
     private final AbstractConfigCell hideOriginalTextAfterTranslateRow = cellGroup.appendCell(new ConfigCellTextCheck(NekoConfig.hideOriginalTextAfterTranslate));
     private final AbstractConfigCell autoSendMessageIfBlockedBySlowModeRow = cellGroup.appendCell(new ConfigCellTextCheck(NekoConfig.autoSendMessageIfBlockedBySlowMode, LocaleController.getString(R.string.AutoSendMessageIfBlockedBySlowModeDesc)));
     private final AbstractConfigCell replyAsQuoteByDefaultRow = cellGroup.appendCell(new ConfigCellTextCheck(NekoConfig.replyAsQuoteByDefault));
+
+    private final AbstractConfigCell increasedMaxPhotoResolutionRow = cellGroup.appendCell(new ConfigCellTextCheck(NekoConfig.increasedMaxPhotoResolution));
     private final AbstractConfigCell enhancedVideoBitrateRow = cellGroup.appendCell(new ConfigCellTextCheck(NekoConfig.enhancedVideoBitrate, LocaleController.getString(R.string.EnhancedVideoBitrateInfo)));
     private final AbstractConfigCell dividerInteractions = cellGroup.appendCell(new ConfigCellDivider());
 
