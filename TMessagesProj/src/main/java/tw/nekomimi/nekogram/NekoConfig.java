@@ -170,8 +170,6 @@ public class NekoConfig {
     public static ConfigItem disableAppBarShadow = addConfig(R.string.DisableAppBarShadow, "DisableAppBarShadow", configTypeBool, GENERAL, false);
     public static ConfigItem mediaPreview = addConfig(R.string.MediaPreview, "MediaPreview", configTypeBool, CHAT, true);
 
-    public static ConfigItem proxyAutoSwitch = addConfig(R.string.ProxyAutoSwitch, "ProxyAutoSwitch", configTypeBool, EXPERIMENTAL, false);
-
     public static ConfigItem usePersianCalendar = addConfig(R.string.UsePersiancalendar, "UsePersiancalendar", configTypeBool, GENERAL, false);
     public static ConfigItem displayPersianCalendarByLatin = addConfig(R.string.DisplayPersianCalendarByLatin, "DisplayPersianCalendarByLatin", configTypeBool, GENERAL, false);
     public static ConfigItem openPGPApp = addConfig(R.string.OpenPGPApp, "OpenPGPApp", configTypeString, GENERAL, "");
@@ -577,9 +575,6 @@ public class NekoConfig {
             disableAppBarShadow.setConfigBool(preferences.getBoolean("disableAppBarShadow", false));
         if (preferences.contains("mediaPreview"))
             mediaPreview.setConfigBool(preferences.getBoolean("mediaPreview", true));
-
-        if (preferences.contains("proxy_auto_switch"))
-            proxyAutoSwitch.setConfigBool(preferences.getBoolean("proxy_auto_switch", false));
 
         if (preferences.contains("openPGPApp"))
             openPGPApp.setConfigString(preferences.getString("openPGPApp", ""));
