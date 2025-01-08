@@ -55,6 +55,7 @@ import org.telegram.ui.Cells.TextCheckCell;
 import org.telegram.ui.Cells.TextDetailSettingsCell;
 import org.telegram.ui.Cells.TextInfoPrivacyCell;
 import org.telegram.ui.Cells.TextSettingsCell;
+import org.telegram.ui.Components.AlertsCreator;
 import org.telegram.ui.Components.BulletinFactory;
 import org.telegram.ui.Components.LayoutHelper;
 import org.telegram.ui.Components.RecyclerListView;
@@ -99,6 +100,11 @@ public class NekoGeneralSettingsActivity extends BaseFragment {
     private final AbstractConfigCell avatarBackgroundBlurRow = cellGroup.appendCell(new ConfigCellTextCheck(NekoConfig.avatarBackgroundBlur));
     private final AbstractConfigCell avatarBackgroundDarkenRow = cellGroup.appendCell(new ConfigCellTextCheck(NekoConfig.avatarBackgroundDarken));
     private final AbstractConfigCell hidePhoneRow = cellGroup.appendCell(new ConfigCellTextCheck(NekoConfig.hidePhone));
+    private final AbstractConfigCell generateMonetThemeRow = cellGroup.appendCell(new ConfigCellSelectBox(LocaleController.getString(R.string.GenerateMonetTheme), null, null, () -> {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            AlertsCreator.createMonetThemeDialog(getParentActivity()).show();
+        }
+    }));
     private final AbstractConfigCell checkUpdateRow = cellGroup.appendCell(new ConfigCellTextCheck(NekoConfig.checkUpdate));
     private final AbstractConfigCell divider0 = cellGroup.appendCell(new ConfigCellDivider());
 
@@ -511,6 +517,8 @@ public class NekoGeneralSettingsActivity extends BaseFragment {
 
         restartTooltip = new UndoView(context);
         frameLayout.addView(restartTooltip, LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, LayoutHelper.WRAP_CONTENT, Gravity.BOTTOM | Gravity.LEFT, 8, 0, 8, 8));
+
+        if (Build.VERSION.SDK_INT < 31) cellGroup.rows.remove(generateMonetThemeRow);
 
         if (scrollToIndex > -1) {
             AndroidUtilities.runOnUIThread(() -> listView.post(() -> {

@@ -67,6 +67,8 @@ import androidx.annotation.RawRes;
 import androidx.annotation.RequiresApi;
 import androidx.core.util.Consumer;
 
+import com.c3r5b8.telegram_monet.MonetThemeCreator;
+
 import org.telegram.messenger.AccountInstance;
 import org.telegram.messenger.AndroidUtilities;
 import org.telegram.messenger.ApplicationLoader;
@@ -107,6 +109,7 @@ import org.telegram.ui.CacheControlActivity;
 import org.telegram.ui.Cells.AccountSelectCell;
 import org.telegram.ui.Cells.CheckBoxCell;
 import org.telegram.ui.Cells.RadioColorCell;
+import org.telegram.ui.Cells.TextCheckCell;
 import org.telegram.ui.Cells.TextColorCell;
 import org.telegram.ui.ChatActivity;
 import org.telegram.ui.Components.Premium.LimitReachedBottomSheet;
@@ -154,6 +157,54 @@ public class AlertsCreator {
                 .setTitle(LocaleController.getString(R.string.ForgotPasscode))
                 .setMessage(LocaleController.getString(R.string.ForgotPasscodeInfo))
                 .setPositiveButton(LocaleController.getString(R.string.Close), null)
+                .create();
+    }
+
+    @RequiresApi(31)
+    public static Dialog createMonetThemeDialog(Context ctx) {
+        LinearLayout layout = new LinearLayout(ctx);
+        TextCheckCell isLight = new TextCheckCell(ctx),
+                isAmoled = new TextCheckCell(ctx),
+                isGradient = new TextCheckCell(ctx),
+                isAvatarGradient = new TextCheckCell(ctx),
+                isNicknameColorful = new TextCheckCell(ctx),
+                isAlterOutColor = new TextCheckCell(ctx);
+
+        isLight.setTextAndCheck(LocaleController.getString(R.string.MonetLightMode), false, false);
+        isLight.setOnClickListener((__) -> isLight.setChecked(!isLight.getCheckBox().isChecked()));
+        isAmoled.setTextAndCheck(LocaleController.getString(R.string.MonetAmoled), false, true);
+        isAmoled.setOnClickListener((__) -> isAmoled.setChecked(!isAmoled.getCheckBox().isChecked()));
+        isGradient.setTextAndCheck(LocaleController.getString(R.string.MonetGradient), false, false);
+        isGradient.setOnClickListener((__) -> isGradient.setChecked(!isGradient.getCheckBox().isChecked()));
+        isAvatarGradient.setTextAndCheck(LocaleController.getString(R.string.MonetAvatarGradient), false, false);
+        isAvatarGradient.setOnClickListener((__) -> isAvatarGradient.setChecked(!isAvatarGradient.getCheckBox().isChecked()));
+        isNicknameColorful.setTextAndCheck(LocaleController.getString(R.string.MonetNickname), false, false);
+        isNicknameColorful.setOnClickListener((__) -> isNicknameColorful.setChecked(!isNicknameColorful.getCheckBox().isChecked()));
+        isAlterOutColor.setTextAndCheck(LocaleController.getString(R.string.MonetAlterOut), false, false);
+        isAlterOutColor.setOnClickListener((__) -> isAlterOutColor.setChecked(!isAlterOutColor.getCheckBox().isChecked()));
+
+        layout.setOrientation(LinearLayout.VERTICAL);
+        layout.addView(isLight);
+        layout.addView(isAmoled);
+        layout.addView(isGradient);
+        layout.addView(isAvatarGradient);
+        layout.addView(isNicknameColorful);
+        layout.addView(isAlterOutColor);
+
+        return new AlertDialog.Builder(ctx)
+                .setTitle(LocaleController.getString(R.string.GenerateMonetTheme))
+                .setView(layout)
+                .setPositiveButton(LocaleController.getString(R.string.Proceed), (__, ___) -> {
+                    MonetThemeCreator.INSTANCE.createTheme(
+                            ctx,
+                            isLight.getCheckBox().isChecked(),
+                            isAmoled.getCheckBox().isChecked(),
+                            isGradient.getCheckBox().isChecked(),
+                            isAvatarGradient.getCheckBox().isChecked(),
+                            isNicknameColorful.getCheckBox().isChecked(),
+                            isAlterOutColor.getCheckBox().isChecked()
+                    );
+                })
                 .create();
     }
 

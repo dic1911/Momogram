@@ -204,4 +204,11 @@
     <string name="CustomApiHash">Custom API hash</string>
     <string name="AllowDupLogin">Allow login to existing account(s)</string>
     <string name="AllowDupLoginInfo">This can causes various issues, make sure you only keep one of the sessions after the work is done.</string>
+    <string name="GenerateMonetTheme">Generate Monet theme</string>
+    <string name="MonetLightMode">Light</string>
+    <string name="MonetAmoled">AMOLED</string>
+    <string name="MonetGradient">Gradient</string>
+    <string name="MonetAvatarGradient">Gradient for avatars</string>
+    <string name="MonetNickname">Monet for nicknames</string>
+    <string name="MonetAlterOut">Alternative outgoing message style</string>
 </resources>

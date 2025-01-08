@@ -83,7 +83,7 @@ def nativeTarget = System.getenv("NATIVE_TARGET")
 if (nativeTarget == null) nativeTarget = ""
 
 android {
-    compileSdkVersion 34
+    compileSdk 34
     buildToolsVersion "34.0.0"
     ndkVersion rootProject.ext.ndkVersion
 
