@@ -1,5 +1,6 @@
 package tw.nekomimi.nekogram.database
 
+import android.util.Log
 import org.dizitart.no2.Nitrite
 import org.dizitart.no2.mvstore.MVStoreModule
 import org.telegram.messenger.ApplicationLoader
@@ -64,13 +65,10 @@ fun openMainSharedPreference(name: String, delete: Boolean = false): DbPref {
     }
 
     return try {
-
         mainSharedPreferencesDatabase.openSharedPreference(name)
-
     } catch (e: IllegalStateException) {
-
+        Log.e("030-db", "failed to open", e)
         openMainSharedPreference(name, true)
-
     }
 
 }
