@@ -209,6 +209,7 @@ import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
 import kotlin.Unit;
 import kotlin.text.StringsKt;
+import tw.nekomimi.nekogram.NekoXConfig;
 import tw.nekomimi.nekogram.ui.BottomBuilder;
 import tw.nekomimi.nekogram.NekoConfig;
 import tw.nekomimi.nekogram.cc.CCConverter;
@@ -218,7 +219,6 @@ import tw.nekomimi.nekogram.transtale.Translator;
 import tw.nekomimi.nekogram.transtale.TranslatorKt;
 import tw.nekomimi.nekogram.utils.AlertUtil;
 import tw.nekomimi.nekogram.utils.PGPUtil;
-import tw.nekomimi.nekogram.utils.TelegramUtil;
 import tw.nekomimi.nekogram.utils.UIUtil;
 
 public class ChatActivityEnterView extends BlurredFrameLayout implements NotificationCenter.NotificationCenterDelegate, SizeNotifierFrameLayout.SizeNotifierFrameLayoutDelegate, StickersAlert.StickersAlertDelegate, SuggestEmojiView.AnchorViewDelegate {
@@ -12568,6 +12568,7 @@ public class ChatActivityEnterView extends BlurredFrameLayout implements Notific
                     botMenuButtonType = BotMenuButtonType.NO_BUTTON;
                 }
 
+                NekoXConfig.saveBotHasWebView(dialog_id, hasBotWebView());
                 if (NekoConfig.alwaysShowBotCommandButton.Bool()) createBotButton();
                 updateBotButton(false);
             }
@@ -13572,6 +13573,7 @@ public class ChatActivityEnterView extends BlurredFrameLayout implements Notific
             } else {
                 botMenuButtonType = BotMenuButtonType.NO_BUTTON;
             }
+            NekoXConfig.saveBotHasWebView(dialog_id, hasBotWebView());
         } else {
             botMenuButtonType = BotMenuButtonType.NO_BUTTON;
         }

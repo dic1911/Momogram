@@ -62,6 +62,7 @@ import org.telegram.ui.Stories.StoriesUtilities;
 import java.util.Locale;
 
 import tw.nekomimi.nekogram.NekoConfig;
+import tw.nekomimi.nekogram.NekoXConfig;
 
 public class ProfileSearchCell extends BaseCell implements NotificationCenter.NotificationCenterDelegate, Theme.Colorable {
 
@@ -181,7 +182,7 @@ public class ProfileSearchCell extends BaseCell implements NotificationCenter.No
             chat = null;
             contact = null;
             premiumBlocked = showPremiumBlocked && user != null && MessagesController.getInstance(currentAccount).isUserPremiumBlocked(user.id);
-            setOpenBotButton(allowBotOpenButton && user.bot_has_main_app);
+            setOpenBotButton(allowBotOpenButton && (user.bot_has_main_app || NekoXConfig.botHasWebView(user.id)));
         } else if (object instanceof TLRPC.Chat) {
             chat = (TLRPC.Chat) object;
             user = null;

@@ -116,6 +116,21 @@ public class NekoXConfig {
         return BuildConfig.APP_ID;
     }
 
+    private static HashSet<String> botWithWebView = null;
+    public static boolean saveBotHasWebView(long id, boolean value) {
+        if (value) botWithWebView.add(String.valueOf(id));
+        else botWithWebView.remove(String.valueOf(id));
+        return value;
+    }
+
+    public static boolean botHasWebView(long id) {
+        if (botWithWebView == null) {
+            botWithWebView = new HashSet<>();
+        }
+
+        return botWithWebView.contains(String.valueOf(id));
+    }
+
     public static void toggleDisableStatusUpdate() {
         preferences.edit().putBoolean("disable_status_update", disableStatusUpdate = !disableStatusUpdate).apply();
         NotificationCenter.getGlobalInstance().postNotificationName(NotificationCenter.updateUserStatus, (Object) null);
