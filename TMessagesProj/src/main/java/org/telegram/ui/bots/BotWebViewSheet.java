@@ -571,7 +571,12 @@ public class BotWebViewSheet extends Dialog implements NotificationCenter.Notifi
                 if (lastTab != null) {
                     final BottomSheetTabs tabs = LaunchActivity.instance.getBottomSheetTabs();
                     if (tabs != null) {
+                        boolean bottomPadding = tabs.getTabs().size() > 1;
                         tabs.openTab(lastTab);
+                        if (bottomPadding) {
+                            tabs.setTabSheetVisibility(false);
+                            tabs.updateVisibility(true);
+                        }
                     }
                     lastTab = null;
                 }

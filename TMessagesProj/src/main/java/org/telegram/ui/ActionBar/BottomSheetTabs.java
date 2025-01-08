@@ -295,7 +295,7 @@ public class BottomSheetTabs extends FrameLayout {
 
     public int getExpandedHeight() {
         final int count = getTabs().size();
-        if (count == 0) {
+        if (count == 0 || !drawTabs) {
             return 0;
         } else if (count == 1) {
             return dp(60);
