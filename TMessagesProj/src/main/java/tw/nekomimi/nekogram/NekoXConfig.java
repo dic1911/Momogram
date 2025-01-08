@@ -118,6 +118,7 @@ public class NekoXConfig {
 
     private static HashSet<String> botWithWebView = null;
     public static boolean saveBotHasWebView(long id, boolean value) {
+        if (botWithWebView == null) botWithWebView = new HashSet<>();
         if (value) botWithWebView.add(String.valueOf(id));
         else botWithWebView.remove(String.valueOf(id));
         return value;
