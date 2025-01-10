@@ -206,17 +206,6 @@ android {
             ndk.debugSymbolLevel = 'FULL'
         }
 
-        releaseNoGcm {
-            debuggable false
-            jniDebuggable false
-            minifyEnabled true
-            shrinkResources true
-            multiDexEnabled true
-            proguardFiles getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro", '../TMessagesProj/proguard-rules-beta.pro'
-            matchingFallbacks = ["release", "debug"]
-            signingConfig keystorePwd == null ? signingConfigs.debug : signingConfigs.release
-        }
-
         release {
             debuggable false
             jniDebuggable false
@@ -253,31 +242,15 @@ android {
 
         debug {
             java {
-                srcDirs "src/main/java", "src/gservcies/java"
+                srcDirs "src/main/java"
             }
             jni.srcDirs = ["./jni/"]
-            manifest {
-                srcFile "src/gservcies/AndroidManifest.xml"
-            }
-        }
-
-        releaseNoGcm {
-            jni.srcDirs = []
-            jniLibs {
-                srcDir "src/main/libs"
-            }
         }
 
         release {
-            java {
-                srcDirs "src/main/java", "src/gservcies/java"
-            }
             jni.srcDirs = []
             jniLibs {
                 srcDir "src/main/libs"
-            }
-            manifest {
-                srcFile "src/gservcies/AndroidManifest.xml"
             }
         }
 
@@ -302,9 +275,6 @@ android {
         mini {
             isDefault true
             manifestPlaceholders = [is_full_version: "false"]
-        }
-        full {
-            manifestPlaceholders = [is_full_version: "true"]
         }
         miniPlay {
             versionNameSuffix "-play"
@@ -335,7 +305,7 @@ android {
 
     applicationVariants.all { variant ->
         variant.outputs.all { output ->
-            outputFileName = outputFileName.replace("-mini", "").replace("-releaseNoGcm", "").replace("TMessagesProj", "Momo-v" + versionName)
+            outputFileName = outputFileName.replace("-mini", "").replace("-release", "").replace("TMessagesProj", "Momo-v" + versionName)
         }
     }
 
@@ -393,7 +363,7 @@ dependencies {
 //    implementation 'com.google.android.gms:play-services-safetynet:18.0.1'
 
     compileOnly 'org.yaml:snakeyaml:2.3'
-    fullImplementation 'org.yaml:snakeyaml:2.3'
+//    fullImplementation 'org.yaml:snakeyaml:2.3'
 
     implementation project(":openpgp-api")
 
@@ -414,6 +384,8 @@ dependencies {
 //    releaseImplementation "com.google.firebase:firebase-messaging:$fcmVersion"
 //    releaseImplementation "com.google.firebase:firebase-crashlytics:$crashlyticsVersion"
 //    releaseImplementation "com.google.android.play:core:$playCoreVersion"
+
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.14'
 
     testImplementation "junit:junit:4.13.2"
     testImplementation "androidx.test:core:1.5.0"
@@ -454,9 +426,9 @@ android {
     tasks.all { task ->
         if (task.name.startsWith("uploadCrashlyticsMappingFile")) {
             task.enabled = false
-        } else if (task.name.contains("Crashlytics") && task.name.contains("NoGcm")) {
+        } else if (task.name.contains("Crashlytics")) {
             task.enabled = false
-        } else if (task.name.endsWith("GoogleServices") && task.name.contains("NoGcm")) {
+        } else if (task.name.endsWith("GoogleServices")) {
             task.enabled = false
         }
     }
