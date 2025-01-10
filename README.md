@@ -161,8 +161,10 @@ apt install -y yasm
 <ul>
     <li>Telegram-FOSS: <a href="https://github.com/Telegram-FOSS-Team/Telegram-FOSS/blob/master/LICENSE">GPLv2</a></li>
     <li>Nekogram X: GPLv3</li>
-    <li>Nekogram: <a href="https://gitlab.com/Nekogram/Nekogram/-/blob/master/LICENSE">GPLv2</a></li>
+    <li>Nekogram: <a href="https://gitlab.com/Nekogram/Nekogram/blob/master/LICENSE">GPLv2</a></li>
     <li>Nagram: <a href="https://github.com/NextAlone/Nagram/blob/master/LICENSE">GPLv3</a></li>
+    <li>Cherrygram: <a href="https://github.com/NextAlone/Nagram/blob/master/LICENSE">GPLv2</a></li>
+    <li>Telegram-Monet: <a href="https://github.com/mi-g-alex/Telegram-Monet/blob/main/LICENSE">EPL-2.0</a></li>
     <li>HanLP: <a href="https://github.com/hankcs/HanLP/blob/1.x/LICENSE">Apache License 2.0</a></li>
     <li>OpenCC: <a href="https://github.com/BYVoid/OpenCC/blob/master/LICENSE">Apache License 2.0</a></li>
     <li>opencc-data: <a href="https://github.com/nk2028/opencc-data">Apache License 2.0</a></li>
