@@ -41,9 +41,9 @@ public class BuildVars {
     public static String TGX_APP_HASH = "3e0cb5efcd52300aec5994fdfc5bdc16";
 
     public static boolean isUnknown = !BuildConfig.BUILD_TYPE.startsWith("release");
-    public static boolean isPlay = BuildConfig.FLAVOR.endsWith("Play");
+    public static boolean isPlay = false;
     public static boolean isFdroid = BuildConfig.BUILD_TYPE.toLowerCase().contains("fdroid");
-    public static boolean isMini = !BuildConfig.FLAVOR.startsWith("full");
+    public static boolean isMini = true;
     public static boolean isGServicesCompiled = BuildConfig.BUILD_TYPE.equals("debug") || BuildConfig.BUILD_TYPE.equals("release");
     public static final boolean hasTintSupport = Build.VERSION.SDK_INT > 21;
 
