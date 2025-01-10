@@ -8134,7 +8134,7 @@ public class PhotoViewer implements NotificationCenter.NotificationCenterDelegat
             VideoPlayer.saveQuality(videoPlayer.getQuality(qualityIndex), currentMessageObject);
         }
         updateQualityItems();
-        videoItem.toggleSubMenu();
+        if (videoItem.isSubMenuShowing()) videoItem.toggleSubMenu();
     }
 
     private void updateQualityItems() {
