@@ -777,20 +777,6 @@
                 <category android:name="android.intent.category.BROWSABLE" />
                 <data android:scheme="tonsite" />
             </intent-filter>
-            <intent-filter android:icon="@mipmap/ic_launcher" android:roundIcon="@mipmap/ic_launcher" android:priority="1" android:enabled="${is_full_version}">
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.BROWSABLE" />
-                <category android:name="android.intent.category.DEFAULT" />
-
-                <data android:scheme="vmess" />
-                <data android:scheme="vmess1" />
-                <data android:scheme="ss" />
-                <data android:scheme="ssr" />
-                <data android:scheme="ws" />
-                <data android:scheme="wss" />
-                <data android:scheme="trojan" />
-
-            </intent-filter>
             <intent-filter android:icon="@mipmap/ic_launcher" android:roundIcon="@mipmap/ic_launcher" android:priority="1">
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.BROWSABLE" />

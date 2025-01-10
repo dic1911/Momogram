@@ -269,19 +269,7 @@ android {
 
     }
 
-    flavorDimensions "version"
-
-    productFlavors {
-        mini {
-            isDefault true
-            manifestPlaceholders = [is_full_version: "false"]
-        }
-        miniPlay {
-            versionNameSuffix "-play"
-            versionCode verCode - 2
-            manifestPlaceholders = [is_full_version: "false"]
-        }
-    }
+    flavorDimensions ["version"]
 
     sourceSets.all { set ->
         if (set.name.startsWith("full")) {
