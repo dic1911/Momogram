@@ -153,7 +153,7 @@ apt install -y yasm
 6. Replace TMessagesProj/google-services.json if you want fcm to work.
 7. Replace release.keystore with yours and fill out `ALIAS_NAME`, `KEYSTORE_PASS` and `ALIAS_PASS` in `local.properties` if you want a custom sign key.
 
-`./gradlew assembleMini<Debug/Release/ReleaseNoGcm>`
+`./gradlew assemble<Debug/Release>`
 
 
 ## Credits
