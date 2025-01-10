@@ -7914,6 +7914,7 @@ public class LaunchActivity extends BasePermissionsActivity implements INavigati
                 }
             }
         }
+        PhotoViewer.onLowMemory();
     }
 
     @Override

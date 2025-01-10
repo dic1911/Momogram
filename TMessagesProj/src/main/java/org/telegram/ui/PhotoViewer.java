@@ -305,6 +305,7 @@ import tw.nekomimi.nekogram.ui.BottomBuilder;
 import tw.nekomimi.nekogram.utils.AlertUtil;
 import tw.nekomimi.nekogram.utils.ProxyUtil;
 import tw.nekomimi.nekogram.utils.StrUtil;
+import tw.nekomimi.nekogram.utils.TelegramUtil;
 
 @SuppressLint("WrongConstant")
 @SuppressWarnings("unchecked")
@@ -4661,6 +4662,8 @@ public class PhotoViewer implements NotificationCenter.NotificationCenterDelegat
                 rightImage.onDetachedFromWindow();
                 attachedToWindow = false;
                 wasLayout = false;
+                if (NekoConfig.alwaysDestroyPhotoViewer.Bool())
+                    destroyPhotoViewer();
             }
 
             @Override
@@ -17566,8 +17569,10 @@ public class PhotoViewer implements NotificationCenter.NotificationCenterDelegat
 
     public void destroyPhotoViewer() {
         if (parentActivity == null || windowView == null) {
+            Log.d("030-pv", "already destroyed");
             return;
         }
+        Log.d("030-pv", String.format("destroyPhotoViewer %s", TelegramUtil.getStackTraceAsString(null)));
         if (PipVideoOverlay.isVisible()) {
             PipVideoOverlay.dismiss();
         }
@@ -21996,6 +22001,20 @@ public class PhotoViewer implements NotificationCenter.NotificationCenterDelegat
                 )
                 .setImageScale(.8f)
                 .show(!above);
+        }
+    }
+
+    public static void onLowMemory() {
+        try {
+            Log.w("030-pv", "onLowMemory: destroying existing PhotoViewer");
+            if (hasInstance()) {
+                Instance.destroyPhotoViewer();
+            }
+            if (PipInstance != null) {
+                PipInstance.destroyPhotoViewer();
+            }
+        } catch (Exception ex) {
+            FileLog.e(ex);
         }
     }
 }
