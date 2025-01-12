@@ -12203,6 +12203,7 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
         if (show && bottomOverlayProgress.getTag() != null || !show && bottomOverlayProgress.getTag() == null) {
             return;
         }
+        if (show && isBottomOverlaysInvisible() && isMuteUnmuteButton()) show = false;
         if (bottomOverlayAnimation != null) {
             bottomOverlayAnimation.cancel();
             bottomOverlayAnimation = null;
@@ -12230,11 +12231,12 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
                         ObjectAnimator.ofFloat(text, View.SCALE_Y, 1.0f),
                         ObjectAnimator.ofFloat(text, View.ALPHA, 1.0f));
             }
+            final boolean showFinal = show;
             bottomOverlayAnimation.addListener(new AnimatorListenerAdapter() {
                 @Override
                 public void onAnimationEnd(Animator animation) {
                     if (bottomOverlayAnimation != null && bottomOverlayAnimation.equals(animation)) {
-                        if (!show) {
+                        if (!showFinal) {
                             bottomOverlayProgress.setVisibility(View.INVISIBLE);
                         } else {
                             (bottomOverlayLinks ? bottomOverlayLinksText : bottomOverlayChatText).setVisibility(View.INVISIBLE);
@@ -43229,11 +43231,20 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
     }
 
     private boolean isBottomOverlaysInvisible() {
-        return bottomOverlayChat.getVisibility() == View.INVISIBLE && chatActivityEnterView.getVisibility() == View.INVISIBLE && bottomMessagesActionContainer.getVisibility() == View.INVISIBLE && searchContainer.getVisibility() == View.INVISIBLE && !isInPreviewMode() && !isInBubbleMode() && NekoConfig.hideChannelBottomMuteUnmute.Bool();
+        return bottomOverlayChat.getVisibility() == View.INVISIBLE
+                && chatActivityEnterView.getVisibility() == View.INVISIBLE
+                && (bottomMessagesActionContainer == null || bottomMessagesActionContainer.getVisibility() == View.INVISIBLE)
+                && (searchContainer == null || searchContainer.getVisibility() == View.INVISIBLE)
+                && !isInPreviewMode()
+                && !isInBubbleMode()
+                && NekoConfig.hideChannelBottomMuteUnmute.Bool();
     }
 
     private boolean isMuteUnmuteButton() {
-        return (bottomOverlayChatText.getText() == LocaleController.getString(R.string.ChannelMute) || bottomOverlayChatText.getText() == LocaleController.getString(R.string.ChannelUnmute)) && NekoConfig.hideChannelBottomMuteUnmute.Bool();
+        CharSequence text = bottomOverlayChatText.getText();
+        return (LocaleController.getString(R.string.ChannelMute).equals(text)
+                || LocaleController.getString(R.string.ChannelUnmute).equals(text))
+                && NekoConfig.hideChannelBottomMuteUnmute.Bool();
     }
 
     private void updatePaddings() {
