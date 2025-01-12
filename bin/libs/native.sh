@@ -7,7 +7,7 @@ OUT=TMessagesProj/build/intermediates/stripped_native_libs/miniFoss/stripMiniFos
 DIR=TMessagesProj/src/main/libs
 
 export COMPILE_NATIVE=1
-./gradlew TMessagesProj:stripMiniFossDebugSymbols || exit 1
+./gradlew TMessagesProj:stripFossDebugSymbols || exit 1
 
 function install() {
   local ABI="$1"
