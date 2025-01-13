@@ -300,4 +300,13 @@
     <string name="EnhancedVideoBitrateInfo">大幅にファイルサイズが大きくなるが、より高画質で</string>
     <string name="MarkdownCode">コード</string>
     <string name="UnarchiveOnSwipe">スワイプでチャットにアーカイブを解除</string>
+    <string name="TranscribeProvider">転写サービスプロバイダー</string>
+    <string name="TranscribeProviderAuto">デフォルト</string>
+    <string name="TranscribeProviderWorkersAI">Whisper (Workers AI)</string>
+    <string name="TranscribeProviderDesc">デフォルトに設定する場合, %s は Telegram Premium がないときに使用されます.</string>
+    <string name="CloudflareCredentials">Cloudflare 認証情報</string>
+    <string name="CloudflareCredentialsNotSet">Cloudflare の認証情報は設定していません.</string>
+    <string name="CloudflareAccountID">アカウント ID</string>
+    <string name="CloudflareAPIToken">API トークン</string>
+    <string name="CloudflareCredentialsDialog">Cloudflare のアカウント ID と API トークンを設定する.\n**どう取る?**</string>
 </resources>

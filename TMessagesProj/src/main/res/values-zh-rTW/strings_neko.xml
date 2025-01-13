@@ -300,4 +300,13 @@
     <string name="EnhancedVideoBitrateInfo">分享影片的畫質會變得更好, 但檔案大小將大幅增加</string>
     <string name="MarkdownCode">程式碼</string>
     <string name="UnarchiveOnSwipe">使用滑動解除封存對話</string>
+    <string name="TranscribeProvider">語音轉文字服務</string>
+    <string name="TranscribeProviderAuto">自動選取</string>
+    <string name="TranscribeProviderWorkersAI">Whisper (Workers AI)</string>
+    <string name="TranscribeProviderDesc">使用自動選取時, %s 將在沒有 Telegram Premium 時被使用.</string>
+    <string name="CloudflareCredentials">Cloudflare 驗證資訊</string>
+    <string name="CloudflareCredentialsNotSet">尚未設定 Cloudflare 驗證資訊.</string>
+    <string name="CloudflareAccountID">帳戶 ID</string>
+    <string name="CloudflareAPIToken">API 權杖</string>
+    <string name="CloudflareCredentialsDialog">填入 Cloudflare 帳戶 ID 及 API 權杖.\n**如何取得?**</string>
 </resources>
