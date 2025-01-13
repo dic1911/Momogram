@@ -216,6 +216,7 @@ public class NekoGeneralSettingsActivity extends BaseFragment {
     private final AbstractConfigCell disableUndoRow = cellGroup.appendCell(new ConfigCellTextCheck(NekoConfig.disableUndo));
     private final AbstractConfigCell showIdAndDcRow = cellGroup.appendCell(new ConfigCellTextCheck(NekoConfig.showIdAndDc));
     private final AbstractConfigCell inappCameraRow = cellGroup.appendCell(new ConfigCellTextCheck(NekoConfig.inappCamera));
+    private final AbstractConfigCell useCamera2Row = cellGroup.appendCell(new ConfigCellCustom(CellGroup.ITEM_TYPE_TEXT_CHECK, true));
     private final AbstractConfigCell hideProxySponsorChannelRow = cellGroup.appendCell(new ConfigCellTextCheck(NekoConfig.hideProxySponsorChannel));
     private final AbstractConfigCell hideSponsoredMessageRow = cellGroup.appendCell(new ConfigCellTextCheck(NekoConfig.hideSponsoredMessage));
     private final AbstractConfigCell autoPauseVideoRow = cellGroup.appendCell(new ConfigCellTextCheck(NekoConfig.autoPauseVideo, LocaleController.getString(R.string.AutoPauseVideoAbout)));
@@ -407,6 +408,10 @@ public class NekoGeneralSettingsActivity extends BaseFragment {
                     });
                 } else if (position == cellGroup.rows.indexOf(nameOrderRow)) {
                     LocaleController.getInstance().recreateFormatters();
+                } else if (position == cellGroup.rows.indexOf(useCamera2Row)) {
+                    SharedConfig.toggleUseCamera2(currentAccount);
+                    if (view instanceof TextCheckCell)
+                        ((TextCheckCell) view).setChecked(SharedConfig.isUsingCamera2(currentAccount));
                 }
             }
         });
@@ -829,6 +834,12 @@ public class NekoGeneralSettingsActivity extends BaseFragment {
                             textCell.setTextAndValue(LocaleController.getString(R.string.TransToLang), NekoXConfig.formatLang(NekoConfig.translateToLang.String()), true);
                         } else if (position == cellGroup.rows.indexOf(translateInputToLangRow)) {
                             textCell.setTextAndValue(LocaleController.getString(R.string.TransInputToLang), NekoXConfig.formatLang(NekoConfig.translateInputLang.String()), true);
+                        }
+                    } else if (holder.itemView instanceof TextCheckCell) {
+                        TextCheckCell checkCell = (TextCheckCell) holder.itemView;
+                        if (position == cellGroup.rows.indexOf(useCamera2Row)) {
+                            checkCell.setTextAndCheck(LocaleController.getString(R.string.UseCamera2API),
+                                    SharedConfig.isUsingCamera2(currentAccount), true);
                         }
                     }
                 } else {
