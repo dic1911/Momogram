@@ -4662,7 +4662,8 @@ public class PhotoViewer implements NotificationCenter.NotificationCenterDelegat
                 rightImage.onDetachedFromWindow();
                 attachedToWindow = false;
                 wasLayout = false;
-                if (NekoConfig.alwaysDestroyPhotoViewer.Bool())
+                // only destroy non-pip instance
+                if (NekoConfig.alwaysDestroyPhotoViewer.Bool() && PhotoViewer.this != PipInstance && Instance != null)
                     destroyPhotoViewer();
             }
 
