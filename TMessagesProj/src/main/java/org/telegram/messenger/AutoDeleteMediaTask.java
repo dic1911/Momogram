@@ -140,9 +140,13 @@ public class AutoDeleteMediaTask {
             //}
 
             int maxCacheGb = SharedConfig.getPreferences().getInt("cache_limit", Integer.MAX_VALUE);
+            int customMaxCache = SharedConfig.getPreferences().getInt("custom_cache_limit", 0);
             if (maxCacheGb != Integer.MAX_VALUE) {
                 long maxCacheSize;
-                if (maxCacheGb == 1) {
+                if (customMaxCache > 0) {
+                    maxCacheSize = customMaxCache * 1024L * 1000L;
+                    Log.d("030-cache", "using custom cache size: " + maxCacheSize);
+                } else if (maxCacheGb == 1) {
                     maxCacheSize = 1024L * 1024L * 300L;
                 } else {
                     maxCacheSize = maxCacheGb * 1024L * 1024L * 1000L;

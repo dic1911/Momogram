@@ -213,4 +213,7 @@
     <string name="MonetAlterOut">Alternative outgoing message style</string>
     <string name="AlwaysDestroyPhotoViewer">Always destroy PhotoViewer</string>
     <string name="HideChannelBottomNotiToggle">Hide notification toggle in the bottom of channels</string>
+    <string name="CustomMaxCacheSize">Custom cache size</string>
+    <string name="CustomMaxCacheSizeHint">Size in MB (ex. 512)</string>
+    <string name="CustomMaxCacheSizeBulletin">Maximum cache size is set to %1$s MB</string>
 </resources>

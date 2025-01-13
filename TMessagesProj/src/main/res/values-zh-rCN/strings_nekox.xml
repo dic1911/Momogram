@@ -207,4 +207,7 @@
     <string name="UseOldAppName">使用旧应用名称 (NekoX)</string>
     <string name="UseOldAppNameDesc">变更此设置时会自动退回桌面, 且图示将被重设.</string>
     <string name="HideChannelBottomNotiToggle">隐藏频道底部通知开关</string>
+    <string name="CustomMaxCacheSize">自定缓存大小</string>
+    <string name="CustomMaxCacheSizeHint">單位: MB (ex. 512)</string>
+    <string name="CustomMaxCacheSizeBulletin">最大缓存大小已设为 %1$s MB</string>
 </resources>

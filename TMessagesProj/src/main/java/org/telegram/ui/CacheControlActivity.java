@@ -51,6 +51,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.accessibility.AccessibilityNodeInfo;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -123,6 +124,7 @@ import org.telegram.ui.Cells.TextSettingsCell;
 import org.telegram.ui.Components.AlertsCreator;
 import org.telegram.ui.Components.AnimatedFloat;
 import org.telegram.ui.Components.BackupImageView;
+import org.telegram.ui.Components.BulletinFactory;
 import org.telegram.ui.Components.CacheChart;
 import org.telegram.ui.Components.CheckBox2;
 import org.telegram.ui.Components.AlertsCreator;
@@ -132,6 +134,7 @@ import org.telegram.ui.Components.BackupImageView;
 import org.telegram.ui.Components.CacheChart;
 import org.telegram.ui.Components.CheckBox2;
 import org.telegram.ui.Components.CubicBezierInterpolator;
+import org.telegram.ui.Components.EditTextBoldCursor;
 import org.telegram.ui.Components.FlickerLoadingView;
 import org.telegram.ui.Components.HideViewAfterAnimation;
 import org.telegram.ui.Components.LayoutHelper;
@@ -251,6 +254,10 @@ public class CacheControlActivity extends BaseFragment implements NotificationCe
     private static final int clear_database_id = 3;
     private static final int reset_database_id = 4;
     private static final int cleanup_leftovers_id = 1001;
+    private static final int custom_cache_size_id = 1002;
+
+    private SlideChooseView cacheSizeSliderView;
+
     private boolean loadingDialogs;
     private NestedSizeNotifierLayout nestedSizeNotifierLayout;
 
@@ -1310,6 +1317,8 @@ public class CacheControlActivity extends BaseFragment implements NotificationCe
                     clearDatabase(true);
                 } else if (id == cleanup_leftovers_id) {
                     cleanupLeftovers();
+                } else if (id == custom_cache_size_id) {
+                    setCustomCacheSize();
                 }
             }
         });
@@ -1353,6 +1362,10 @@ public class CacheControlActivity extends BaseFragment implements NotificationCe
         clearDatabaseItem.setSelectorColor(Theme.multAlpha(Theme.getColor(Theme.key_text_RedRegular), .12f));
 
         cleanupLeftoversItem = otherItem.addSubItem(cleanup_leftovers_id, R.drawable.baseline_delete_sweep_24, LocaleController.getString(R.string.CleanupLeftovers));
+        cleanupLeftoversItem.setIconColor(Theme.getColor(Theme.key_actionBarDefaultSubmenuItem));
+        cleanupLeftoversItem.setTextColor(Theme.getColor(Theme.key_actionBarDefaultSubmenuItem));
+
+        cleanupLeftoversItem = otherItem.addSubItem(custom_cache_size_id, R.drawable.chats_delete , LocaleController.getString(R.string.CustomMaxCacheSize));
         cleanupLeftoversItem.setIconColor(Theme.getColor(Theme.key_actionBarDefaultSubmenuItem));
         cleanupLeftoversItem.setTextColor(Theme.getColor(Theme.key_actionBarDefaultSubmenuItem));
 
@@ -1733,6 +1746,80 @@ public class CacheControlActivity extends BaseFragment implements NotificationCe
         });
         AlertDialog alertDialog = builder.create();
         showDialog(alertDialog);
+    }
+
+    private void setCustomCacheSize() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getParentActivity());
+        builder.setTitle(LocaleController.getString(R.string.CustomMaxCacheSize));
+        EditTextBoldCursor input = new EditTextBoldCursor(builder.getContext());
+        input.setHintTextColor(Theme.getColor(Theme.key_windowBackgroundWhiteHintText));
+        input.setTextColor(Theme.getColor(Theme.key_windowBackgroundWhiteBlackText));
+        input.setSingleLine();
+        input.setFocusable(true);
+        input.setBackgroundDrawable(null);
+        input.setText(String.valueOf(NekoConfig.customCacheSize.Int()));
+        input.setHint(R.string.CustomMaxCacheSizeHint);
+        builder.setView(input);
+        builder.setNegativeButton(LocaleController.getString(R.string.Cancel), null);
+        builder.setPositiveButton(LocaleController.getString(R.string.Set), (dialogInterface, __) -> {
+            try {
+                String txt = input.getText().toString().trim();
+                int size = Integer.parseInt(txt);
+                Log.d("030-cache", String.format("parsed %s to %d", txt, size));
+                NekoConfig.customCacheSize.setConfigInt(size);
+                float totalSizeInGb = (int) (totalDeviceSize / 1024L / 1024L) / 1000.0f;
+                ArrayList<Integer> options = new ArrayList<>();
+                if (totalSizeInGb <= 17) {
+                    options.add(2);
+                }
+                if (totalSizeInGb > 5) {
+                    options.add(5);
+                }
+                if (totalSizeInGb > 16) {
+                    options.add(16);
+                }
+                if (totalSizeInGb > 32) {
+                    options.add(32);
+                }
+                int customSize = NekoConfig.customCacheSize.Int(), customSizeIndex = -1;
+                if (customSize > 0) {
+                    options.add(customSizeIndex = options.size(), customSize);
+                }
+                options.add(Integer.MAX_VALUE);
+                String[] values = new String[options.size()];
+                for (int i = 0; i < options.size(); i++) {
+                    if (customSizeIndex == i) {
+                        values[i] = LocaleController.getString(R.string.AutoDeleteCustom);
+                    } else if (options.get(i) == 1) {
+                        values[i] = "300 MB";
+                    } else if (options.get(i) == Integer.MAX_VALUE) {
+                        values[i] = LocaleController.getString(R.string.NoLimit);
+                    } else {
+                        values[i] = String.format("%d GB", options.get(i));
+                    }
+                }
+                int finalCustomSizeIndex = customSizeIndex;
+                cacheSizeSliderView.setCallback(i -> {
+                    boolean isCustom = (i == finalCustomSizeIndex);
+                    if (isCustom) {
+                        int newCustomSize = NekoConfig.customCacheSize.Int();
+                        SharedConfig.getPreferences().edit().putInt("custom_cache_limit", newCustomSize).apply();
+                        BulletinFactory.of(CacheControlActivity.this)
+                                .createSimpleBulletin(R.raw.info,
+                                        LocaleController.formatString(R.string.CustomMaxCacheSizeBulletin, newCustomSize))
+                                .show();
+                    } else {
+                        SharedConfig.getPreferences().edit().remove("custom_cache_limit").apply();
+                    }
+                    SharedConfig.getPreferences().edit().putInt("cache_limit", options.get(i)).apply();
+                });
+                cacheSizeSliderView.setOptions(cacheSizeSliderView.getSelectedIndex(), values);
+                updateRows(false);
+            } catch (Exception ex) {
+                Log.e(CacheControlActivity.class.getName(), "error parsing custom cache size", ex);
+            }
+        });
+        showDialog(builder.create());
     }
 
     private void clearDatabase(boolean fullReset) {
@@ -2665,7 +2752,7 @@ public class CacheControlActivity extends BaseFragment implements NotificationCe
                     view = clearCacheButton = new ClearCacheButtonInternal(mContext);
                     break;
                 case VIEW_TYPE_MAX_CACHE_SIZE:
-                    SlideChooseView slideChooseView2 = new SlideChooseView(mContext);
+                    SlideChooseView slideChooseView2 = cacheSizeSliderView = new SlideChooseView(mContext);
                     view = slideChooseView2;
                     view.setBackgroundColor(Theme.getColor(Theme.key_windowBackgroundWhite));
 
@@ -2686,22 +2773,45 @@ public class CacheControlActivity extends BaseFragment implements NotificationCe
                     if (totalSizeInGb > 32) {
                         options.add(32);
                     }
+
+                    int customSize = NekoConfig.customCacheSize.Int(), customSizeIndex = -1;
+                    if (customSize > 0) {
+                        options.add(customSizeIndex = options.size(), customSize);
+                    }
+
                     options.add(Integer.MAX_VALUE);
                     String[] values = new String[options.size()];
                     for (int i = 0; i < options.size(); i++) {
-                        if (options.get(i) == 1) {
-                            values[i] = String.format("300 MB");
+                        if (customSizeIndex == i) {
+                            values[i] = LocaleController.getString(R.string.AutoDeleteCustom);
+                        } else if (options.get(i) == 1) {
+                            values[i] = "300 MB";
                         } else if (options.get(i) == Integer.MAX_VALUE) {
                             values[i] = LocaleController.getString(R.string.NoLimit);
                         } else {
                             values[i] = String.format("%d GB", options.get(i));
                         }
                     }
+                    int finalCustomSizeIndex = customSizeIndex;
                     slideChooseView2.setCallback(i -> {
+                        boolean isCustom = (i == finalCustomSizeIndex);
+                        if (isCustom) {
+                            int newCustomSize = NekoConfig.customCacheSize.Int();
+                            SharedConfig.getPreferences().edit().putInt("custom_cache_limit", newCustomSize).apply();
+                            BulletinFactory.of(CacheControlActivity.this)
+                                    .createSimpleBulletin(R.raw.info,
+                                            LocaleController.formatString(R.string.CustomMaxCacheSizeBulletin, newCustomSize))
+                                    .show();
+                        } else {
+                            SharedConfig.getPreferences().edit().remove("custom_cache_limit").apply();
+                        }
                         SharedConfig.getPreferences().edit().putInt("cache_limit", options.get(i)).apply();
                     });
                     int currentLimit = SharedConfig.getPreferences().getInt("cache_limit", Integer.MAX_VALUE);
                     int i = options.indexOf(currentLimit);
+                    if (customSizeIndex != -1 && SharedConfig.getPreferences().contains("custom_cache_limit"))
+                        i = options.size() - 2;
+
                     if (i < 0) {
                         i = options.size() - 1;
                     }
