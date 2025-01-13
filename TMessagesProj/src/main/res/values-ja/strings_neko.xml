@@ -309,4 +309,5 @@
     <string name="CloudflareAccountID">アカウント ID</string>
     <string name="CloudflareAPIToken">API トークン</string>
     <string name="CloudflareCredentialsDialog">Cloudflare のアカウント ID と API トークンを設定する.\n**どう取る?**</string>
+    <string name="CloudflareCredentialsObtainDesc">1. Cloudflare ダッシュボードを開き、アカウントでログインする\n\n2. サイドメニューから AI を展開し、Workers AI をクリックする\n\n3. 「Use REST API」 をクリックする\n\n4. 表示された 「アカウント ID」 を確認し、そのページで API トークンを作成します.</string>
 </resources>

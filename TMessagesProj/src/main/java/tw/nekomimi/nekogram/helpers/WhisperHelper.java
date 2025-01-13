@@ -6,8 +6,11 @@ import android.media.MediaFormat;
 import android.media.MediaMuxer;
 import android.text.TextUtils;
 import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.inputmethod.EditorInfo;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
@@ -78,7 +81,22 @@ public class WhisperHelper {
         builder.setMessage(AndroidUtilities.replaceSingleTag(LocaleController.getString(R.string.CloudflareCredentialsDialog),
                 -1,
                 AndroidUtilities.REPLACING_TAG_TYPE_LINKBOLD,
-                () -> Browser.openUrl(context, "https://nekogram.app/cloudflare-credentials"),
+                () -> {
+                    // Browser.openUrl(context, "https://nekogram.app/cloudflare-credentials")
+                    ScrollView layout = new ScrollView(context);
+                    TextView textView = new TextView(layout.getContext());
+                    textView.setTextColor(Theme.getColor(Theme.key_dialogTextBlack));
+                    textView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 14);
+                    textView.setGravity(Gravity.CENTER_HORIZONTAL);
+                    textView.setText(LocaleController.getString(R.string.CloudflareCredentialsObtainDesc));
+                    textView.setPadding(AndroidUtilities.dp(30), AndroidUtilities.dp(10), AndroidUtilities.dp(30), AndroidUtilities.dp(21));
+                    layout.addView(textView);
+                    new AlertDialog.Builder(context, resourcesProvider)
+                            .setTitle(LocaleController.getString(R.string.CloudflareCredentials))
+                            .setView(layout)
+                            .setPositiveButton(LocaleController.getString(R.string.OK), null)
+                            .show();
+                },
                 resourcesProvider));
         builder.setCustomViewOffset(0);
 
