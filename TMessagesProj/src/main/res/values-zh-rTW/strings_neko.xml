@@ -310,4 +310,5 @@
     <string name="CloudflareAPIToken">API 權杖</string>
     <string name="CloudflareCredentialsDialog">填入 Cloudflare 帳戶 ID 及 API 權杖.\n**如何取得?**</string>
     <string name="CloudflareCredentialsObtainDesc">1. 開啟 Cloudflare 儀錶板並登入您的帳戶\n\n2. 展開側邊選單的 AI 分類並點選 Workers AI\n\n3. 點擊 "Use REST API"\n\n4. 記下您的 "Account ID" 後於同一頁面建立 API token.</string>
+    <string name="SwipeActionInTopicList">話題清單滑動操作 (隱藏/顯示)</string>
 </resources>

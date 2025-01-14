@@ -306,6 +306,7 @@ public class NekoConfig {
     public static ConfigItem showChannelMsgFwdCount = addConfig(R.string.ShowChannelMsgFwdCount , "ShowChannelMsgFwdCount", configTypeBool, CHAT, true);
     public static ConfigItem enhancedVideoBitrate = addConfig(R.string.EnhancedVideoBitrate , "EnhancedVideoBitrate", configTypeBool, CHAT, false);
     public static ConfigItem unarchiveOnSwipe = addConfig(R.string.UnarchiveOnSwipe , "UnarchiveOnSwipe", configTypeBool, GENERAL, true);
+    public static ConfigItem swipeActionInTopicList = addConfig(R.string.SwipeActionInTopicList , "SwipeActionInTopicList", configTypeBool, GENERAL, true);
     public static ConfigItem customCacheSize = addConfig("CustomCacheSize", configTypeInt, -1);
 
     public static ConfigItem transcribeProvider = addConfig("TranscribeProvider", configTypeInt, CHAT, TRANSCRIBE_AUTO);

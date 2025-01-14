@@ -2391,7 +2391,7 @@ public class TopicsFragment extends BaseFragment implements NotificationCenter.N
                 return makeMovementFlags(0, 0);
             }
             TLRPC.TL_forumTopic topic = forumTopics.get(position).topic;
-            if (selectedTopics.isEmpty() && viewHolder.itemView instanceof TopicDialogCell && topic.id == 1) {
+            if (selectedTopics.isEmpty() && viewHolder.itemView instanceof TopicDialogCell && topic.id == 1 && NekoConfig.swipeActionInTopicList.Bool()) {
                 TopicDialogCell dialogCell = (TopicDialogCell) viewHolder.itemView;
                 swipeFolderBack = false;
                 swipingFolder = true;
