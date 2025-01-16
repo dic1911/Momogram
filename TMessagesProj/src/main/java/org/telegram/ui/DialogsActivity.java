@@ -299,6 +299,8 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
         return openedDialogId;
     }
 
+    private boolean updatePopped = false;
+
     public class ViewPage extends FrameLayout {
         public int pageAdditionalOffset;
         public DialogsRecyclerView listView;
@@ -5239,9 +5241,10 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
 
         if (searchString == null && initialDialogsType == DIALOGS_TYPE_DEFAULT) {
             // NekoX: Remove UPDATE NOW Bottom View in DialogsActivity
-            if (NekoConfig.checkUpdate.Bool()) {
+            if (!updatePopped && NekoConfig.checkUpdate.Bool() && folderId == 0) {
                 long t = System.currentTimeMillis();
                 if (t >= NekoConfig.nextPromptUpdateTime.Long()) {
+                    updatePopped = true;
                     MomoUpdater.checkUpdate((resp, err) -> {
                         AndroidUtilities.runOnUIThread(() -> {
                             if (err || resp == null) {
@@ -5261,6 +5264,7 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
                                         NekoConfig.nextPromptUpdateTime.setConfigLong(t + (3 * 86400 * 1000));
                                     })
                                     .show();
+                            updatePopped = false;
                         });
                     });
                 }
