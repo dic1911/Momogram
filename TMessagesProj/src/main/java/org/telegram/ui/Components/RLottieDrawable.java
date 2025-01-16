@@ -785,6 +785,7 @@ public class RLottieDrawable extends BitmapDrawable implements Animatable, Bitma
         if (parent == null) {
             return;
         }
+        currentParentView = null;
         parentViews.remove(parent);
         checkCacheCancel();
     }

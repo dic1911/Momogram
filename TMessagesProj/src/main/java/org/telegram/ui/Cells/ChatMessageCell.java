@@ -5278,6 +5278,10 @@ public class ChatMessageCell extends BaseCell implements SeekBar.SeekBarDelegate
         if (channelRecommendationsCell != null) {
             channelRecommendationsCell.onDetachedFromWindow();
         }
+
+        if (photoImage != null) {
+            photoImage.onDetachedFromWindow();
+        }
     }
 
     @Override
