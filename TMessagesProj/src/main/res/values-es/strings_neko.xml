@@ -216,7 +216,7 @@
     <string name="SearchByMessageType">Búsqueda por tipo de mensaje</string>
     <string name="MarqueeForLongChatTitles">Utilizar Marquee para los títulos largos del chat</string>
     <string name="DontSendRightAfterTranslated">No enviar justo después de que el mensaje se haya traducido</string>
-    <string name="HideOriginalTextAfterTranslate">Esconder texto original después de traducir</string>
+    <string name="HideOriginalTextAfterTranslate">Ocultar texto original después de traducir</string>
     <string name="DontAutoPlayNextMessage">No reproducir automáticamente el siguiente mensaje de voz</string>
     <string name="ChatListFontSizeFollowChat">Usar el tamaño de la fuente del mensaje en la lista de chat</string>
     <string name="UseCustomProviderForAutoTranslate">Usar traductor personalizado para traducción automática</string>
@@ -299,4 +299,19 @@
     <string name="DataCleared">Datos borrados</string>
     <string name="BlacklistedQueryRemoved">La consulta/consultas deseleccionadas se ha eliminado de la lista negra.</string>
     <string name="ShowChannelMsgFwdCount">Mostrar el recuento de reenvíos de mensajes del canal</string>
+    <string name="EnhancedVideoBitrateInfo">Mejor calidad, archivos más grandes</string>
+    <string name="UnarchiveOnSwipe">Desarchivar chat al deslizar</string>
+    <string name="TranscribeProvider">Proveedor de transcripción</string>
+    <string name="TranscribeProviderAuto">Selección automática</string>
+    <string name="CloudflareCredentials">Credenciales de Cloudfare</string>
+    <string name="CloudflareCredentialsNotSet">Las credenciales de Cloudfare no están configuradas.</string>
+    <string name="CloudflareAccountID">ID de la cuenta</string>
+    <string name="CloudflareAPIToken">Token de API</string>
+    <string name="CloudflareCredentialsDialog">Configure la ID de cuenta de Cloudflare y el token de API.\n**¿Cómo obtener?**</string>
+    <string name="TranscribeProviderWorkersAI">Whisper (Workers AI)</string>
+    <string name="SwipeActionInTopicList">Deslizar en lista de temas (Ocultar/Mostrar)</string>
+    <string name="EnhancedVideoBitrate">Tasa de bits de video compartido mejorada</string>
+    <string name="MarkdownCode">Código</string>
+    <string name="TranscribeProviderDesc">Con la opción de selección automática, %s se utilizará cuando Telegram Premium no esté disponible.</string>
+    <string name="CloudflareCredentialsObtainDesc">1. Abre el panel de control de Cloudfare e inicia sesión con tu cuenta\n\n2. Expande la opción de IA en el menú lateral y haz clic en Workers AI\n\n3. Haz clic en Usar API REST\n\n4. Anota tu ID de cuenta y luego crea un token de API en esa página.</string>
 </resources>
