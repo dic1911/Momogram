@@ -1922,10 +1922,13 @@ public class MediaDataController extends BaseController {
                 TLRPC.TL_messages_getSavedGifs req = new TLRPC.TL_messages_getSavedGifs();
                 req.hash = calcDocumentsHash(recentGifs);
                 getConnectionsManager().sendRequest(req, (response, error) -> {
-                    ArrayList<TLRPC.Document> arrayList = null;
+                    ArrayList<TLRPC.Document> arrayList = recentGifs;
                     if (response instanceof TLRPC.TL_messages_savedGifs) {
                         TLRPC.TL_messages_savedGifs res = (TLRPC.TL_messages_savedGifs) response;
-                        arrayList = res.gifs;
+                        for (TLRPC.Document g : res.gifs) {
+                            if (arrayList.contains(g)) continue;
+                            arrayList.add(0, g);
+                        }
                     }
                     processLoadedRecentDocuments(type, arrayList, true, 0, true);
                 });
@@ -1996,7 +1999,7 @@ public class MediaDataController extends BaseController {
                     SQLiteDatabase database = getMessagesStorage().getDatabase();
                     int maxCount;
                     if (gif) {
-                        maxCount = getMessagesController().maxRecentGifsCount;
+                        maxCount = Integer.MAX_VALUE;
                     } else {
                         if (type == TYPE_GREETINGS || type == TYPE_PREMIUM_STICKERS) {
                             maxCount = 200;
