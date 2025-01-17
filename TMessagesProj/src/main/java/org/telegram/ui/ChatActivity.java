@@ -133,6 +133,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
+import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.ui.AspectRatioFrameLayout;
 import com.google.zxing.common.detector.MathUtils;
 
@@ -3160,6 +3161,9 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
         if (chatInviteRunnable != null) {
             AndroidUtilities.cancelRunOnUIThread(chatInviteRunnable);
             chatInviteRunnable = null;
+        }
+        if (PhotoViewer.getPipInstance() == null) {
+            Player.videoListeners.clear();
         }
         getNotificationCenter().removePostponeNotificationsCallback(postponeNotificationsWhileLoadingCallback);
         getMessagesController().setLastCreatedDialogId(dialog_id, chatMode == MODE_SCHEDULED, false);

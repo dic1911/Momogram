@@ -27,6 +27,7 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.Shader;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.text.Editable;
 import android.text.SpannableStringBuilder;
 import android.text.TextPaint;
@@ -82,7 +83,7 @@ public class CaptionContainerView extends FrameLayout {
     private final FrameLayout containerView;
 
     protected final Paint backgroundPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-    public final EditTextEmoji editText;
+    public EditTextEmoji editText;
     private Drawable applyButtonCheck;
     private CombinedDrawable applyButtonDrawable;
     public ImageView applyButton;
@@ -99,7 +100,7 @@ public class CaptionContainerView extends FrameLayout {
     private final TextPaint hintTextPaint = new TextPaint(Paint.ANTI_ALIAS_FLAG | Paint.FILTER_BITMAP_FLAG);
     private final Paint hintTextBitmapPaint = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.FILTER_BITMAP_FLAG);
 
-    private final FrameLayout rootView;
+    private FrameLayout rootView;
     private final SizeNotifierFrameLayout sizeNotifierFrameLayout;
 
     public final KeyboardNotifier keyboardNotifier;
@@ -360,13 +361,15 @@ public class CaptionContainerView extends FrameLayout {
 
     public void invalidateBlur() {
         invalidate();
-        editText.getEditText().invalidate();
-        editText.getEmojiButton().invalidate();
         if (mentionContainer != null) {
             mentionContainer.invalidate();
         }
-        if (editText.getEmojiView() != null && customBlur()) {
-            editText.getEmojiView().invalidate();
+        if (editText != null) {
+            editText.getEditText().invalidate();
+            editText.getEmojiButton().invalidate();
+            if (editText.getEmojiView() != null && customBlur()) {
+                editText.getEmojiView().invalidate();
+            }
         }
     }
 
@@ -1284,6 +1287,19 @@ public class CaptionContainerView extends FrameLayout {
             hintTextBitmap.recycle();
             hintTextBitmap = null;
         }
+        if (editText != null) {
+            editText.onDestroy();
+            editText = null;
+        }
+        if (mentionContainer != null) {
+            mentionContainer.detachedFromWindow();
+            mentionContainer = null;
+        }
+        rootView = null;
+    }
+
+    public void detachedFromWindow() {
+        onDetachedFromWindow();
     }
 
     public static class PeriodDrawable extends Drawable {

@@ -6475,6 +6475,8 @@ public class PhotoViewer implements NotificationCenter.NotificationCenterDelegat
                     topCaptionEdit.expandMoveButton();
                 }
             }
+
+
         };
         captionEdit.setOnTimerChange(seconds -> {
             Object object1 = imagesArrLocals.get(currentIndex);
@@ -17593,7 +17595,32 @@ public class PhotoViewer implements NotificationCenter.NotificationCenterDelegat
             currentThumb.release();
             currentThumb = null;
         }
-        animatingImageView.setImageBitmap(null);
+
+        if (animatingImageView != null) {
+            animatingImageView.setImageBitmap(null);
+        }
+
+        // 030: aggressive gc
+        if (NekoConfig.alwaysDestroyPhotoViewer.Bool()) {
+            if (captionEdit != null) captionEdit.detachedFromWindow();
+            if (topCaptionEdit != null) topCaptionEdit.detachedFromWindow();
+            if (containerView != null) {
+                containerView.onDetachedFromWindow();
+                containerView = null;
+            }
+            if (videoPlayer != null) {
+                videoPlayer.removeVideoListener();
+                videoPlayer = null;
+            }
+            if (actionBar != null) {
+                actionBar.detachedFromWindow();
+                actionBar = null;
+            }
+            animatingImageView = null;
+            selectedPhotosAdapter = null;
+            navigationBar = null;
+            blurManager = null;
+        }
 //        if (captionEdit.editText != null) {
 //            captionEdit.editText.onDestroy();
 //        }

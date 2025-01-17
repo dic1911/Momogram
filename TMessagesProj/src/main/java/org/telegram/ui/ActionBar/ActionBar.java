@@ -1795,6 +1795,11 @@ public class ActionBar extends FrameLayout {
         if (lastRightDrawable instanceof AnimatedEmojiDrawable.SwapAnimatedEmojiDrawable) {
             ((AnimatedEmojiDrawable.SwapAnimatedEmojiDrawable) lastRightDrawable).setParentView(null);
         }
+        if (actionMode != null) actionMode.detachedFromWindow();
+    }
+
+    public void detachedFromWindow() {
+        onDetachedFromWindow();
     }
 
     private void updateAttachState() {

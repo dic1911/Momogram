@@ -21,6 +21,7 @@ import android.text.InputFilter;
 import android.text.InputType;
 import android.text.SpannableString;
 import android.text.Spanned;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.ActionMode;
 import android.view.ContextMenu;
@@ -486,13 +487,17 @@ public class EditTextEmoji extends FrameLayout implements NotificationCenter.Not
     }
 
     public void onDestroy() {
+        Log.d("030-gc", "EditTextEmoji.onDestroy");
         destroyed = true;
         NotificationCenter.getGlobalInstance().removeObserver(this, NotificationCenter.emojiLoaded);
         if (emojiView != null) {
             emojiView.onDestroy();
         }
         if (sizeNotifierLayout != null) {
+            Log.d("030-gc", "EditTextEmoji.onDestroy - cleanup sizeNotifierLayout");
+            sizeNotifierLayout.onDetachedFromWindow();
             sizeNotifierLayout.removeDelegate(this);
+            sizeNotifierLayout = null;
         }
     }
 

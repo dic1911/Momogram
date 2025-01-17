@@ -45,6 +45,7 @@ import android.text.TextPaint;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.text.style.ImageSpan;
+import android.util.Log;
 import android.util.LongSparseArray;
 import android.util.Property;
 import android.util.TypedValue;
@@ -2610,98 +2611,7 @@ public class ChatAttachAlert extends BottomSheet implements NotificationCenter.N
 
         currentLimit = MessagesController.getInstance(UserConfig.selectedAccount).getCaptionMaxLengthLimit();
 
-        commentTextView = new EditTextEmoji(context, sizeNotifierFrameLayout, null, EditTextEmoji.STYLE_DIALOG, true, resourcesProvider) {
-
-            private boolean shouldAnimateEditTextWithBounds;
-            private int messageEditTextPredrawHeigth;
-            private int messageEditTextPredrawScrollY;
-            private ValueAnimator messageEditTextAnimator;
-
-            @Override
-            public boolean onInterceptTouchEvent(MotionEvent ev) {
-                if (!enterCommentEventSent) {
-                    if (ev.getX() > commentTextView.getEditText().getLeft() && ev.getX() < commentTextView.getEditText().getRight()
-                            && ev.getY() > commentTextView.getEditText().getTop() && ev.getY() < commentTextView.getEditText().getBottom()) {
-                        makeFocusable(commentTextView.getEditText(), true);
-                    } else {
-                        makeFocusable(commentTextView.getEditText(), false);
-                    }
-                }
-                return super.onInterceptTouchEvent(ev);
-            }
-
-            @Override
-            protected void dispatchDraw(Canvas canvas) {
-                if (shouldAnimateEditTextWithBounds) {
-                    EditTextCaption editText = commentTextView.getEditText();
-                    float dy = (messageEditTextPredrawHeigth - editText.getMeasuredHeight()) + (messageEditTextPredrawScrollY - editText.getScrollY());
-                    editText.setOffsetY(editText.getOffsetY() - dy);
-                    ValueAnimator a = ValueAnimator.ofFloat(editText.getOffsetY(), 0);
-                    a.addUpdateListener(animation -> {
-                        editText.setOffsetY((float) animation.getAnimatedValue());
-                        updateCommentTextViewPosition();
-                        if (currentAttachLayout == photoLayout) {
-                            photoLayout.onContainerTranslationUpdated(currentPanTranslationY);
-                        }
-                    });
-                    if (messageEditTextAnimator != null) {
-                        messageEditTextAnimator.cancel();
-                    }
-                    messageEditTextAnimator = a;
-                    a.setDuration(200);
-                    a.setInterpolator(CubicBezierInterpolator.DEFAULT);
-                    a.start();
-                    shouldAnimateEditTextWithBounds = false;
-                }
-                super.dispatchDraw(canvas);
-            }
-
-            @Override
-            protected void onLineCountChanged(int oldLineCount, int newLineCount) {
-                if (!TextUtils.isEmpty(getEditText().getText())) {
-                    shouldAnimateEditTextWithBounds = true;
-                    messageEditTextPredrawHeigth = getEditText().getMeasuredHeight();
-                    messageEditTextPredrawScrollY = getEditText().getScrollY();
-                    invalidate();
-                } else {
-                    getEditText().animate().cancel();
-                    getEditText().setOffsetY(0);
-                    shouldAnimateEditTextWithBounds = false;
-                }
-                chatActivityEnterViewAnimateFromTop = frameLayout2.getTop() + captionEditTextTopOffset;
-                frameLayout2.invalidate();
-                updateCommentTextViewPosition();
-            }
-
-            @Override
-            protected void bottomPanelTranslationY(float translation) {
-                bottomPannelTranslation = translation;
-                frameLayout2.setTranslationY(translation);
-                moveCaptionButton.setTranslationY(bottomPannelTranslation - commentTextView.getHeight() + captionContainer.getTranslationY());
-                writeButtonContainer.setTranslationY(translation);
-                frameLayout2.invalidate();
-                updateLayout(currentAttachLayout, true, 0);
-            }
-
-            @Override
-            protected void closeParent() {
-                ChatAttachAlert.super.dismiss();
-            }
-
-            @Override
-            protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
-                super.onLayout(changed, left, top, right, bottom);
-                updateCommentTextViewPosition();
-            }
-
-            @Override
-            protected void extendActionMode(ActionMode actionMode, Menu menu) {
-                if (baseFragment instanceof ChatActivity) {
-                    ChatActivity.fillActionModeMenu(menu, ((ChatActivity) baseFragment).getCurrentEncryptedChat(), true);
-                }
-                super.extendActionMode(actionMode, menu);
-            }
-        };
+        commentTextView = createCommentTextView(context);// 030 mark
         commentTextView.setHint(getString("AddCaption", R.string.AddCaption));
         commentTextView.onResume();
         commentTextView.getEditText().addTextChangedListener(new TextWatcher() {
@@ -2797,40 +2707,7 @@ public class ChatAttachAlert extends BottomSheet implements NotificationCenter.N
 
         topCommentContainer.setPadding(dp(10), dp(2), dp(10), dp(10));
         topCommentContainer.setWillNotDraw(false);
-        topCommentTextView = new EditTextEmoji(context, sizeNotifierFrameLayout, null, EditTextEmoji.STYLE_DIALOG, true, resourcesProvider) {
-            @Override
-            public boolean onInterceptTouchEvent(MotionEvent ev) {
-                if (!enterCommentEventSent) {
-                    if (ev.getX() > topCommentTextView.getEditText().getLeft() && ev.getX() < topCommentTextView.getEditText().getRight()
-                            && ev.getY() > topCommentTextView.getEditText().getTop() && ev.getY() < topCommentTextView.getEditText().getBottom()) {
-                        makeFocusable(topCommentTextView.getEditText(), true);
-                    } else {
-                        makeFocusable(topCommentTextView.getEditText(), false);
-                    }
-                }
-                return super.onInterceptTouchEvent(ev);
-            }
-
-            @Override
-            protected void onLineCountChanged(int oldLineCount, int newLineCount) {
-                super.onLineCountChanged(oldLineCount, newLineCount);
-                updatedTopCaptionHeight();
-            }
-
-            @Override
-            protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
-                super.onLayout(changed, left, top, right, bottom);
-                updatedTopCaptionHeight();
-            }
-
-            @Override
-            protected void extendActionMode(ActionMode actionMode, Menu menu) {
-                if (baseFragment instanceof ChatActivity) {
-                    ChatActivity.fillActionModeMenu(menu, ((ChatActivity) baseFragment).getCurrentEncryptedChat(), true);
-                }
-                super.extendActionMode(actionMode, menu);
-            }
-        };
+        topCommentTextView = createTopCommentTextView(context);
         topCommentTextView.getEditText().addTextChangedListener(new TextWatcher() {
 
             private boolean processChange;
@@ -5069,6 +4946,8 @@ public class ChatAttachAlert extends BottomSheet implements NotificationCenter.N
             commentTextView.setVisibility(allowEnterCaption ? View.VISIBLE : View.INVISIBLE);
         }
         photoLayout.onInit(videosEnabled, photosEnabled, documentsEnabled);
+        if (commentTextView == null) commentTextView = createCommentTextView(getContext());
+        if (topCommentTextView == null) topCommentTextView = createCommentTextView(getContext());
         commentTextView.hidePopup(true);
         topCommentTextView.hidePopup(true);
         enterCommentEventSent = false;
@@ -5554,11 +5433,32 @@ public class ChatAttachAlert extends BottomSheet implements NotificationCenter.N
     }
 
     private void removeFromRoot() {
+        Log.d("030-gc", "removeFromRoot");
         if (containerView != null) {
             containerView.setVisibility(View.INVISIBLE);
         }
         if (actionBar.isSearchFieldVisible()) {
             actionBar.closeSearchField();
+        }
+        if (sizeNotifierFrameLayout != null) {
+            Log.d("030-gc", "removeFromRoot - sizeNotifierFrameLayout");
+            sizeNotifierFrameLayout.onDetachedFromWindow();
+            // sizeNotifierFrameLayout = null;
+        }
+        if (commentTextView != null) {
+            Log.d("030-gc", "removeFromRoot - commentTextView");
+            commentTextView.onDestroy();
+            commentTextView = null;
+        }
+        if (topCommentTextView != null) {
+            Log.d("030-gc", "removeFromRoot - topCommentTextView");
+            topCommentTextView.onDestroy();
+            topCommentTextView = null;
+        }
+        if (mentionContainer != null) {
+            Log.d("030-gc", "removeFromRoot - mentionContainer");
+            mentionContainer.onDetachedFromWindow();
+            mentionContainer = null;
         }
         contactsLayout = null;
         quickRepliesLayout = null;
@@ -5922,5 +5822,139 @@ public class ChatAttachAlert extends BottomSheet implements NotificationCenter.N
             dismiss();
             dismissInternal();
         });
+    }
+
+    private EditTextEmoji createCommentTextView(Context context) {
+        if (commentTextView != null) return commentTextView;
+        return new EditTextEmoji(context, sizeNotifierFrameLayout, null, EditTextEmoji.STYLE_DIALOG, true, resourcesProvider) {
+
+            private boolean shouldAnimateEditTextWithBounds;
+            private int messageEditTextPredrawHeigth;
+            private int messageEditTextPredrawScrollY;
+            private ValueAnimator messageEditTextAnimator;
+
+            @Override
+            public boolean onInterceptTouchEvent(MotionEvent ev) {
+                if (!enterCommentEventSent) {
+                    if (ev.getX() > commentTextView.getEditText().getLeft() && ev.getX() < commentTextView.getEditText().getRight()
+                            && ev.getY() > commentTextView.getEditText().getTop() && ev.getY() < commentTextView.getEditText().getBottom()) {
+                        makeFocusable(commentTextView.getEditText(), true);
+                    } else {
+                        makeFocusable(commentTextView.getEditText(), false);
+                    }
+                }
+                return super.onInterceptTouchEvent(ev);
+            }
+
+            @Override
+            protected void dispatchDraw(Canvas canvas) {
+                if (shouldAnimateEditTextWithBounds) {
+                    EditTextCaption editText = commentTextView.getEditText();
+                    float dy = (messageEditTextPredrawHeigth - editText.getMeasuredHeight()) + (messageEditTextPredrawScrollY - editText.getScrollY());
+                    editText.setOffsetY(editText.getOffsetY() - dy);
+                    ValueAnimator a = ValueAnimator.ofFloat(editText.getOffsetY(), 0);
+                    a.addUpdateListener(animation -> {
+                        editText.setOffsetY((float) animation.getAnimatedValue());
+                        updateCommentTextViewPosition();
+                        if (currentAttachLayout == photoLayout) {
+                            photoLayout.onContainerTranslationUpdated(currentPanTranslationY);
+                        }
+                    });
+                    if (messageEditTextAnimator != null) {
+                        messageEditTextAnimator.cancel();
+                    }
+                    messageEditTextAnimator = a;
+                    a.setDuration(200);
+                    a.setInterpolator(CubicBezierInterpolator.DEFAULT);
+                    a.start();
+                    shouldAnimateEditTextWithBounds = false;
+                }
+                super.dispatchDraw(canvas);
+            }
+
+            @Override
+            protected void onLineCountChanged(int oldLineCount, int newLineCount) {
+                if (!TextUtils.isEmpty(getEditText().getText())) {
+                    shouldAnimateEditTextWithBounds = true;
+                    messageEditTextPredrawHeigth = getEditText().getMeasuredHeight();
+                    messageEditTextPredrawScrollY = getEditText().getScrollY();
+                    invalidate();
+                } else {
+                    getEditText().animate().cancel();
+                    getEditText().setOffsetY(0);
+                    shouldAnimateEditTextWithBounds = false;
+                }
+                chatActivityEnterViewAnimateFromTop = frameLayout2.getTop() + captionEditTextTopOffset;
+                frameLayout2.invalidate();
+                updateCommentTextViewPosition();
+            }
+
+            @Override
+            protected void bottomPanelTranslationY(float translation) {
+                bottomPannelTranslation = translation;
+                frameLayout2.setTranslationY(translation);
+                moveCaptionButton.setTranslationY(bottomPannelTranslation - commentTextView.getHeight() + captionContainer.getTranslationY());
+                writeButtonContainer.setTranslationY(translation);
+                frameLayout2.invalidate();
+                updateLayout(currentAttachLayout, true, 0);
+            }
+
+            @Override
+            protected void closeParent() {
+                ChatAttachAlert.super.dismiss();
+            }
+
+            @Override
+            protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
+                super.onLayout(changed, left, top, right, bottom);
+                updateCommentTextViewPosition();
+            }
+
+            @Override
+            protected void extendActionMode(ActionMode actionMode, Menu menu) {
+                if (baseFragment instanceof ChatActivity) {
+                    ChatActivity.fillActionModeMenu(menu, ((ChatActivity) baseFragment).getCurrentEncryptedChat(), true);
+                }
+                super.extendActionMode(actionMode, menu);
+            }
+        };
+    }
+
+    private EditTextEmoji createTopCommentTextView(Context context) {
+        if (topCommentTextView != null) return topCommentTextView;
+        return new EditTextEmoji(context, sizeNotifierFrameLayout, null, EditTextEmoji.STYLE_DIALOG, true, resourcesProvider) {
+            @Override
+            public boolean onInterceptTouchEvent(MotionEvent ev) {
+                if (!enterCommentEventSent) {
+                    if (ev.getX() > topCommentTextView.getEditText().getLeft() && ev.getX() < topCommentTextView.getEditText().getRight()
+                            && ev.getY() > topCommentTextView.getEditText().getTop() && ev.getY() < topCommentTextView.getEditText().getBottom()) {
+                        makeFocusable(topCommentTextView.getEditText(), true);
+                    } else {
+                        makeFocusable(topCommentTextView.getEditText(), false);
+                    }
+                }
+                return super.onInterceptTouchEvent(ev);
+            }
+
+            @Override
+            protected void onLineCountChanged(int oldLineCount, int newLineCount) {
+                super.onLineCountChanged(oldLineCount, newLineCount);
+                updatedTopCaptionHeight();
+            }
+
+            @Override
+            protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
+                super.onLayout(changed, left, top, right, bottom);
+                updatedTopCaptionHeight();
+            }
+
+            @Override
+            protected void extendActionMode(ActionMode actionMode, Menu menu) {
+                if (baseFragment instanceof ChatActivity) {
+                    ChatActivity.fillActionModeMenu(menu, ((ChatActivity) baseFragment).getCurrentEncryptedChat(), true);
+                }
+                super.extendActionMode(actionMode, menu);
+            }
+        };
     }
 }

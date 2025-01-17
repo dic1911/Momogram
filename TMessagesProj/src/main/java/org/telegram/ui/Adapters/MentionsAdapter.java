@@ -99,7 +99,7 @@ public class MentionsAdapter extends RecyclerListView.SelectionAdapter implement
     private final boolean USE_DIVIDERS = false;
 
     private int currentAccount = UserConfig.selectedAccount;
-    private final Context mContext;
+    private Context mContext;
     private long dialog_id;
     private long threadMessageId;
     private final boolean stories;
@@ -484,6 +484,7 @@ public class MentionsAdapter extends RecyclerListView.SelectionAdapter implement
         }
         NotificationCenter.getInstance(currentAccount).removeObserver(this, NotificationCenter.recentDocumentsDidLoad);
         NotificationCenter.getInstance(currentAccount).removeObserver(this, NotificationCenter.stickersDidLoad);
+        mContext = null;
     }
 
     public void setParentFragment(ChatActivity fragment) {

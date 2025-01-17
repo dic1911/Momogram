@@ -11,6 +11,7 @@ import android.os.Build;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.Spanned;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -53,6 +54,8 @@ import org.telegram.ui.PhotoViewer;
 
 import java.util.ArrayList;
 
+import tw.nekomimi.nekogram.utils.TelegramUtil;
+
 public class MentionsContainerView extends BlurredFrameLayout implements NotificationCenter.NotificationCenterDelegate {
 
     private final SizeNotifierFrameLayout sizeNotifierFrameLayout;
@@ -73,6 +76,7 @@ public class MentionsContainerView extends BlurredFrameLayout implements Notific
 
     public MentionsContainerView(@NonNull Context context, long dialogId, long threadMessageId, BaseFragment baseFragment, SizeNotifierFrameLayout container, Theme.ResourcesProvider resourcesProvider) {
         super(context, container);
+        Log.d("030-?", "create MentionsContainerView: " + TelegramUtil.getStackTraceAsString(null));
         this.baseFragment = baseFragment;
         this.sizeNotifierFrameLayout = container;
         this.resourcesProvider = resourcesProvider;
@@ -897,6 +901,11 @@ public class MentionsContainerView extends BlurredFrameLayout implements Notific
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
         NotificationCenter.getGlobalInstance().removeObserver(this, NotificationCenter.emojiLoaded);
+        adapter.onDestroy();
+    }
+
+    public void detachedFromWindow() {
+        onDetachedFromWindow();
     }
 
     @Override

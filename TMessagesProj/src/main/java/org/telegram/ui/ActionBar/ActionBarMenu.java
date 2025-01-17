@@ -598,4 +598,8 @@ public class ActionBarMenu extends LinearLayout {
             onLayoutListener.run();
         }
     }
+
+    public void detachedFromWindow() {
+        onDetachedFromWindow();
+    }
 }

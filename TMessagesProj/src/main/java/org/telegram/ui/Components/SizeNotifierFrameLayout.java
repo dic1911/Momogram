@@ -415,7 +415,8 @@ public class SizeNotifierFrameLayout extends FrameLayout {
     public void addDelegate(SizeNotifierFrameLayoutDelegate delegate) {
         this.delegates.add(delegate);
     }
-    public void removeDelegate(SizeNotifierFrameLayoutDelegate delegate) {
+    public void
+    removeDelegate(SizeNotifierFrameLayoutDelegate delegate) {
         this.delegates.remove(delegate);
     }
 
