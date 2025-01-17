@@ -44,7 +44,7 @@ public class BuildVars {
     public static boolean isPlay = false;
     public static boolean isFdroid = BuildConfig.BUILD_TYPE.toLowerCase().contains("fdroid");
     public static boolean isMini = true;
-    public static boolean isGServicesCompiled = BuildConfig.BUILD_TYPE.equals("debug") || BuildConfig.BUILD_TYPE.equals("release");
+    public static boolean isGServicesCompiled = false; // BuildConfig.BUILD_TYPE.equals("debug") || BuildConfig.BUILD_TYPE.equals("release");
     public static final boolean hasTintSupport = Build.VERSION.SDK_INT > 21;
 
     static {
