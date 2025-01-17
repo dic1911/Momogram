@@ -5422,7 +5422,7 @@ public class MediaDataController extends BaseController {
             return;
         }
         TLRPC.User user = getMessagesController().getUser(dialogId);
-        if (user == null || user.bot || user.self) {
+        if (user == null || (!NekoConfig.allowBotInDirectShare.Bool() && user.bot) || user.self) {
             return;
         }
         getMessagesStorage().getStorageQueue().postRunnable(() -> {
