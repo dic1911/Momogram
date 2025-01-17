@@ -4090,6 +4090,8 @@ public class ChatAttachAlert extends BottomSheet implements NotificationCenter.N
     }
 
     private boolean showCommentTextView(boolean show, boolean animated) {
+        if (commentTextView == null) commentTextView = createCommentTextView(getContext());
+        if (topCommentTextView == null) topCommentTextView = createCommentTextView(getContext());
         if (show == (frameLayout2.getTag() != null)) {
             return false;
         }
