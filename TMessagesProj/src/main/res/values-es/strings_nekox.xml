@@ -191,7 +191,7 @@
     <string name="doubleTapShowReactionsMenu">Mostrar menú de reacciones</string>
     <string name="doubleTapSendReaction">Enviar reacción</string>
     <string name="doubleTapDisable">Deshabilitado</string>
-    <string name="disableReactionsWhenSelecting">Esconder reacciones al seleccionar</string>
+    <string name="disableReactionsWhenSelecting">Ocultar reacciones al seleccionar</string>
     <string name="UnsupportedProxy">Proxy no soportado</string>
     <string name="ShowSelfInsteadOfSavedMessages">Mostrar como uno mismo en lugar de "Mensajes guardados"</string>
     <string name="DisableCustomWallpaperUser">Deshabilitar fondo personalizado de usuario</string>
