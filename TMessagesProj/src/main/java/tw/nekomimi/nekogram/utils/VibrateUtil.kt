@@ -51,7 +51,9 @@ object VibrateUtil {
     }
 
     @JvmStatic
-    fun disableHapticFeedback(view: View) {
+    fun disableHapticFeedback(view: View?) {
+
+        if (view == null) return
 
         view.isHapticFeedbackEnabled = false
 
