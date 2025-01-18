@@ -43,6 +43,7 @@ import androidx.multidex.MultiDex;
 import com.jakewharton.processphoenix.ProcessPhoenix;
 
 import org.json.JSONObject;
+import org.telegram.messenger.BuildConfig;
 import org.telegram.messenger.voip.VideoCapturerDevice;
 import org.telegram.tgnet.ConnectionsManager;
 import org.telegram.tgnet.TLRPC;
@@ -106,7 +107,8 @@ public class ApplicationLoader extends Application {
         }
         Thread.currentThread().setUncaughtExceptionHandler((thread, error) -> {
             Log.e("nekox", "from " + thread, error);
-            String errStr = String.format("%s\n%s: %s | %s\n%s",
+            String errStr = String.format("%s\n%s\n%s: %s | %s\n%s",
+                    BuildConfig.VERSION_NAME,
                     AndroidUtilities.getSystemProperty("ro.build.fingerprint"),
                     error.getClass().getName(), error.getMessage(), error.getCause(),
                     TelegramUtil.getStackTraceAsString(error.getStackTrace()));
