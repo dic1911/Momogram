@@ -202,4 +202,17 @@
     <string name="AllowDupLogin">Izinkan login ke akun yang ada</string>
     <string name="AllowDupLoginInfo">Hal ini dapat menyebabkan berbagai masalah, pastikan Anda hanya menjalankan satu sesi setelah pekerjaan selesai.</string>
     <string name="CustomApiHash">Hash API khusus</string>
+    <string name="MonetLightMode">Terang</string>
+    <string name="MonetAmoled">Amoled</string>
+    <string name="MonetGradient">Gradien</string>
+    <string name="MonetAvatarGradient">Gradien untuk avatar</string>
+    <string name="MonetAlterOut">Gaya pesan keluar alternatif</string>
+    <string name="AlwaysDestroyPhotoViewer">Selalu hancurkan PhotoViewer</string>
+    <string name="CustomMaxCacheSize">Ukuran cache khusus</string>
+    <string name="CustomMaxCacheSizeHint">Ukuran dalam MB (mis. 512)</string>
+    <string name="GenerateMonetTheme">Hasilkan tema Monet</string>
+    <string name="CustomMaxCacheSizeBulletin">Ukuran cache maksimum ditetapkan ke %1$s MB</string>
+    <string name="HideChannelBottomNotiToggle">Sembunyikan tombol notifikasi di bagian bawah saluran</string>
+    <string name="MonetNickname">Monet untuk nama panggilan</string>
+    <string name="UseCamera2API">Gunakan API Kamera 2</string>
 </resources>
