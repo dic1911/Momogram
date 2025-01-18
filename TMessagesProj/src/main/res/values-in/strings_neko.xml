@@ -299,4 +299,19 @@
     <string name="ResetIVFailDomainsConfirm">Semua data kegagalan tampilan instan yang disimpan sebelumnya akan dihapus! Lanjutkan?</string>
     <string name="ShowChannelMsgFwdCount">Tampilkan jumlah penerusan pesan saluran</string>
     <string name="BlacklistedQueryRemoved">Kueri yang tidak dipilih telah dihapus dari daftar hitam.</string>
+    <string name="TranscribeProviderDesc">Dengan opsi pemilihan otomatis, %s akan digunakan saat Telegram Premium tidak tersedia.</string>
+    <string name="CloudflareCredentials">Kredensial Cloudflare</string>
+    <string name="CloudflareCredentialsNotSet">Kredensial Cloudflare tidak dikonfigurasi.</string>
+    <string name="CloudflareCredentialsDialog">Konfigurasikan ID Akun Cloudflare dan Token API.\n**Bagaimana cara memperolehnya?**</string>
+    <string name="TranscribeProviderWorkersAI">Whisper (Workers AI)</string>
+    <string name="CloudflareAPIToken">Toko API</string>
+    <string name="EnhancedVideoBitrate">Bitrate video bersama yang ditingkatkan</string>
+    <string name="EnhancedVideoBitrateInfo">Kualitas lebih baik dengan ukuran file yang jauh lebih besar</string>
+    <string name="CloudflareCredentialsObtainDesc">1. Buka dasbor Cloudflare dan masuk dengan akun Anda\n\n2. Perluas AI dari menu samping dan klik pada Workers AI\n\n3. Klik pada Use REST API\n\n4. Catat ID Akun Anda lalu buat token API di halaman tersebut.</string>
+    <string name="UnarchiveOnSwipe">Batalkan pengarsipan obrolan dengan menggeser</string>
+    <string name="SwipeActionInTopicList">Tindakan geser dalam daftar topik (SembunyikanTampilkan)</string>
+    <string name="MarkdownCode">Kode</string>
+    <string name="TranscribeProvider">Penyedia transkripsi</string>
+    <string name="TranscribeProviderAuto">Pilih otomatis</string>
+    <string name="CloudflareAccountID">ID Akun</string>
 </resources>
