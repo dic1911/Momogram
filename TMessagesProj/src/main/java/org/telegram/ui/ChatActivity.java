@@ -7067,6 +7067,7 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
                 return super.dispatchTouchEvent(ev);
             }
         };
+        mentionContainer.markDontDestroyAdapter();
         if (isInPreviewMode()) {
             mentionContainer.setAlpha(0f);
         }
