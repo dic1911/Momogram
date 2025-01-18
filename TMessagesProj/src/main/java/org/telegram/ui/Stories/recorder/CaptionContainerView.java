@@ -245,7 +245,6 @@ public class CaptionContainerView extends FrameLayout {
         captionBlur = new BlurringShader.StoryBlurDrawer(blurManager, editText.getEditText(), customBlur() ? BlurringShader.StoryBlurDrawer.BLUR_TYPE_CAPTION : BlurringShader.StoryBlurDrawer.BLUR_TYPE_CAPTION_XFER);
         editText.getEditText().setHintColor(0xffffffff);
         editText.getEditText().setHintText(LocaleController.getString(R.string.AddCaption), false);
-        hintTextBitmapPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.DST_IN));
         editText.getEditText().setTranslationX(AndroidUtilities.dp(-40 + 18));
         if (isAtTop()) {
             editText.getEditText().setGravity(Gravity.TOP);
@@ -1197,6 +1196,7 @@ public class CaptionContainerView extends FrameLayout {
     }
 
     public CharSequence getText() {
+        if (editText == null) return "";
         return editText.getText();
     }
 
@@ -1479,4 +1479,100 @@ public class CaptionContainerView extends FrameLayout {
         return false;
     }
 
+    public void createEditText(Context context) {
+        if (editText != null) return;
+        if (context == null) context = getContext();
+        editText = new EditTextEmoji(context, sizeNotifierFrameLayout, null, getEditTextStyle(), true, new DarkThemeResourceProvider()) {
+            @Override
+            public boolean dispatchTouchEvent(MotionEvent ev) {
+                if (CaptionContainerView.this instanceof CaptionStory && ((CaptionStory) CaptionContainerView.this).isRecording()) {
+                    return false;
+                }
+                return super.dispatchTouchEvent(ev);
+            }
+
+            @Override
+            protected void updatedEmojiExpanded() {
+                keyboardNotifier.fire();
+            }
+
+            @Override
+            protected boolean allowSearch() {
+                return true;
+            }
+
+            @Override
+            protected void onEmojiKeyboardUpdate() {
+                keyboardNotifier.fire();
+            }
+
+            @Override
+            protected void onWaitingForKeyboard() {
+                keyboardNotifier.awaitKeyboard();
+            }
+
+            @Override
+            protected void createEmojiView() {
+                super.createEmojiView();
+                EmojiView emojiView = getEmojiView();
+                if (emojiView != null && (getEditTextStyle() == EditTextEmoji.STYLE_STORY || getEditTextStyle() == EditTextEmoji.STYLE_PHOTOVIEWER)) {
+                    emojiView.shouldLightenBackground = false;
+                    emojiView.fixBottomTabContainerTranslation = false;
+                    emojiView.setShouldDrawBackground(false);
+                    if (CaptionContainerView.this instanceof CaptionPhotoViewer) {
+                        emojiView.setPadding(0, 0, 0, AndroidUtilities.navigationBarHeight);
+                        emojiView.emojiCacheType = AnimatedEmojiDrawable.CACHE_TYPE_ALERT_PREVIEW;
+                    }
+                }
+            }
+
+            private BlurringShader.StoryBlurDrawer blurDrawer;
+
+            @Override
+            protected void drawEmojiBackground(Canvas canvas, View view) {
+                rectF.set(0, 0, view.getWidth(), view.getHeight());
+                if (customBlur()) {
+                    if (blurDrawer == null) {
+                        blurDrawer = new BlurringShader.StoryBlurDrawer(blurManager, view, BlurringShader.StoryBlurDrawer.BLUR_TYPE_EMOJI_VIEW);
+                    }
+                    drawBlur(blurDrawer, canvas, rectF, 0, false, 0, -view.getY(), false, 1.0f);
+                } else {
+                    drawBackground(canvas, rectF, 0, .95f, view);
+                }
+            }
+
+            @Override
+            protected boolean onScrollYChange(int afterScrollY) {
+                if (scrollAnimator != null && scrollAnimator.isRunning() && afterScrollY == goingToScrollY) {
+                    return false;
+                }
+                CaptionContainerView.this.invalidate();
+                if (waitingForScrollYChange) {
+                    waitingForScrollYChange = false;
+                    if (beforeScrollY != afterScrollY && (scrollAnimator == null || !scrollAnimator.isRunning() || afterScrollY != goingToScrollY)) {
+                        if (scrollAnimator != null) {
+                            scrollAnimator.cancel();
+                        }
+                        editText.getEditText().setScrollY(beforeScrollY);
+                        scrollAnimator = ObjectAnimator.ofInt(editText.getEditText(), "scrollY", beforeScrollY, goingToScrollY = afterScrollY);
+                        scrollAnimator.setDuration(240);
+                        scrollAnimator.setInterpolator(CubicBezierInterpolator.EASE_OUT_QUINT);
+                        scrollAnimator.addListener(new AnimatorListenerAdapter() {
+                            @Override
+                            public void onAnimationEnd(Animator animation) {
+                                if (scrollAnimator != animation) {
+                                    return;
+                                }
+                                scrollAnimator = null;
+                                editText.getEditText().setScrollY(goingToScrollY);
+                            }
+                        });
+                        scrollAnimator.start();
+                        return false;
+                    }
+                }
+                return true;
+            }
+        };
+    }
 }

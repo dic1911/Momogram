@@ -2984,6 +2984,8 @@ public class PhotoViewer implements NotificationCenter.NotificationCenterDelegat
             widthSize -= (getPaddingRight() + getPaddingLeft());
             heightSize -= getPaddingBottom();
 
+            ensureCaptionPhotoViewerEditText();
+
             int childCount = getChildCount();
             for (int i = 0; i < childCount; i++) {
                 View child = getChildAt(i);
@@ -3009,7 +3011,7 @@ public class PhotoViewer implements NotificationCenter.NotificationCenterDelegat
                         height = heightSize;
                     }
                     paintingOverlay.measure(MeasureSpec.makeMeasureSpec(width, MeasureSpec.EXACTLY), MeasureSpec.makeMeasureSpec(height, MeasureSpec.EXACTLY));
-                } else if ((captionEdit.editText != null && captionEdit.editText.isPopupView(child)) || (topCaptionEdit.editText != null && topCaptionEdit.editText.isPopupView(child))) {
+                } else if (captionEdit.editText.isPopupView(child) || topCaptionEdit.editText.isPopupView(child)) {
                     int inputFieldHeight = 0;
                     if (inBubbleMode) {
                         child.measure(MeasureSpec.makeMeasureSpec(widthSize, MeasureSpec.EXACTLY), MeasureSpec.makeMeasureSpec(heightSize - inputFieldHeight, MeasureSpec.EXACTLY));
@@ -3115,10 +3117,11 @@ public class PhotoViewer implements NotificationCenter.NotificationCenterDelegat
                         break;
                 }
 
+                ensureCaptionPhotoViewerEditText();
                 if (child == captionEdit.mentionContainer) {
                 } else if (child == topCaptionEdit.mentionContainer) {
                     childTop += actionBar.getMeasuredHeight();
-                } else if ((captionEdit.editText != null && captionEdit.editText.isPopupView(child)) || (topCaptionEdit.editText != null && topCaptionEdit.editText.isPopupView(child))) {
+                } else if (captionEdit.editText.isPopupView(child) || topCaptionEdit.editText.isPopupView(child)) {
                     childTop = (_b - t) - height + (!inBubbleMode && !AndroidUtilities.isInMultiwindow ? AndroidUtilities.navigationBarHeight : 0);
                 } else if (child == selectedPhotosListView) {
                     childTop = actionBar.getMeasuredHeight() + dp(5);
@@ -4735,7 +4738,7 @@ public class PhotoViewer implements NotificationCenter.NotificationCenterDelegat
                     if (captionEdit.getVisibility() == View.GONE) {
                         return 0;
                     }
-                    return getHeight() - captionEdit.editText.getTop();
+                    return getHeight() - (captionEdit.editText == null ? 0 :captionEdit.editText.getTop());
                 }
             };
 
@@ -9533,7 +9536,9 @@ public class PhotoViewer implements NotificationCenter.NotificationCenterDelegat
     }
 
     private CaptionContainerView getCaptionView() {
-        return placeProvider != null && placeProvider.isCaptionAbove() ? topCaptionEdit : captionEdit;
+        CaptionContainerView v = placeProvider != null && placeProvider.isCaptionAbove() ? topCaptionEdit : captionEdit;
+        if (v.editText == null) v.createEditText(null);
+        return v;
     }
 
     private CharSequence applyCaption() {
@@ -12554,14 +12559,18 @@ public class PhotoViewer implements NotificationCenter.NotificationCenterDelegat
         animatorSet.start();
         if (!show && isCaptionOpen()) {
             closeCaptionEnter(true);
-            if (captionEdit.editText.isPopupShowing()) {
-                captionEdit.editText.hidePopup(true);
+            if (captionEdit.editText != null) {
+                if (captionEdit.editText.isPopupShowing())
+                    captionEdit.editText.hidePopup(true);
+
+                captionEdit.editText.closeKeyboard();
             }
-            if (topCaptionEdit.editText.isPopupShowing()) {
-                topCaptionEdit.editText.hidePopup(true);
+            if (topCaptionEdit.editText != null) {
+                if (topCaptionEdit.editText.isPopupShowing())
+                    topCaptionEdit.editText.hidePopup(true);
+
+                topCaptionEdit.editText.closeKeyboard();
             }
-            captionEdit.editText.closeKeyboard();
-            topCaptionEdit.editText.closeKeyboard();
         }
     }
 
@@ -12682,7 +12691,16 @@ public class PhotoViewer implements NotificationCenter.NotificationCenterDelegat
         if (actionBarAnimator != null) {
             actionBarAnimator.cancel();
         }
-        if (show && actionBar != null) {
+        if (actionBar == null) {
+            actionBar = new ActionBar(parentFragment.getParentActivity()) {
+                @Override
+                public void setAlpha(float alpha) {
+                    super.setAlpha(alpha);
+                    containerView.invalidate();
+                }
+            };
+        }
+        if (show) {
             actionBar.setVisibility(View.VISIBLE);
             if (bottomLayout.getTag() != null) {
                 bottomLayout.setVisibility(View.VISIBLE);
@@ -22044,5 +22062,10 @@ public class PhotoViewer implements NotificationCenter.NotificationCenterDelegat
         } catch (Exception ex) {
             FileLog.e(ex);
         }
+    }
+
+    private void ensureCaptionPhotoViewerEditText() {
+        if (captionEdit != null) captionEdit.createEditText(null);
+        if (topCaptionEdit != null) topCaptionEdit.createEditText(null);
     }
 }
