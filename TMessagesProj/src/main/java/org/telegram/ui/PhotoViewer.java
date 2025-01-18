@@ -3009,7 +3009,7 @@ public class PhotoViewer implements NotificationCenter.NotificationCenterDelegat
                         height = heightSize;
                     }
                     paintingOverlay.measure(MeasureSpec.makeMeasureSpec(width, MeasureSpec.EXACTLY), MeasureSpec.makeMeasureSpec(height, MeasureSpec.EXACTLY));
-                } else if (captionEdit.editText.isPopupView(child) || topCaptionEdit.editText.isPopupView(child)) {
+                } else if ((captionEdit.editText != null && captionEdit.editText.isPopupView(child)) || (topCaptionEdit.editText != null && topCaptionEdit.editText.isPopupView(child))) {
                     int inputFieldHeight = 0;
                     if (inBubbleMode) {
                         child.measure(MeasureSpec.makeMeasureSpec(widthSize, MeasureSpec.EXACTLY), MeasureSpec.makeMeasureSpec(heightSize - inputFieldHeight, MeasureSpec.EXACTLY));
@@ -3118,7 +3118,7 @@ public class PhotoViewer implements NotificationCenter.NotificationCenterDelegat
                 if (child == captionEdit.mentionContainer) {
                 } else if (child == topCaptionEdit.mentionContainer) {
                     childTop += actionBar.getMeasuredHeight();
-                } else if (captionEdit.editText.isPopupView(child) || topCaptionEdit.editText.isPopupView(child)) {
+                } else if ((captionEdit.editText != null && captionEdit.editText.isPopupView(child)) || (topCaptionEdit.editText != null && topCaptionEdit.editText.isPopupView(child))) {
                     childTop = (_b - t) - height + (!inBubbleMode && !AndroidUtilities.isInMultiwindow ? AndroidUtilities.navigationBarHeight : 0);
                 } else if (child == selectedPhotosListView) {
                     childTop = actionBar.getMeasuredHeight() + dp(5);
@@ -12682,7 +12682,7 @@ public class PhotoViewer implements NotificationCenter.NotificationCenterDelegat
         if (actionBarAnimator != null) {
             actionBarAnimator.cancel();
         }
-        if (show) {
+        if (show && actionBar != null) {
             actionBar.setVisibility(View.VISIBLE);
             if (bottomLayout.getTag() != null) {
                 bottomLayout.setVisibility(View.VISIBLE);
