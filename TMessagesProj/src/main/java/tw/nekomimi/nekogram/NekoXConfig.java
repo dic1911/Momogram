@@ -281,7 +281,7 @@ public class NekoXConfig {
         preferences.edit().putStringSet(instantViewFailedDomainKey, instantViewFailedDomainSet).apply();
     }
     public static void resetInstantViewFailedDomains() {
-        instantViewFailedDomainSet.clear();
+        if (instantViewFailedDomainSet != null) instantViewFailedDomainSet.clear();
         preferences.edit().putStringSet(instantViewFailedDomainKey, Set.of()).apply();
     }
     public static boolean isInstantViewFailedDomain(String host) {
