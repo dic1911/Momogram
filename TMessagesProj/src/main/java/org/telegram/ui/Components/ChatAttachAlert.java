@@ -2611,95 +2611,7 @@ public class ChatAttachAlert extends BottomSheet implements NotificationCenter.N
 
         currentLimit = MessagesController.getInstance(UserConfig.selectedAccount).getCaptionMaxLengthLimit();
 
-        commentTextView = createCommentTextView(context);// 030 mark
-        commentTextView.setHint(getString("AddCaption", R.string.AddCaption));
-        commentTextView.onResume();
-        commentTextView.getEditText().addTextChangedListener(new TextWatcher() {
-
-            private boolean processChange;
-            private boolean wasEmpty;
-
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
-                if ((count - before) >= 1) {
-                    processChange = true;
-                }
-                if (mentionContainer == null) {
-                    createMentionsContainer();
-                }
-                if (mentionContainer.getAdapter() != null) {
-                    mentionContainer.setReversed(false);
-                    mentionContainer.getAdapter().searchUsernameOrHashtag(charSequence, commentTextView.getEditText().getSelectionStart(), null, false, false);
-                    updateCommentTextViewPosition();
-                }
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                if (wasEmpty != TextUtils.isEmpty(editable)) {
-                    if (currentAttachLayout != null) {
-                        currentAttachLayout.onSelectedItemsCountChanged(currentAttachLayout.getSelectedItemsCount());
-                    }
-                    wasEmpty = !wasEmpty;
-                }
-                if (processChange) {
-                    ImageSpan[] spans = editable.getSpans(0, editable.length(), ImageSpan.class);
-                    for (int i = 0; i < spans.length; i++) {
-                        editable.removeSpan(spans[i]);
-                    }
-                    Emoji.replaceEmoji(editable, commentTextView.getEditText().getPaint().getFontMetricsInt(), dp(20), false);
-                    processChange = false;
-                }
-                int beforeLimit;
-                codepointCount = Character.codePointCount(editable, 0, editable.length());
-                boolean sendButtonEnabledLocal = true;
-                if (currentLimit > 0 && (beforeLimit = currentLimit - codepointCount) <= 100) {
-                    if (beforeLimit < -9999) {
-                        beforeLimit = -9999;
-                    }
-                    captionLimitView.setNumber(beforeLimit, captionLimitView.getVisibility() == View.VISIBLE);
-                    if (captionLimitView.getVisibility() != View.VISIBLE) {
-                        captionLimitView.setVisibility(View.VISIBLE);
-                        captionLimitView.setAlpha(0);
-                        captionLimitView.setScaleX(0.5f);
-                        captionLimitView.setScaleY(0.5f);
-                    }
-                    captionLimitView.animate().setListener(null).cancel();
-                    captionLimitView.animate().alpha(1f).scaleX(1f).scaleY(1f).setDuration(100).start();
-                    if (beforeLimit < 0) {
-                        sendButtonEnabledLocal = false;
-                        captionLimitView.setTextColor(getThemedColor(Theme.key_text_RedRegular));
-                    } else {
-                        captionLimitView.setTextColor(getThemedColor(Theme.key_windowBackgroundWhiteGrayText));
-                    }
-                    topCaptionLimitView.setNumber(beforeLimit, false);
-                    topCaptionLimitView.setAlpha(1.0f);
-                } else {
-                    captionLimitView.animate().alpha(0).scaleX(0.5f).scaleY(0.5f).setDuration(100).setListener(new AnimatorListenerAdapter() {
-                        @Override
-                        public void onAnimationEnd(Animator animation) {
-                            captionLimitView.setVisibility(View.GONE);
-                        }
-                    });
-                    topCaptionLimitView.setAlpha(0.0f);
-                }
-
-                if (sendButtonEnabled != sendButtonEnabledLocal) {
-                    sendButtonEnabled = sendButtonEnabledLocal;
-                    writeButton.invalidate();
-                }
-
-//                if (!captionLimitBulletinShown && !MessagesController.getInstance(currentAccount).premiumFeaturesBlocked() && !UserConfig.getInstance(currentAccount).isPremium() && codepointCount > MessagesController.getInstance(currentAccount).captionLengthLimitDefault && codepointCount < MessagesController.getInstance(currentAccount).captionLengthLimitPremium) {
-//                    captionLimitBulletinShown = true;
-//                    showCaptionLimitBulletin(parentFragment);
-//                }
-            }
-        });
+        commentTextView = createCommentTextView(context); // style and init stuff all moved inside the method
         captionContainer.addView(commentTextView, LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, LayoutHelper.WRAP_CONTENT, Gravity.BOTTOM | Gravity.LEFT, 0, 0, 84, 0));
         captionContainer.setClipChildren(false);
         frameLayout2.setClipChildren(false);
@@ -2707,98 +2619,7 @@ public class ChatAttachAlert extends BottomSheet implements NotificationCenter.N
 
         topCommentContainer.setPadding(dp(10), dp(2), dp(10), dp(10));
         topCommentContainer.setWillNotDraw(false);
-        topCommentTextView = createTopCommentTextView(context);
-        topCommentTextView.getEditText().addTextChangedListener(new TextWatcher() {
-
-            private boolean processChange;
-            private boolean wasEmpty;
-
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
-                if ((count - before) >= 1) {
-                    processChange = true;
-                }
-                if (mentionContainer == null) {
-                    createMentionsContainer();
-                }
-                if (mentionContainer.getAdapter() != null) {
-                    mentionContainer.setReversed(true);
-                    mentionContainer.getAdapter().searchUsernameOrHashtag(charSequence, topCommentTextView.getEditText().getSelectionStart(), null, false, false);
-                    updateCommentTextViewPosition();
-                }
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                if (wasEmpty != TextUtils.isEmpty(editable)) {
-                    if (currentAttachLayout != null) {
-                        currentAttachLayout.onSelectedItemsCountChanged(currentAttachLayout.getSelectedItemsCount());
-                    }
-                    wasEmpty = !wasEmpty;
-                }
-                if (processChange) {
-                    ImageSpan[] spans = editable.getSpans(0, editable.length(), ImageSpan.class);
-                    for (int i = 0; i < spans.length; i++) {
-                        editable.removeSpan(spans[i]);
-                    }
-                    Emoji.replaceEmoji(editable, topCommentTextView.getEditText().getPaint().getFontMetricsInt(), dp(20), false);
-                    processChange = false;
-                }
-                int beforeLimit;
-                codepointCount = Character.codePointCount(editable, 0, editable.length());
-                boolean sendButtonEnabledLocal = true;
-                if (currentLimit > 0 && (beforeLimit = currentLimit - codepointCount) <= 100) {
-                    if (beforeLimit < -9999) {
-                        beforeLimit = -9999;
-                    }
-                    topCaptionLimitView.setNumber(beforeLimit, topCaptionLimitView.getVisibility() == View.VISIBLE);
-                    if (topCaptionLimitView.getVisibility() != View.VISIBLE) {
-                        topCaptionLimitView.setVisibility(View.VISIBLE);
-                        topCaptionLimitView.setAlpha(0);
-                        topCaptionLimitView.setScaleX(0.5f);
-                        topCaptionLimitView.setScaleY(0.5f);
-                    }
-                    topCaptionLimitView.animate().setListener(null).cancel();
-                    topCaptionLimitView.animate().alpha(1f).scaleX(1f).scaleY(1f).setDuration(100).start();
-                    if (beforeLimit < 0) {
-                        sendButtonEnabledLocal = false;
-                        topCaptionLimitView.setTextColor(getThemedColor(Theme.key_text_RedRegular));
-                    } else {
-                        topCaptionLimitView.setTextColor(getThemedColor(Theme.key_windowBackgroundWhiteGrayText));
-                    }
-                    captionLimitView.setNumber(beforeLimit, false);
-                    captionLimitView.setAlpha(1.0f);
-                } else {
-                    topCaptionLimitView.animate().alpha(0).scaleX(0.5f).scaleY(0.5f).setDuration(100).setListener(new AnimatorListenerAdapter() {
-                        @Override
-                        public void onAnimationEnd(Animator animation) {
-                            topCaptionLimitView.setVisibility(View.GONE);
-                        }
-                    });
-                    captionLimitView.setAlpha(0.0f);
-                }
-
-                if (sendButtonEnabled != sendButtonEnabledLocal) {
-                    sendButtonEnabled = sendButtonEnabledLocal;
-                    writeButton.invalidate();
-                }
-
-                if (!captionLimitBulletinShown && !MessagesController.getInstance(currentAccount).premiumFeaturesBlocked() && !UserConfig.getInstance(currentAccount).isPremium() && codepointCount > MessagesController.getInstance(currentAccount).captionLengthLimitDefault && codepointCount < MessagesController.getInstance(currentAccount).captionLengthLimitPremium) {
-                    captionLimitBulletinShown = true;
-                    showCaptionLimitBulletin(parentFragment);
-                }
-            }
-        });
-        topCommentTextView.getEditText().setPadding(0, dp(9), 0, dp(9));
-        topCommentTextView.getEditText().setLayoutParams(LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, LayoutHelper.MATCH_PARENT, Gravity.LEFT | Gravity.CENTER_VERTICAL, 48, 0, 36, 0));
-        topCommentTextView.getEditText().setTextSize(TypedValue.COMPLEX_UNIT_DIP, 17);
-        topCommentTextView.getEmojiButton().setLayoutParams(LayoutHelper.createFrame(40, 40, Gravity.BOTTOM | Gravity.LEFT, 0, 0, 0, 0));
-        topCommentTextView.setHint(getString("AddCaption", R.string.AddCaption));
+        topCommentTextView = createTopCommentTextView(context); // style and init stuff all moved inside the method
         topCommentContainer.addView(topCommentTextView, LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, LayoutHelper.WRAP_CONTENT, Gravity.FILL));
         topCommentContainer.setAlpha(0.0f);
         topCommentContainer.setVisibility(View.GONE);
@@ -4090,8 +3911,8 @@ public class ChatAttachAlert extends BottomSheet implements NotificationCenter.N
     }
 
     private boolean showCommentTextView(boolean show, boolean animated) {
-        if (commentTextView == null) commentTextView = createCommentTextView(getContext());
-        if (topCommentTextView == null) topCommentTextView = createCommentTextView(getContext());
+        if (commentTextView == null) commentTextView = createCommentTextView(null);
+        if (topCommentTextView == null) topCommentTextView = createTopCommentTextView(null);
         if (show == (frameLayout2.getTag() != null)) {
             return false;
         }
@@ -4948,8 +4769,8 @@ public class ChatAttachAlert extends BottomSheet implements NotificationCenter.N
             commentTextView.setVisibility(allowEnterCaption ? View.VISIBLE : View.INVISIBLE);
         }
         photoLayout.onInit(videosEnabled, photosEnabled, documentsEnabled);
-        if (commentTextView == null) commentTextView = createCommentTextView(getContext());
-        if (topCommentTextView == null) topCommentTextView = createCommentTextView(getContext());
+        if (commentTextView == null) commentTextView = createCommentTextView(null);
+        if (topCommentTextView == null) topCommentTextView = createTopCommentTextView(null);
         commentTextView.hidePopup(true);
         topCommentTextView.hidePopup(true);
         enterCommentEventSent = false;
@@ -5828,7 +5649,10 @@ public class ChatAttachAlert extends BottomSheet implements NotificationCenter.N
 
     private EditTextEmoji createCommentTextView(Context context) {
         if (commentTextView != null) return commentTextView;
-        return new EditTextEmoji(context, sizeNotifierFrameLayout, null, EditTextEmoji.STYLE_DIALOG, true, resourcesProvider) {
+        if (context == null) {
+            context = (baseFragment != null ? baseFragment.getContext() : getContext());
+        }
+        commentTextView = new EditTextEmoji(context, sizeNotifierFrameLayout, null, EditTextEmoji.STYLE_DIALOG, true, resourcesProvider) {
 
             private boolean shouldAnimateEditTextWithBounds;
             private int messageEditTextPredrawHeigth;
@@ -5920,11 +5744,103 @@ public class ChatAttachAlert extends BottomSheet implements NotificationCenter.N
                 super.extendActionMode(actionMode, menu);
             }
         };
+        commentTextView.setHint(getString(R.string.AddCaption));
+        commentTextView.onResume();
+        commentTextView.getEditText().addTextChangedListener(new TextWatcher() {
+
+            private boolean processChange;
+            private boolean wasEmpty;
+
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
+                if ((count - before) >= 1) {
+                    processChange = true;
+                }
+                if (mentionContainer == null) {
+                    createMentionsContainer();
+                }
+                if (mentionContainer.getAdapter() != null) {
+                    mentionContainer.setReversed(false);
+                    mentionContainer.getAdapter().searchUsernameOrHashtag(charSequence, commentTextView.getEditText().getSelectionStart(), null, false, false);
+                    updateCommentTextViewPosition();
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                if (wasEmpty != TextUtils.isEmpty(editable)) {
+                    if (currentAttachLayout != null) {
+                        currentAttachLayout.onSelectedItemsCountChanged(currentAttachLayout.getSelectedItemsCount());
+                    }
+                    wasEmpty = !wasEmpty;
+                }
+                if (processChange) {
+                    ImageSpan[] spans = editable.getSpans(0, editable.length(), ImageSpan.class);
+                    for (int i = 0; i < spans.length; i++) {
+                        editable.removeSpan(spans[i]);
+                    }
+                    Emoji.replaceEmoji(editable, commentTextView.getEditText().getPaint().getFontMetricsInt(), dp(20), false);
+                    processChange = false;
+                }
+                int beforeLimit;
+                codepointCount = Character.codePointCount(editable, 0, editable.length());
+                boolean sendButtonEnabledLocal = true;
+                if (currentLimit > 0 && (beforeLimit = currentLimit - codepointCount) <= 100) {
+                    if (beforeLimit < -9999) {
+                        beforeLimit = -9999;
+                    }
+                    captionLimitView.setNumber(beforeLimit, captionLimitView.getVisibility() == View.VISIBLE);
+                    if (captionLimitView.getVisibility() != View.VISIBLE) {
+                        captionLimitView.setVisibility(View.VISIBLE);
+                        captionLimitView.setAlpha(0);
+                        captionLimitView.setScaleX(0.5f);
+                        captionLimitView.setScaleY(0.5f);
+                    }
+                    captionLimitView.animate().setListener(null).cancel();
+                    captionLimitView.animate().alpha(1f).scaleX(1f).scaleY(1f).setDuration(100).start();
+                    if (beforeLimit < 0) {
+                        sendButtonEnabledLocal = false;
+                        captionLimitView.setTextColor(getThemedColor(Theme.key_text_RedRegular));
+                    } else {
+                        captionLimitView.setTextColor(getThemedColor(Theme.key_windowBackgroundWhiteGrayText));
+                    }
+                    topCaptionLimitView.setNumber(beforeLimit, false);
+                    topCaptionLimitView.setAlpha(1.0f);
+                } else {
+                    captionLimitView.animate().alpha(0).scaleX(0.5f).scaleY(0.5f).setDuration(100).setListener(new AnimatorListenerAdapter() {
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            captionLimitView.setVisibility(View.GONE);
+                        }
+                    });
+                    topCaptionLimitView.setAlpha(0.0f);
+                }
+
+                if (sendButtonEnabled != sendButtonEnabledLocal) {
+                    sendButtonEnabled = sendButtonEnabledLocal;
+                    writeButton.invalidate();
+                }
+
+//                if (!captionLimitBulletinShown && !MessagesController.getInstance(currentAccount).premiumFeaturesBlocked() && !UserConfig.getInstance(currentAccount).isPremium() && codepointCount > MessagesController.getInstance(currentAccount).captionLengthLimitDefault && codepointCount < MessagesController.getInstance(currentAccount).captionLengthLimitPremium) {
+//                    captionLimitBulletinShown = true;
+//                    showCaptionLimitBulletin(parentFragment);
+//                }
+            }
+        });
+        return commentTextView;
     }
 
     private EditTextEmoji createTopCommentTextView(Context context) {
         if (topCommentTextView != null) return topCommentTextView;
-        return new EditTextEmoji(context, sizeNotifierFrameLayout, null, EditTextEmoji.STYLE_DIALOG, true, resourcesProvider) {
+        if (context == null) {
+            context = (baseFragment != null ? baseFragment.getContext() : getContext());
+        }
+        topCommentTextView = new EditTextEmoji(context, sizeNotifierFrameLayout, null, EditTextEmoji.STYLE_DIALOG, true, resourcesProvider) {
             @Override
             public boolean onInterceptTouchEvent(MotionEvent ev) {
                 if (!enterCommentEventSent) {
@@ -5958,5 +5874,99 @@ public class ChatAttachAlert extends BottomSheet implements NotificationCenter.N
                 super.extendActionMode(actionMode, menu);
             }
         };
+
+        topCommentTextView.getEditText().addTextChangedListener(new TextWatcher() {
+
+            private boolean processChange;
+            private boolean wasEmpty;
+
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
+                if ((count - before) >= 1) {
+                    processChange = true;
+                }
+                if (mentionContainer == null) {
+                    createMentionsContainer();
+                }
+                if (mentionContainer.getAdapter() != null) {
+                    mentionContainer.setReversed(true);
+                    mentionContainer.getAdapter().searchUsernameOrHashtag(charSequence, topCommentTextView.getEditText().getSelectionStart(), null, false, false);
+                    updateCommentTextViewPosition();
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                if (wasEmpty != TextUtils.isEmpty(editable)) {
+                    if (currentAttachLayout != null) {
+                        currentAttachLayout.onSelectedItemsCountChanged(currentAttachLayout.getSelectedItemsCount());
+                    }
+                    wasEmpty = !wasEmpty;
+                }
+                if (processChange) {
+                    ImageSpan[] spans = editable.getSpans(0, editable.length(), ImageSpan.class);
+                    for (int i = 0; i < spans.length; i++) {
+                        editable.removeSpan(spans[i]);
+                    }
+                    Emoji.replaceEmoji(editable, topCommentTextView.getEditText().getPaint().getFontMetricsInt(), dp(20), false);
+                    processChange = false;
+                }
+                int beforeLimit;
+                codepointCount = Character.codePointCount(editable, 0, editable.length());
+                boolean sendButtonEnabledLocal = true;
+                if (currentLimit > 0 && (beforeLimit = currentLimit - codepointCount) <= 100) {
+                    if (beforeLimit < -9999) {
+                        beforeLimit = -9999;
+                    }
+                    topCaptionLimitView.setNumber(beforeLimit, topCaptionLimitView.getVisibility() == View.VISIBLE);
+                    if (topCaptionLimitView.getVisibility() != View.VISIBLE) {
+                        topCaptionLimitView.setVisibility(View.VISIBLE);
+                        topCaptionLimitView.setAlpha(0);
+                        topCaptionLimitView.setScaleX(0.5f);
+                        topCaptionLimitView.setScaleY(0.5f);
+                    }
+                    topCaptionLimitView.animate().setListener(null).cancel();
+                    topCaptionLimitView.animate().alpha(1f).scaleX(1f).scaleY(1f).setDuration(100).start();
+                    if (beforeLimit < 0) {
+                        sendButtonEnabledLocal = false;
+                        topCaptionLimitView.setTextColor(getThemedColor(Theme.key_text_RedRegular));
+                    } else {
+                        topCaptionLimitView.setTextColor(getThemedColor(Theme.key_windowBackgroundWhiteGrayText));
+                    }
+                    captionLimitView.setNumber(beforeLimit, false);
+                    captionLimitView.setAlpha(1.0f);
+                } else {
+                    topCaptionLimitView.animate().alpha(0).scaleX(0.5f).scaleY(0.5f).setDuration(100).setListener(new AnimatorListenerAdapter() {
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            topCaptionLimitView.setVisibility(View.GONE);
+                        }
+                    });
+                    captionLimitView.setAlpha(0.0f);
+                }
+
+                if (sendButtonEnabled != sendButtonEnabledLocal) {
+                    sendButtonEnabled = sendButtonEnabledLocal;
+                    writeButton.invalidate();
+                }
+
+                if (!captionLimitBulletinShown && !MessagesController.getInstance(currentAccount).premiumFeaturesBlocked() && !UserConfig.getInstance(currentAccount).isPremium() && codepointCount > MessagesController.getInstance(currentAccount).captionLengthLimitDefault && codepointCount < MessagesController.getInstance(currentAccount).captionLengthLimitPremium) {
+                    captionLimitBulletinShown = true;
+                    if (baseFragment != null) showCaptionLimitBulletin(baseFragment);
+                }
+            }
+        });
+        topCommentTextView.getEditText().setPadding(0, dp(9), 0, dp(9));
+        topCommentTextView.getEditText().setLayoutParams(LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, LayoutHelper.MATCH_PARENT, Gravity.LEFT | Gravity.CENTER_VERTICAL, 48, 0, 36, 0));
+        topCommentTextView.getEditText().setTextSize(TypedValue.COMPLEX_UNIT_DIP, 17);
+        topCommentTextView.getEmojiButton().setLayoutParams(LayoutHelper.createFrame(40, 40, Gravity.BOTTOM | Gravity.LEFT, 0, 0, 0, 0));
+        topCommentTextView.setHint(getString(R.string.AddCaption));
+
+        return topCommentTextView;
     }
 }

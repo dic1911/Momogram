@@ -72,7 +72,6 @@ public class MentionsContainerView extends BlurredFrameLayout implements Notific
 
     public MentionsContainerView(@NonNull Context context, long dialogId, long threadMessageId, BaseFragment baseFragment, SizeNotifierFrameLayout container, Theme.ResourcesProvider resourcesProvider) {
         super(context, container);
-        Log.d("030-?", "create MentionsContainerView: " + TelegramUtil.getStackTraceAsString(null));
         this.baseFragment = baseFragment;
         this.sizeNotifierFrameLayout = container;
         this.resourcesProvider = resourcesProvider;

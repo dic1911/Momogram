@@ -7356,7 +7356,7 @@ public class PhotoViewer implements NotificationCenter.NotificationCenterDelegat
                         photoCropView.setBitmap(bitmap, imageReceiver.getOrientation(), sendPhotoType != SELECT_TYPE_AVATAR && sendPhotoType != SELECT_TYPE_STICKER, true, paintingOverlay, cropTransform, null, null);
                     }
                 }
-                if (paintingOverlay.getVisibility() == View.VISIBLE) {
+                if (paintingOverlay.getVisibility() == View.VISIBLE && containerView != null) {
                     containerView.requestLayout();
                 }
                 detectFaces();
@@ -9537,7 +9537,9 @@ public class PhotoViewer implements NotificationCenter.NotificationCenterDelegat
 
     private CaptionContainerView getCaptionView() {
         CaptionContainerView v = placeProvider != null && placeProvider.isCaptionAbove() ? topCaptionEdit : captionEdit;
-        if (v.editText == null) v.createEditText(null);
+        Context context = activityContext;
+        if (context == null) context = parentChatActivity.getContext();
+        if (v.editText == null) v.createEditText(context);
         return v;
     }
 
@@ -15488,7 +15490,7 @@ public class PhotoViewer implements NotificationCenter.NotificationCenterDelegat
             captionTextViewSwitcher.setVisibility(visible ? View.VISIBLE : View.INVISIBLE);
         } else {
             if (needCaptionLayout) {
-                captionTextViewSwitcher.setText(getString("AddCaption", R.string.AddCaption), animated);
+                captionTextViewSwitcher.setText(getString(R.string.AddCaption), animated);
                 captionTextViewSwitcher.getCurrentView().setTextColor(0xb2ffffff);
                 captionTextViewSwitcher.setTag("empty");
                 captionTextViewSwitcher.setVisibility(View.VISIBLE);
@@ -22065,7 +22067,9 @@ public class PhotoViewer implements NotificationCenter.NotificationCenterDelegat
     }
 
     private void ensureCaptionPhotoViewerEditText() {
-        if (captionEdit != null) captionEdit.createEditText(null);
-        if (topCaptionEdit != null) topCaptionEdit.createEditText(null);
+        Context context = activityContext;
+        if (context == null) context = parentChatActivity.getContext();
+        if (captionEdit != null) captionEdit.createEditText(context);
+        if (topCaptionEdit != null) topCaptionEdit.createEditText(context);
     }
 }

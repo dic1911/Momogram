@@ -1872,6 +1872,7 @@ public class MentionsAdapter extends RecyclerListView.SelectionAdapter implement
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        if (mContext == null) mContext = parent.getContext();
         View view;
         switch (viewType) {
             case 0:

@@ -77,6 +77,8 @@ import org.telegram.ui.Components.Text;
 import org.telegram.ui.LaunchActivity;
 import org.telegram.ui.Stories.DarkThemeResourceProvider;
 
+import tw.nekomimi.nekogram.utils.TelegramUtil;
+
 public class CaptionContainerView extends FrameLayout {
 
     protected Theme.ResourcesProvider resourcesProvider;
@@ -109,7 +111,8 @@ public class CaptionContainerView extends FrameLayout {
     private int shiftDp = -4;
     private final BlurringShader.BlurManager blurManager;
 
-    protected final BlurringShader.StoryBlurDrawer captionBlur, replyTextBlur;
+    protected BlurringShader.StoryBlurDrawer captionBlur;
+    protected final BlurringShader.StoryBlurDrawer replyTextBlur;
     protected final BlurringShader.StoryBlurDrawer backgroundBlur, replyBackgroundBlur;
     private BlurringShader.StoryBlurDrawer mentionBackgroundBlur;
 
@@ -145,173 +148,7 @@ public class CaptionContainerView extends FrameLayout {
 
         keyboardNotifier = new KeyboardNotifier(rootView, this::updateKeyboard);
 
-        editText = new EditTextEmoji(context, sizeNotifierFrameLayout, null, getEditTextStyle(), true, new DarkThemeResourceProvider()) {
-            @Override
-            public boolean dispatchTouchEvent(MotionEvent ev) {
-                if (CaptionContainerView.this instanceof CaptionStory && ((CaptionStory) CaptionContainerView.this).isRecording()) {
-                    return false;
-                }
-                return super.dispatchTouchEvent(ev);
-            }
-
-            @Override
-            protected void updatedEmojiExpanded() {
-                keyboardNotifier.fire();
-            }
-
-            @Override
-            protected boolean allowSearch() {
-                return true;
-            }
-
-            @Override
-            protected void onEmojiKeyboardUpdate() {
-                keyboardNotifier.fire();
-            }
-
-            @Override
-            protected void onWaitingForKeyboard() {
-                keyboardNotifier.awaitKeyboard();
-            }
-
-            @Override
-            protected void createEmojiView() {
-                super.createEmojiView();
-                EmojiView emojiView = getEmojiView();
-                if (emojiView != null && (getEditTextStyle() == EditTextEmoji.STYLE_STORY || getEditTextStyle() == EditTextEmoji.STYLE_PHOTOVIEWER)) {
-                    emojiView.shouldLightenBackground = false;
-                    emojiView.fixBottomTabContainerTranslation = false;
-                    emojiView.setShouldDrawBackground(false);
-                    if (CaptionContainerView.this instanceof CaptionPhotoViewer) {
-                        emojiView.setPadding(0, 0, 0, AndroidUtilities.navigationBarHeight);
-                        emojiView.emojiCacheType = AnimatedEmojiDrawable.CACHE_TYPE_ALERT_PREVIEW;
-                    }
-                }
-            }
-
-            private BlurringShader.StoryBlurDrawer blurDrawer;
-
-            @Override
-            protected void drawEmojiBackground(Canvas canvas, View view) {
-                rectF.set(0, 0, view.getWidth(), view.getHeight());
-                if (customBlur()) {
-                    if (blurDrawer == null) {
-                        blurDrawer = new BlurringShader.StoryBlurDrawer(blurManager, view, BlurringShader.StoryBlurDrawer.BLUR_TYPE_EMOJI_VIEW);
-                    }
-                    drawBlur(blurDrawer, canvas, rectF, 0, false, 0, -view.getY(), false, 1.0f);
-                } else {
-                    drawBackground(canvas, rectF, 0, .95f, view);
-                }
-            }
-
-            @Override
-            protected boolean onScrollYChange(int afterScrollY) {
-                if (scrollAnimator != null && scrollAnimator.isRunning() && afterScrollY == goingToScrollY) {
-                    return false;
-                }
-                CaptionContainerView.this.invalidate();
-                if (waitingForScrollYChange) {
-                    waitingForScrollYChange = false;
-                    if (beforeScrollY != afterScrollY && (scrollAnimator == null || !scrollAnimator.isRunning() || afterScrollY != goingToScrollY)) {
-                        if (scrollAnimator != null) {
-                            scrollAnimator.cancel();
-                        }
-                        editText.getEditText().setScrollY(beforeScrollY);
-                        scrollAnimator = ObjectAnimator.ofInt(editText.getEditText(), "scrollY", beforeScrollY, goingToScrollY = afterScrollY);
-                        scrollAnimator.setDuration(240);
-                        scrollAnimator.setInterpolator(CubicBezierInterpolator.EASE_OUT_QUINT);
-                        scrollAnimator.addListener(new AnimatorListenerAdapter() {
-                            @Override
-                            public void onAnimationEnd(Animator animation) {
-                                if (scrollAnimator != animation) {
-                                    return;
-                                }
-                                scrollAnimator = null;
-                                editText.getEditText().setScrollY(goingToScrollY);
-                            }
-                        });
-                        scrollAnimator.start();
-                        return false;
-                    }
-                }
-                return true;
-            }
-        };
-        editText.setFocusable(true);
-        editText.setFocusableInTouchMode(true);
-        editText.getEditText().hintLayoutYFix = true;
-        editText.getEditText().drawHint = this::drawHint;
-        editText.getEditText().setSupportRtlHint(true);
-        captionBlur = new BlurringShader.StoryBlurDrawer(blurManager, editText.getEditText(), customBlur() ? BlurringShader.StoryBlurDrawer.BLUR_TYPE_CAPTION : BlurringShader.StoryBlurDrawer.BLUR_TYPE_CAPTION_XFER);
-        editText.getEditText().setHintColor(0xffffffff);
-        editText.getEditText().setHintText(LocaleController.getString(R.string.AddCaption), false);
-        editText.getEditText().setTranslationX(AndroidUtilities.dp(-40 + 18));
-        if (isAtTop()) {
-            editText.getEditText().setGravity(Gravity.TOP);
-        }
-        editText.getEmojiButton().setAlpha(0f);
-        editText.getEditText().addTextChangedListener(new TextWatcher() {
-
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                if (scrollAnimator == null || !scrollAnimator.isRunning()) {
-                    beforeScrollY = editText.getEditText().getScrollY();
-                    waitingForScrollYChange = true;
-                }
-            }
-
-            @Override
-            public void onTextChanged(CharSequence text, int start, int before, int count) {
-                if (editText.getEditText().suppressOnTextChanged) {
-                    return;
-                }
-                if (mentionContainer == null) {
-                    createMentionsContainer();
-                }
-                if (mentionContainer.getAdapter() != null) {
-                    mentionContainer.getAdapter().setUserOrChat(MessagesController.getInstance(currentAccount).getUser(dialogId), MessagesController.getInstance(currentAccount).getChat(-dialogId));
-                    mentionContainer.getAdapter().searchUsernameOrHashtag(text, editText.getEditText().getSelectionStart(), null, false, false);
-                }
-            }
-
-            private int lastLength;
-            private boolean lastOverLimit;
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                codePointCount = Character.codePointCount(s, 0, s.length());
-                String limitText = null;
-                final int limit = getCaptionLimit();
-                if (codePointCount + 25 > limit) {
-                    limitText = "" + (limit - codePointCount);
-                }
-                limitTextView.cancelAnimation();
-                limitTextView.setText(limitText);
-                limitTextView.setTextColor(codePointCount >= limit ? 0xffEC7777 : 0xffffffff);
-                if (codePointCount > limit && !UserConfig.getInstance(currentAccount).isPremium() && codePointCount < getCaptionPremiumLimit() && codePointCount > lastLength && (captionLimitToast() || MessagesController.getInstance(currentAccount).premiumFeaturesBlocked())) {
-                    AndroidUtilities.shakeViewSpring(limitTextView, shiftDp = -shiftDp);
-                    BotWebViewVibrationEffect.APP_ERROR.vibrate();
-                }
-                lastLength = codePointCount;
-
-                final boolean overLimit = codePointCount > limit;
-                if (overLimit != lastOverLimit) {
-                    onCaptionLimitUpdate(overLimit);
-                }
-                lastOverLimit = overLimit;
-
-                if (!ignoreTextChange) {
-                    AndroidUtilities.cancelRunOnUIThread(textChangeRunnable);
-                    AndroidUtilities.runOnUIThread(textChangeRunnable, 1500);
-                }
-                ignoreTextChange = false;
-
-                AndroidUtilities.runOnUIThread(() -> {
-                    waitingForScrollYChange = false;
-                });
-            }
-        });
-        editText.getEditText().setLinkTextColor(Color.WHITE);
+        createEditText(context);
         addView(editText, LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, LayoutHelper.WRAP_CONTENT, (isAtTop() ? Gravity.TOP : Gravity.BOTTOM) | Gravity.FILL_HORIZONTAL, 12, 12, 12 + additionalRightMargin(), 12));
 
         applyButton = new BounceableImageView(context);
@@ -1481,7 +1318,6 @@ public class CaptionContainerView extends FrameLayout {
 
     public void createEditText(Context context) {
         if (editText != null) return;
-        if (context == null) context = getContext();
         editText = new EditTextEmoji(context, sizeNotifierFrameLayout, null, getEditTextStyle(), true, new DarkThemeResourceProvider()) {
             @Override
             public boolean dispatchTouchEvent(MotionEvent ev) {
@@ -1574,5 +1410,81 @@ public class CaptionContainerView extends FrameLayout {
                 return true;
             }
         };
+        editText.setFocusable(true);
+        editText.setFocusableInTouchMode(true);
+        editText.getEditText().hintLayoutYFix = true;
+        editText.getEditText().drawHint = this::drawHint;
+        editText.getEditText().setSupportRtlHint(true);
+        editText.getEditText().setHintColor(0xffffffff);
+        editText.getEditText().setHintText(LocaleController.getString(R.string.AddCaption), false);
+        editText.getEditText().setTranslationX(AndroidUtilities.dp(-40 + 18));
+        if (isAtTop()) {
+            editText.getEditText().setGravity(Gravity.TOP);
+        }
+        editText.getEmojiButton().setAlpha(0f);
+        editText.getEditText().addTextChangedListener(new TextWatcher() {
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                if (scrollAnimator == null || !scrollAnimator.isRunning()) {
+                    beforeScrollY = editText.getEditText().getScrollY();
+                    waitingForScrollYChange = true;
+                }
+            }
+
+            @Override
+            public void onTextChanged(CharSequence text, int start, int before, int count) {
+                if (editText.getEditText().suppressOnTextChanged) {
+                    return;
+                }
+                if (mentionContainer == null) {
+                    createMentionsContainer();
+                }
+                if (mentionContainer.getAdapter() != null) {
+                    mentionContainer.getAdapter().setUserOrChat(MessagesController.getInstance(currentAccount).getUser(dialogId), MessagesController.getInstance(currentAccount).getChat(-dialogId));
+                    mentionContainer.getAdapter().searchUsernameOrHashtag(text, editText.getEditText().getSelectionStart(), null, false, false);
+                }
+            }
+
+            private int lastLength;
+            private boolean lastOverLimit;
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                codePointCount = Character.codePointCount(s, 0, s.length());
+                String limitText = null;
+                final int limit = getCaptionLimit();
+                if (codePointCount + 25 > limit) {
+                    limitText = "" + (limit - codePointCount);
+                }
+                limitTextView.cancelAnimation();
+                limitTextView.setText(limitText);
+                limitTextView.setTextColor(codePointCount >= limit ? 0xffEC7777 : 0xffffffff);
+                if (codePointCount > limit && !UserConfig.getInstance(currentAccount).isPremium() && codePointCount < getCaptionPremiumLimit() && codePointCount > lastLength && (captionLimitToast() || MessagesController.getInstance(currentAccount).premiumFeaturesBlocked())) {
+                    AndroidUtilities.shakeViewSpring(limitTextView, shiftDp = -shiftDp);
+                    BotWebViewVibrationEffect.APP_ERROR.vibrate();
+                }
+                lastLength = codePointCount;
+
+                final boolean overLimit = codePointCount > limit;
+                if (overLimit != lastOverLimit) {
+                    onCaptionLimitUpdate(overLimit);
+                }
+                lastOverLimit = overLimit;
+
+                if (!ignoreTextChange) {
+                    AndroidUtilities.cancelRunOnUIThread(textChangeRunnable);
+                    AndroidUtilities.runOnUIThread(textChangeRunnable, 1500);
+                }
+                ignoreTextChange = false;
+
+                AndroidUtilities.runOnUIThread(() -> {
+                    waitingForScrollYChange = false;
+                });
+            }
+        });
+        editText.getEditText().setLinkTextColor(Color.WHITE);
+        captionBlur = new BlurringShader.StoryBlurDrawer(blurManager, editText.getEditText(), customBlur() ? BlurringShader.StoryBlurDrawer.BLUR_TYPE_CAPTION : BlurringShader.StoryBlurDrawer.BLUR_TYPE_CAPTION_XFER);
+        hintTextBitmapPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.DST_IN));
     }
 }
