@@ -3148,6 +3148,7 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
         }
         if (mentionContainer != null && mentionContainer.getAdapter() != null) {
             mentionContainer.getAdapter().onDestroy();
+            mentionContainer.detachedFromWindow();
         }
         if (chatAttachAlert != null) {
             chatAttachAlert.dismissInternal();

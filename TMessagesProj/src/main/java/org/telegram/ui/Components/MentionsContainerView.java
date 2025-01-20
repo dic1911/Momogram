@@ -896,7 +896,7 @@ public class MentionsContainerView extends BlurredFrameLayout implements Notific
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
         NotificationCenter.getGlobalInstance().removeObserver(this, NotificationCenter.emojiLoaded);
-        if (destroyAdapterOnDetached) adapter.onDestroy();
+        if (destroyAdapterOnDetached && adapter != null) adapter.onDestroy();
     }
 
     public void detachedFromWindow() {
