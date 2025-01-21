@@ -1927,7 +1927,7 @@ public class MediaDataController extends BaseController {
                         TLRPC.TL_messages_savedGifs res = (TLRPC.TL_messages_savedGifs) response;
                         for (TLRPC.Document g : res.gifs) {
                             if (arrayList.contains(g)) continue;
-                            arrayList.add(0, g);
+                            arrayList.add(g);
                         }
                     }
                     processLoadedRecentDocuments(type, arrayList, true, 0, true);
