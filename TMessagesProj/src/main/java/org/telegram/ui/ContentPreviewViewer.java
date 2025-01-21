@@ -1458,7 +1458,7 @@ public class ContentPreviewViewer {
         centerImage.setLayerNum(Integer.MAX_VALUE);
         effectImage.setCurrentAccount(currentAccount);
         effectImage.setLayerNum(Integer.MAX_VALUE);
-        if (parentActivity == activity) {
+        if (parentActivity == activity && windowView != null && windowView.isAttachedToWindow()) {
             return;
         }
         parentActivity = activity;
@@ -1477,6 +1477,16 @@ public class ContentPreviewViewer {
                     return true;
                 }
                 return super.dispatchKeyEvent(event);
+            }
+
+            @Override
+            protected void onDetachedFromWindow() {
+                super.onDetachedFromWindow();
+                if (windowView.getParent() != null) {
+                    WindowManager wm = (WindowManager) parentActivity.getSystemService(Context.WINDOW_SERVICE);
+                    wm.removeViewImmediate(windowView);
+                }
+                windowView = null;
             }
         };
         windowView.setFocusable(true);
@@ -1545,6 +1555,8 @@ public class ContentPreviewViewer {
         } else {
             windowLayoutParams.flags |=  WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM;
         }
+        if (parentActivity != null && windowView == null) setParentActivity(parentActivity);
+        if (windowView == null) return;
         WindowManager wm1 = (WindowManager) parentActivity.getSystemService(Context.WINDOW_SERVICE);
         try {
             wm1.updateViewLayout(windowView, windowLayoutParams);
@@ -1558,6 +1570,7 @@ public class ContentPreviewViewer {
     }
 
     public void open(TLRPC.Document document, SendMessagesHelper.ImportingSticker sticker, String emojiPath, String query, TLRPC.BotInlineResult botInlineResult, int contentType, boolean isRecent, Object parent, Theme.ResourcesProvider resourcesProvider) {
+        if (parentActivity != null && windowView == null) setParentActivity(parentActivity);
         if (parentActivity == null || windowView == null) {
             return;
         }
@@ -1774,7 +1787,7 @@ public class ContentPreviewViewer {
         currentDocument = null;
         currentQuery = null;
         currentStickerSet = null;
-        if (parentActivity == null || windowView == null) {
+        if (parentActivity == null) {
             return;
         }
         if (blurrBitmap != null) {
@@ -1784,7 +1797,7 @@ public class ContentPreviewViewer {
         blurProgress = 0f;
         menuVisible = false;
         try {
-            if (windowView.getParent() != null) {
+            if (windowView != null && windowView.getParent() != null) {
                 WindowManager wm = (WindowManager) parentActivity.getSystemService(Context.WINDOW_SERVICE);
                 wm.removeViewImmediate(windowView);
             }
@@ -1960,7 +1973,7 @@ public class ContentPreviewViewer {
                 AndroidUtilities.updateViewVisibilityAnimated(unlockPremiumView, false, 1f, false);
                 blurProgress = 0f;
                 try {
-                    if (windowView.getParent() != null) {
+                    if (windowView != null && windowView.getParent() != null) {
                         WindowManager wm = (WindowManager) parentActivity.getSystemService(Context.WINDOW_SERVICE);
                         wm.removeView(windowView);
                     }
