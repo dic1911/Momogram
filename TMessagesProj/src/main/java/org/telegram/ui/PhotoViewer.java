@@ -17626,7 +17626,7 @@ public class PhotoViewer implements NotificationCenter.NotificationCenterDelegat
             if (topCaptionEdit != null) topCaptionEdit.detachedFromWindow();
             if (containerView != null) {
                 containerView.onDetachedFromWindow();
-                containerView = null;
+                // containerView = null;
             }
             if (videoPlayer != null) {
                 videoPlayer.removeVideoListener();
