@@ -307,7 +307,8 @@ public class PipVideoOverlay {
         controlsAnimator.setInterpolator(CubicBezierInterpolator.DEFAULT);
         controlsAnimator.addUpdateListener(animation -> {
             float value = (float) animation.getAnimatedValue();
-            controlsView.setAlpha(value);
+            if (controlsView != null)
+                controlsView.setAlpha(value);
         });
         controlsAnimator.addListener(new AnimatorListenerAdapter() {
             @Override
@@ -403,6 +404,9 @@ public class PipVideoOverlay {
         photoViewerWebView = null;
         parentSheet = null;
         consumingChild = null;
+        contentView = null;
+        contentFrameLayout = null;
+        controlsView = null;
         isScrolling = false;
         isVisible = false;
         isDismissing = false;
@@ -1012,7 +1016,8 @@ public class PipVideoOverlay {
 
             @Override
             public void invalidate() {
-                controlsView.invalidate();
+                if (controlsView != null)
+                    controlsView.invalidate();
             }
         });
         controlsView = new FrameLayout(context) {
