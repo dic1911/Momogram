@@ -548,8 +548,9 @@ public class MessageObject {
         boolean hasMedia = messageOwner.media != null;
         boolean maskForBlockedUser = (NekoConfig.ignoreBlocked.Bool() && MessagesController.getInstance(currentAccount).blockePeers.indexOfKey(getSenderId()) >= 0);
         boolean maskForSpecifiedChat = NekoConfig.alwaysUseSpoilerForMediaChats.contains(messageOwner.dialog_id);
-        boolean spoilerOverride = maskForSpecifiedChat || maskForBlockedUser;
-        return (hasMedia && spoilerOverride) || !isRepostPreview && (hasMedia && messageOwner.media.spoiler || needDrawBluredPreview()) || isHiddenSensitive();
+        return maskForBlockedUser || (hasMedia && maskForSpecifiedChat)
+                || !isRepostPreview && (hasMedia && (messageOwner.media.spoiler && !NekoConfig.showSpoilersDirectly.Bool()) || needDrawBluredPreview())
+                || isHiddenSensitive();
     }
 
     public Boolean isSensitiveCached;
