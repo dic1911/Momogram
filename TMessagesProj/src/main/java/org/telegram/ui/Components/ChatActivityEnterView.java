@@ -12575,22 +12575,26 @@ public class ChatActivityEnterView extends BlurredFrameLayout implements Notific
         } else if (id == NotificationCenter.didUpdatePremiumGiftFieldIcon) {
             updateGiftButton(true);
         } else if (id == NotificationCenter.outgoingMessageTranslated) {
-            FileLog.d(String.format("030-tx: outgoingMessageTranslated %d %s", dialog_id, parentFragment.isFullyVisible));
-            sendButton.setLoading(false, SendButton.INFINITE_LOADING);
-            if (!parentFragment.isFullyVisible) return;
             boolean dontSend = isTranslatedBeforeSend = NekoConfig.dontSendRightAfterTranslated.Bool();
+            boolean parentExists = (parentFragment != null);
+
+            sendButton.setLoading(false, SendButton.INFINITE_LOADING);
             CharSequence translated = (CharSequence) args[0];
-            if (parentFragment.chatAttachAlert != null && parentFragment.chatAttachAlert.hasSelectedItem()) {
+
+            if (parentExists) {
+                if (!parentFragment.isFullyVisible) return;
                 // media selector opened
-                PhotoViewer viewer = PhotoViewer.getInstance();
-                parentFragment.chatAttachAlert.commentTextView.setText(translated);
-                if (viewer.waitingForTranslation) {
-                    viewer.waitingForTranslation = false;
-                    if (dontSend) viewer.setCaption(translated);
-                    else viewer.closePhoto(true, false);
+                if (parentFragment.chatAttachAlert != null && parentFragment.chatAttachAlert.hasSelectedItem()) {
+                    PhotoViewer viewer = PhotoViewer.getInstance();
+                    parentFragment.chatAttachAlert.commentTextView.setText(translated);
+                    if (viewer.waitingForTranslation) {
+                        viewer.waitingForTranslation = false;
+                        if (dontSend) viewer.setCaption(translated);
+                        else viewer.closePhoto(true, false);
+                    }
+                    parentFragment.finishPreviewFragment();
+                    parentFragment.chatAttachAlert.handleTranslatedMessage(translated, dontSend);
                 }
-                parentFragment.finishPreviewFragment();
-                parentFragment.chatAttachAlert.handleTranslatedMessage(translated, dontSend);
             } else {
                 // normal text msg
                 setFieldText(translated, false, true);
