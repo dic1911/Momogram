@@ -684,7 +684,7 @@ public class ChatAttachAlertPhotoLayout extends ChatAttachAlert.AttachAlertLayou
     public ChatAttachAlertPhotoLayout(ChatAttachAlert alert, Context context, boolean forceDarkTheme, boolean needCamera, Theme.ResourcesProvider resourcesProvider) {
         super(alert, context, resourcesProvider);
         this.forceDarkTheme = forceDarkTheme;
-        this.needCamera = needCamera;
+        this.needCamera = needCamera && !NekoConfig.hideCameraInAttachMenu.Bool();
         NotificationCenter.getGlobalInstance().addObserver(this, NotificationCenter.albumsDidLoad);
         NotificationCenter.getGlobalInstance().addObserver(this, NotificationCenter.cameraInitied);
         FrameLayout container = alert.getContainer();
@@ -999,10 +999,8 @@ public class ChatAttachAlertPhotoLayout extends ChatAttachAlert.AttachAlertLayou
                 }, hasSpoiler ? 250 : 0);
             } else {
                 if (SharedConfig.inappCamera) {
-                    if (NekoConfig.disableInstantCamera.Bool()) {
-                        showCamera();
-                    }
-                    openCamera(true);
+                    if (NekoConfig.disableInstantCamera.Bool()) showCamera();
+                    else openCamera(true);
                 } else {
                     if (parentAlert.delegate != null) {
                         parentAlert.delegate.didPressedButton(0, false, true, 0, 0, parentAlert.isCaptionAbove(), false);
@@ -4215,7 +4213,7 @@ public class ChatAttachAlertPhotoLayout extends ChatAttachAlert.AttachAlertLayou
 
         public PhotoAttachAdapter(Context context, boolean camera) {
             mContext = context;
-            needCamera = camera;
+            needCamera = camera && !NekoConfig.hideCameraInAttachMenu.Bool();
         }
 
         public void createCache() {
