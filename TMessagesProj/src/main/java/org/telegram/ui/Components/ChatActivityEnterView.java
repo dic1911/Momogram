@@ -4121,6 +4121,10 @@ public class ChatActivityEnterView extends BlurredFrameLayout implements Notific
     }
 
     private void openWebViewMenu() {
+        openWebViewMenu(false);
+    }
+
+    public void openWebViewMenu(boolean inApp) {
         boolean preventPulldown = NekoConfig.preventPullDownWebview.Bool();
         Runnable onRequestWebView = () -> {
             AndroidUtilities.hideKeyboard(this);
@@ -4135,6 +4139,7 @@ public class ChatActivityEnterView extends BlurredFrameLayout implements Notific
             if (!preventPulldown) {
 //                if (AndroidUtilities.isTablet() || true) {
                     BotWebViewSheet webViewSheet = new BotWebViewSheet(getContext(), resourcesProvider);
+                    webViewSheet.setInApp(inApp);
                     webViewSheet.setDefaultFullsize(false);
                     webViewSheet.setNeedsContext(true);
                     webViewSheet.setParentActivity(parentActivity);
@@ -4159,6 +4164,7 @@ public class ChatActivityEnterView extends BlurredFrameLayout implements Notific
 //                }
             } else {
                 BotWebViewSheet sheet = new BotWebViewSheet(getContext(), resourcesProvider);
+                sheet.setInApp(inApp);
                 sheet.setNeedsContext(false);
                 sheet.setParentActivity(parentActivity);
                 sheet.requestWebView(parentFragment, props);
@@ -12568,7 +12574,8 @@ public class ChatActivityEnterView extends BlurredFrameLayout implements Notific
                     botMenuButtonType = BotMenuButtonType.NO_BUTTON;
                 }
 
-                NekoXConfig.saveBotHasWebView(dialog_id, hasBotWebView());
+                if (NekoXConfig.saveBotHasWebView(dialog_id, hasBotWebView()))
+                    parentFragment.addOpenAppMenuButton();
                 if (NekoConfig.alwaysShowBotCommandButton.Bool()) createBotButton();
                 updateBotButton(false);
             }
@@ -13577,7 +13584,8 @@ public class ChatActivityEnterView extends BlurredFrameLayout implements Notific
             } else {
                 botMenuButtonType = BotMenuButtonType.NO_BUTTON;
             }
-            NekoXConfig.saveBotHasWebView(dialog_id, hasBotWebView());
+            if (NekoXConfig.saveBotHasWebView(dialog_id, hasBotWebView()))
+                parentFragment.addOpenAppMenuButton();
         } else {
             botMenuButtonType = BotMenuButtonType.NO_BUTTON;
         }

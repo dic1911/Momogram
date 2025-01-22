@@ -371,6 +371,7 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
     private final static int nkbtn_copy_link_in_pm = 2025;
 
     private final static int nkheaderbtn_recent_actions = 3001;
+    private final static int nkheaderbtn_bot_app = 3002;
 
     public int shareAlertDebugMode = DEBUG_SHARE_ALERT_MODE_NORMAL;
     public boolean shareAlertDebugTopicsSlowMotion;
@@ -4273,6 +4274,11 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
             }
             if (allowShowPinned) {
                 headerItem.lazilyAddSubItem(nkheaderbtn_show_pinned, R.drawable.deproko_baseline_pin_24, LocaleController.getString(R.string.PinnedMessage));
+            }
+            if (NekoConfig.forceExternalBrowserForBots.Bool()) {
+                TLRPC.User bot = getMessagesController().getUser(dialog_id);
+                if (bot != null && bot.bot_has_main_app)
+                    addOpenAppMenuButton();
             }
             // NekoX - end
             if (ChatObject.isBoostSupported(currentChat) && (getUserConfig().isPremium() || ChatObject.isBoosted(chatInfo) || ChatObject.hasAdminRights(currentChat))) {
@@ -42100,6 +42106,8 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
             });
         } else if (id == nkheaderbtn_recent_actions) {
             presentFragment(new ChannelAdminLogActivity(currentChat));
+        } else if (id == nkheaderbtn_bot_app) {
+            chatActivityEnterView.openWebViewMenu(true);
         }
     }
 
@@ -43261,5 +43269,12 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
             getUndoView().setAdditionalTranslationY(0);
         });
         animator.start();
+    }
+
+    boolean addedOpenAppMenuButton = false;
+    public void addOpenAppMenuButton() {
+        if (addedOpenAppMenuButton) return;
+        headerItem.addSubItem(nkheaderbtn_bot_app, R.drawable.msg_bot, LocaleController.getString(R.string.BotWebAppInstantViewOpen));
+        addedOpenAppMenuButton = true;
     }
 }
