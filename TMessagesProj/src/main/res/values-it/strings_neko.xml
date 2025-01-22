@@ -145,4 +145,21 @@
     <string name="mapDriftingFixForGoogleMaps">Risolvi Google Maps alla deriva in Cina</string>
     <string name="enhancedFileLoader">Migliora la velocità di download</string>
     <string name="useOSMDroidMap">Usa la mappa OSMDroid</string>
+    <string name="DeleteAllFromSelfBefore">Prima...</string>
+    <string name="DeleteAllFromSelfAdmin">Con permessi amministratore</string>
+    <string name="DeleteAllFromSelfDone">Tutti i tuoi messaggi sono cancellati</string>
+    <string name="ProviderTelegramAPI">API Telegram</string>
+    <string name="DisableSendReadStories">Disabilita Invio Lettura Storie</string>
+    <string name="IgnoreAllReactions">Ignora tutte le reazioni</string>
+    <string name="ConfirmToSendCommandToggle">Conferma prima di inviare il comando con un click</string>
+    <string name="CopyPhoto">Copia foto</string>
+    <string name="PhotoCopied">Foto Copiata</string>
+    <string name="CopyPhotoAsSticker">Copia questa foto come sticker</string>
+    <string name="IncreasedMaxPhotoResolution">Aumentata la risoluzione massima della foto a (2560px di lunghezza)</string>
+    <string name="DeleteAllFromSelfAlertBefore">Attenzione! Questo **eliminerà tutti i messaggi inviati prima di %s** in questa chat per **tutti** i partecipanti.</string>
+    <string name="MomoSettings">Impostazioni Momo</string>
+    <string name="AutoArchiveAndMute">Archivia automaticamente e muta il PM precedentemente sconosciuto</string>
+    <string name="useTelegramTranslateInChat">Usa Interfaccia Utente del Traduttore Telegram in chat</string>
+    <string name="DisableStories">Disabilita Storie</string>
+    <string name="ConfirmToSendCommand">Sei sicuro di voler inviare questo comando?</string>
 </resources>
