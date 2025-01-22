@@ -310,4 +310,5 @@
     <string name="CloudflareCredentialsDialog">填入 Cloudflare 账户 ID 和 API 令牌.\n**如何获取?**</string>
     <string name="CloudflareCredentialsObtainDesc">1. 开启 Cloudflare 仪表板并登入您的账户\n\n2. 展开侧边选单的 AI 分类并点选 Workers AI\n\n3. 点击 "Use REST API"\n\n4. 记下您的 "Account ID" 后于同一页面创建 API token.</string>
     <string name="SwipeActionInTopicList">话题列表滑动操作 (隐藏/显示)</string>
+    <string name="AllowBotInDirectShare">允许机器人出现在快速分享选单</string>
 </resources>

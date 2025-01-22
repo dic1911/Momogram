@@ -207,4 +207,5 @@
     <string name="CustomMaxCacheSizeHint">單位: MB (ex. 512)</string>
     <string name="CustomMaxCacheSizeBulletin">最大快取大小已設為 %1$s MB</string>
     <string name="UseCamera2API">使用 Camera 2 API</string>
+    <string name="HideCameraInAttachMenu">隱藏附件選單內的相機</string>
 </resources>

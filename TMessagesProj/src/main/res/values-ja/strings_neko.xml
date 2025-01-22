@@ -311,4 +311,5 @@
     <string name="CloudflareCredentialsDialog">Cloudflare のアカウント ID と API トークンを設定する.\n**どう取る?**</string>
     <string name="CloudflareCredentialsObtainDesc">1. Cloudflare ダッシュボードを開き、アカウントでログインする\n\n2. サイドメニューから AI を展開し、Workers AI をクリックする\n\n3. 「Use REST API」 をクリックする\n\n4. 表示された 「アカウント ID」 を確認し、そのページで API トークンを作成します.</string>
     <string name="SwipeActionInTopicList">話題リストのスワイプ操作 (非表示/表示)</string>
+    <string name="AllowBotInDirectShare">ボットのダイレクトシェアへの表示を許可する</string>
 </resources>
