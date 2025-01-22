@@ -689,6 +689,7 @@ public class ChatAttachAlertPhotoLayout extends ChatAttachAlert.AttachAlertLayou
         NotificationCenter.getGlobalInstance().addObserver(this, NotificationCenter.cameraInitied);
         FrameLayout container = alert.getContainer();
         showAvatarConstructor = parentAlert.avatarPicker != 0;
+        setClipChildren(true); // fix weird PhotoAttachCameraCell shown on top at weird timing
 
         cameraDrawable = context.getResources().getDrawable(R.drawable.instant_camera).mutate();
 
