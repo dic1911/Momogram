@@ -212,4 +212,6 @@
     <string name="CustomMaxCacheSizeBulletin">最大缓存大小已设为 %1$s MB</string>
     <string name="UseCamera2API">使用 Camera 2 API</string>
     <string name="HideCameraInAttachMenu">隐藏附件菜单中的相机</string>
+    <string name="ForceExternalBrowserForBots">使用外部浏览器开启机器人网页/小程序</string>
+    <string name="ForceExternalBrowserForBotsDesc">部份依赖 Telegram 内部 API 的网页可能无法正常工作</string>
 </resources>

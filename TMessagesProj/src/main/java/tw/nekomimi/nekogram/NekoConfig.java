@@ -244,6 +244,7 @@ public class NekoConfig {
     public static ConfigItem preventPullDownWebview = addConfig(R.string.PreventPullDownWebview, "PreventPullDownWebview", ConfigItem.configTypeBool, GENERAL, false);
     public static ConfigItem useBotWebviewForGames = addConfig(R.string.UseBotWebviewForGames, "UseBotWebviewForGames", ConfigItem.configTypeBool, GENERAL, false);
     public static ConfigItem confirmOpenLinkInWebView = addConfig(R.string.ConfirmOpenLinkInWebView, "ConfirmOpenLinkInWebView", ConfigItem.configTypeBool, GENERAL, false);
+    public static ConfigItem forceExternalBrowserForBots = addConfig(R.string.ForceExternalBrowserForBots, "ForceExternalBrowserForBots", ConfigItem.configTypeBool, GENERAL, false);
     public static ConfigItem disableCustomWallpaperUser = addConfig(R.string.DisableCustomWallpaperUser, "DisableCustomWallpaperUser", ConfigItem.configTypeBool, CHAT, false);
     public static ConfigItem disableCustomWallpaperChannel = addConfig(R.string.DisableCustomWallpaperChannel, "DisableCustomWallpaperChannel", ConfigItem.configTypeBool, CHAT, false);
     public static ConfigItem fasterReconnectHack = addConfig(R.string.FasterReconnectHack, "FasterReconnectHack", ConfigItem.configTypeBool, EXPERIMENTAL, false);

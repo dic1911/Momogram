@@ -208,4 +208,6 @@
     <string name="CustomMaxCacheSizeBulletin">最大快取大小已設為 %1$s MB</string>
     <string name="UseCamera2API">使用 Camera 2 API</string>
     <string name="HideCameraInAttachMenu">隱藏附件選單內的相機</string>
+    <string name="ForceExternalBrowserForBots">使用外部瀏覽器打開機器人網頁/小程式</string>
+    <string name="ForceExternalBrowserForBotsDesc">部分依賴 Telegram 內部 API 的網頁可能無法正常運作</string>
 </resources>
