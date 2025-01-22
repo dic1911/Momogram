@@ -126,7 +126,6 @@ import java.util.Map;
 
 import androidx.core.graphics.ColorUtils;
 
-import tw.nekomimi.nekogram.NekoXConfig;
 import tw.nekomimi.nekogram.NekoConfig;
 
 public class ChatAttachAlertPhotoLayout extends ChatAttachAlert.AttachAlertLayout implements NotificationCenter.NotificationCenterDelegate {
@@ -684,7 +683,7 @@ public class ChatAttachAlertPhotoLayout extends ChatAttachAlert.AttachAlertLayou
     public ChatAttachAlertPhotoLayout(ChatAttachAlert alert, Context context, boolean forceDarkTheme, boolean needCamera, Theme.ResourcesProvider resourcesProvider) {
         super(alert, context, resourcesProvider);
         this.forceDarkTheme = forceDarkTheme;
-        this.needCamera = needCamera && !NekoConfig.hideCameraInAttachMenu.Bool();
+        this.needCamera = needCamera = (needCamera && !NekoConfig.hideCameraInAttachMenu.Bool());
         NotificationCenter.getGlobalInstance().addObserver(this, NotificationCenter.albumsDidLoad);
         NotificationCenter.getGlobalInstance().addObserver(this, NotificationCenter.cameraInitied);
         FrameLayout container = alert.getContainer();
@@ -869,7 +868,7 @@ public class ChatAttachAlertPhotoLayout extends ChatAttachAlert.AttachAlertLayou
 
                     }
                     return;
-                } else if (noGalleryPermissions && position != 0) {
+                } else if (noGalleryPermissions && (!this.needCamera || position != 0)) {
                     try {
                         if (position == adapter.itemsCount - 2) {
                             menu.onItemClick(open_in); // NekoX: Use system photo picker
@@ -886,8 +885,8 @@ public class ChatAttachAlertPhotoLayout extends ChatAttachAlert.AttachAlertLayou
                     return;
                 }
             }
-            if (position != 0 || !needCamera || selectedAlbumEntry != galleryAlbumEntry) {
-                if (selectedAlbumEntry == galleryAlbumEntry && needCamera) {
+            if (position != 0 || !this.needCamera || NekoConfig.hideCameraInAttachMenu.Bool() || selectedAlbumEntry != galleryAlbumEntry) {
+                if (selectedAlbumEntry == galleryAlbumEntry && this.needCamera) {
                     position--;
                 }
                 if (showAvatarConstructor) {

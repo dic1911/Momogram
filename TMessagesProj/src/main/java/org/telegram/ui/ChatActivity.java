@@ -12445,7 +12445,7 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
             return;
         }
         if (chatAttachAlert == null) {
-            chatAttachAlert = new ChatAttachAlert(getParentActivity(), this, false, false, true, themeDelegate) {
+            chatAttachAlert = new ChatAttachAlert(getParentActivity(), this, false, false, !NekoConfig.hideCameraInAttachMenu.Bool(), themeDelegate) {
                 @Override
                 public void dismissInternal() {
                     if (chatAttachAlert != null && chatAttachAlert.isShowing()) {
