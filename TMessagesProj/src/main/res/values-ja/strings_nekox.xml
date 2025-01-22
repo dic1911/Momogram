@@ -211,4 +211,5 @@
     <string name="HideCameraInAttachMenu">添付メニューのカメラを隠す</string>
     <string name="ForceExternalBrowserForBots">外部ブラウザでボットアプリを開く</string>
     <string name="ForceExternalBrowserForBotsDesc">一部のボットは Telegram 内部の API を依存しているため作動しない可能性もあります</string>
+    <string name="OpenLinkInApp">アプリ内で開く</string>
 </resources>

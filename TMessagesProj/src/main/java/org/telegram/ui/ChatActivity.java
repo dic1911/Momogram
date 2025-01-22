@@ -34901,9 +34901,30 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
                 }
                 final int finalTimestamp = timestamp;
                 boolean noforwards = (getMessagesController().isChatNoForwardsWithOverride(currentChat) || (messageObject != null && messageObject.messageOwner != null && messageObject.messageOwner.noforwards)) && !NekoXConfig.disableFlagSecure;
-                builder.addItems(noforwards ? new CharSequence[] {LocaleController.getString(R.string.Open)} : new CharSequence[]{LocaleController.getString(R.string.Open), LocaleController.getString(R.string.Copy)},
-                        new int[] {R.drawable.baseline_open_in_browser_24, R.drawable.baseline_content_copy_24},
-                        (which, _text, ign) -> {
+                boolean showOpenInApp = NekoConfig.forceExternalBrowserForBots.Bool();
+                if (showOpenInApp) {
+                    showOpenInApp = str.startsWith("http");
+                    if (showOpenInApp) {
+                        TLRPC.User bot = getMessagesController().getUser(dialog_id);
+                        showOpenInApp = NekoXConfig.botHasWebView(dialog_id) || (bot != null && bot.bot_has_main_app);
+                    }
+                }
+                CharSequence[] btns = null;
+                int[] icons = null;
+                if (noforwards) {
+                    btns = showOpenInApp ?
+                            new CharSequence[] {LocaleController.getString(R.string.Open), LocaleController.getString(R.string.OpenLinkInApp)} :
+                            new CharSequence[] {LocaleController.getString(R.string.Open)};
+                } else {
+                    btns = showOpenInApp ?
+                            new CharSequence[] {LocaleController.getString(R.string.Open), LocaleController.getString(R.string.Copy), LocaleController.getString(R.string.OpenLinkInApp)} :
+                            new CharSequence[] {LocaleController.getString(R.string.Open), LocaleController.getString(R.string.Copy)};
+                }
+                if (noforwards) icons = new int[] {R.drawable.baseline_open_in_browser_24, R.drawable.msg_bot};
+                else icons = new int[] {R.drawable.baseline_open_in_browser_24, R.drawable.baseline_content_copy_24, R.drawable.msg_bot};
+                builder.addItems(btns, icons, (which, _text, ign) -> {
+                    final int copy = noforwards ? -1 : 1;
+                    final int openInApp = noforwards ? 1 : 2;
                     if (which == 0) {
                         if (str.startsWith("video?")) {
                             didPressMessageUrl(url, false, messageObject, cell);
@@ -34911,7 +34932,7 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
                             logSponsoredClicked(messageObject, false, false);
                             openClickableLink(url, str, false, cell, messageObject, true);
                         }
-                    } else if (which == 1) {
+                    } else if (which == copy) {
                         if (str.startsWith("video?") && messageObject != null && !messageObject.scheduled) {
                             MessageObject messageObject1 = messageObject;
                             boolean isMedia = messageObject.isVideo() || messageObject.isRoundVideo() || messageObject.isVoice() || messageObject.isMusic();
@@ -34963,6 +34984,16 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
                         } else {
                             undoView.showWithAction(0, UndoView.ACTION_LINK_COPIED, null);
                         }
+                    } else if (which == openInApp) {
+                        WebViewRequestProps props = WebViewRequestProps.of(currentAccount, dialog_id, dialog_id,
+                                avatarContainer != null ? avatarContainer.getTitleTextView().getText().toString() : "",
+                                str, BotWebViewAttachedSheet.TYPE_BOT_MENU_BUTTON, 0,
+                                false, null, false, null, null, 0, false, false);
+                        BotWebViewSheet webViewSheet = new BotWebViewSheet(getContext(), parentThemeDelegate);
+                        webViewSheet.setInApp(true);
+                        webViewSheet.setParentActivity(getParentActivity());
+                        webViewSheet.requestWebView(this, props);
+                        webViewSheet.show();
                     }
                     return null;
                 });
@@ -42107,7 +42138,14 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
         } else if (id == nkheaderbtn_recent_actions) {
             presentFragment(new ChannelAdminLogActivity(currentChat));
         } else if (id == nkheaderbtn_bot_app) {
-            chatActivityEnterView.openWebViewMenu(true);
+            TLRPC.User bot = getMessagesController().getUser(dialog_id);
+            if (bot.bot_has_main_app) {
+                MessagesController.openAppInApp = true;
+                MessagesController.getInstance(currentAccount).openApp(bot, 0);
+                MessagesController.openAppInApp = false;
+            } else {
+                chatActivityEnterView.openWebViewMenu(true);
+            }
         }
     }
 
@@ -43274,7 +43312,7 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
     boolean addedOpenAppMenuButton = false;
     public void addOpenAppMenuButton() {
         if (addedOpenAppMenuButton) return;
-        headerItem.addSubItem(nkheaderbtn_bot_app, R.drawable.msg_bot, LocaleController.getString(R.string.BotWebAppInstantViewOpen));
+        headerItem.addSubItem(nkheaderbtn_bot_app, R.drawable.msg_bot, LocaleController.getString(R.string.OpenLinkInApp));
         addedOpenAppMenuButton = true;
     }
 }

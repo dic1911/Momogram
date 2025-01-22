@@ -214,4 +214,5 @@
     <string name="HideCameraInAttachMenu">隐藏附件菜单中的相机</string>
     <string name="ForceExternalBrowserForBots">使用外部浏览器开启机器人网页/小程序</string>
     <string name="ForceExternalBrowserForBotsDesc">部份依赖 Telegram 内部 API 的网页可能无法正常工作</string>
+    <string name="OpenLinkInApp">于应用内开启</string>
 </resources>

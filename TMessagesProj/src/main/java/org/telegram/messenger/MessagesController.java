@@ -22292,6 +22292,8 @@ public class MessagesController extends BaseController implements NotificationCe
         return null;
     }
 
+    public static boolean openAppInApp = false;
+
     public void openApp(TLRPC.User bot, int classGuid) {
         openApp(null, bot, null, classGuid, null);
     }
@@ -22326,6 +22328,7 @@ public class MessagesController extends BaseController implements NotificationCe
                 }
 //                if (AndroidUtilities.isTablet() || true) {
                     BotWebViewSheet webViewSheet = new BotWebViewSheet(fragment.getContext(), fragment.getResourceProvider());
+                    if (openAppInApp) webViewSheet.setInApp(true);
                     webViewSheet.setDefaultFullsize(true);
                     webViewSheet.setNeedsContext(false);
                     webViewSheet.setParentActivity(fragment.getParentActivity());
