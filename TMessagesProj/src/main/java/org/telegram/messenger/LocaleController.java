@@ -1431,6 +1431,9 @@ public class LocaleController {
     }
 
     public LocaleInfo getCurrentLocaleInfo() {
+        if (currentLocaleInfo == null) {
+            currentLocaleInfo = languagesDict.get("en");
+        }
         return currentLocaleInfo;
     }
 
@@ -1440,7 +1443,7 @@ public class LocaleController {
 
     public static String getCurrentLanguageName() {
         LocaleInfo localeInfo = getInstance().currentLocaleInfo;
-        return localeInfo == null || TextUtils.isEmpty(localeInfo.name) ? getString("LanguageName", R.string.LanguageName) : localeInfo.name;
+        return localeInfo == null || TextUtils.isEmpty(localeInfo.name) ? getString(R.string.LanguageName) : localeInfo.name;
     }
 
     private String getStringInternal(String key, int res) {
