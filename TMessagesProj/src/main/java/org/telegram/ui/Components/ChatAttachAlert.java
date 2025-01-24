@@ -150,7 +150,6 @@ import tw.nekomimi.nekogram.transtale.TranslateDb;
 import tw.nekomimi.nekogram.transtale.Translator;
 import tw.nekomimi.nekogram.transtale.TranslatorKt;
 import tw.nekomimi.nekogram.utils.AlertUtil;
-import tw.nekomimi.nekogram.utils.StrUtil;
 
 import java.util.Objects;
 
@@ -1455,6 +1454,9 @@ public class ChatAttachAlert extends BottomSheet implements NotificationCenter.N
                 int heightSize = MeasureSpec.getSize(heightMeasureSpec);
 
                 setMeasuredDimension(widthSize, heightSize);
+
+                if (isDismissed()) return;
+
                 widthSize -= backgroundPaddingLeft * 2;
 
                 int keyboardSize = 0;
@@ -1550,7 +1552,7 @@ public class ChatAttachAlert extends BottomSheet implements NotificationCenter.N
                             paddingBottom += pollLayout.getEmojiPadding();
                         }
                     } else {
-                        paddingBottom += keyboardSize <= dp(20) && !AndroidUtilities.isInMultiwindow && !AndroidUtilities.isTablet() ? getCommentView().getEmojiPadding() : 0;
+                        paddingBottom += !isDismissed() && keyboardSize <= dp(20) && !AndroidUtilities.isInMultiwindow && !AndroidUtilities.isTablet() ? getCommentView().getEmojiPadding() : 0;
                     }
                 }
                 setBottomClip(paddingBottom);
@@ -2612,17 +2614,12 @@ public class ChatAttachAlert extends BottomSheet implements NotificationCenter.N
         currentLimit = MessagesController.getInstance(UserConfig.selectedAccount).getCaptionMaxLengthLimit();
 
         commentTextView = createCommentTextView(context); // style and init stuff all moved inside the method
-        captionContainer.addView(commentTextView, LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, LayoutHelper.WRAP_CONTENT, Gravity.BOTTOM | Gravity.LEFT, 0, 0, 84, 0));
-        captionContainer.setClipChildren(false);
         frameLayout2.setClipChildren(false);
         commentTextView.setClipChildren(false);
 
         topCommentContainer.setPadding(dp(10), dp(2), dp(10), dp(10));
         topCommentContainer.setWillNotDraw(false);
         topCommentTextView = createTopCommentTextView(context); // style and init stuff all moved inside the method
-        topCommentContainer.addView(topCommentTextView, LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, LayoutHelper.WRAP_CONTENT, Gravity.FILL));
-        topCommentContainer.setAlpha(0.0f);
-        topCommentContainer.setVisibility(View.GONE);
 
         topCaptionLimitView = new NumberTextView(context);
         topCaptionLimitView.setVisibility(View.GONE);
@@ -3284,6 +3281,7 @@ public class ChatAttachAlert extends BottomSheet implements NotificationCenter.N
     }
 
     public void updateCommentTextViewPosition() {
+        if (isDismissed()) return;
         commentTextView.getLocationOnScreen(commentTextViewLocation);
         if (mentionContainer != null) {
             float y;
@@ -5417,6 +5415,11 @@ public class ChatAttachAlert extends BottomSheet implements NotificationCenter.N
         captionLimitBulletinShown = false;
         super.dismiss();
         allowPassConfirmationAlert = false;
+        captionContainer.removeView(commentTextView);
+        topCommentContainer.removeView(topCommentTextView);
+        commentTextView.onDestroy();
+        topCommentTextView.onDestroy();
+        commentTextView = topCommentTextView = null;
     }
 
     @Override
@@ -5828,6 +5831,8 @@ public class ChatAttachAlert extends BottomSheet implements NotificationCenter.N
 //                }
             }
         });
+        captionContainer.addView(commentTextView, LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, LayoutHelper.WRAP_CONTENT, Gravity.BOTTOM | Gravity.LEFT, 0, 0, 84, 0));
+        captionContainer.setClipChildren(false);
         return commentTextView;
     }
 
@@ -5963,6 +5968,9 @@ public class ChatAttachAlert extends BottomSheet implements NotificationCenter.N
         topCommentTextView.getEmojiButton().setLayoutParams(LayoutHelper.createFrame(40, 40, Gravity.BOTTOM | Gravity.LEFT, 0, 0, 0, 0));
         topCommentTextView.setHint(getString(R.string.AddCaption));
 
+        topCommentContainer.addView(topCommentTextView, LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, LayoutHelper.WRAP_CONTENT, Gravity.FILL));
+        topCommentContainer.setAlpha(0.0f);
+        topCommentContainer.setVisibility(View.GONE);
         return topCommentTextView;
     }
 }
