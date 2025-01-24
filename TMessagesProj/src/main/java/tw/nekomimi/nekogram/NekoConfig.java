@@ -445,7 +445,6 @@ public class NekoConfig {
         if (migrate030.Int() < 3) {
             migrate030.setConfigInt(3);
             alwaysDestroyPhotoViewer.setConfigBool(true);
-            Log.d("030-gc", "alwaysDestroyPhotoViewer set");
         }
 
         // TODO remove this after some versions.

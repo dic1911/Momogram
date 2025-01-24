@@ -5264,22 +5264,18 @@ public class ChatAttachAlert extends BottomSheet implements NotificationCenter.N
             actionBar.closeSearchField();
         }
         if (sizeNotifierFrameLayout != null) {
-            Log.d("030-gc", "removeFromRoot - sizeNotifierFrameLayout");
             sizeNotifierFrameLayout.onDetachedFromWindow();
             // sizeNotifierFrameLayout = null;
         }
         if (commentTextView != null) {
-            Log.d("030-gc", "removeFromRoot - commentTextView");
             commentTextView.onDestroy();
             commentTextView = null;
         }
         if (topCommentTextView != null) {
-            Log.d("030-gc", "removeFromRoot - topCommentTextView");
             topCommentTextView.onDestroy();
             topCommentTextView = null;
         }
         if (mentionContainer != null) {
-            Log.d("030-gc", "removeFromRoot - mentionContainer");
             mentionContainer.onDetachedFromWindow();
             mentionContainer = null;
         }

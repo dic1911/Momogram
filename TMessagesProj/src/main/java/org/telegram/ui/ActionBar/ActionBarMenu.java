@@ -23,6 +23,8 @@ import org.telegram.ui.Components.RLottieDrawable;
 
 import java.util.ArrayList;
 
+import tw.nekomimi.nekogram.NekoConfig;
+
 public class ActionBarMenu extends LinearLayout {
 
     public boolean drawBlur = true;
@@ -600,6 +602,7 @@ public class ActionBarMenu extends LinearLayout {
     }
 
     public void detachedFromWindow() {
-        onDetachedFromWindow();
+        if (NekoConfig.alwaysDestroyPhotoViewer.Bool())
+            onDetachedFromWindow();
     }
 }

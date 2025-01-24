@@ -50,6 +50,7 @@ import org.telegram.ui.PhotoViewer;
 
 import java.util.ArrayList;
 
+import tw.nekomimi.nekogram.NekoConfig;
 import tw.nekomimi.nekogram.utils.TelegramUtil;
 
 public class MentionsContainerView extends BlurredFrameLayout implements NotificationCenter.NotificationCenterDelegate {
@@ -900,7 +901,8 @@ public class MentionsContainerView extends BlurredFrameLayout implements Notific
     }
 
     public void detachedFromWindow() {
-        onDetachedFromWindow();
+        if (NekoConfig.alwaysDestroyPhotoViewer.Bool())
+            onDetachedFromWindow();
     }
 
     private boolean destroyAdapterOnDetached = true;

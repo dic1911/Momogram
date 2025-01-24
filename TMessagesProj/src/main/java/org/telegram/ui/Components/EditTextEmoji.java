@@ -494,7 +494,6 @@ public class EditTextEmoji extends FrameLayout implements NotificationCenter.Not
             emojiView.onDestroy();
         }
         if (sizeNotifierLayout != null) {
-            Log.d("030-gc", "EditTextEmoji.onDestroy - cleanup sizeNotifierLayout");
             sizeNotifierLayout.onDetachedFromWindow();
             sizeNotifierLayout.removeDelegate(this);
             sizeNotifierLayout = null;

@@ -1799,7 +1799,8 @@ public class ActionBar extends FrameLayout {
     }
 
     public void detachedFromWindow() {
-        onDetachedFromWindow();
+        if (NekoConfig.alwaysDestroyPhotoViewer.Bool())
+            onDetachedFromWindow();
     }
 
     private void updateAttachState() {

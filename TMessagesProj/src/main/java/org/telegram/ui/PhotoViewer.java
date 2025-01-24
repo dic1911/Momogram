@@ -22054,7 +22054,6 @@ public class PhotoViewer implements NotificationCenter.NotificationCenterDelegat
 
     public static void onLowMemory() {
         try {
-            Log.w("030-pv", "onLowMemory: destroying existing PhotoViewer");
             if (hasInstance()) {
                 Instance.destroyPhotoViewer();
             }

@@ -77,6 +77,7 @@ import org.telegram.ui.Components.Text;
 import org.telegram.ui.LaunchActivity;
 import org.telegram.ui.Stories.DarkThemeResourceProvider;
 
+import tw.nekomimi.nekogram.NekoConfig;
 import tw.nekomimi.nekogram.utils.TelegramUtil;
 
 public class CaptionContainerView extends FrameLayout {
@@ -1124,19 +1125,22 @@ public class CaptionContainerView extends FrameLayout {
             hintTextBitmap.recycle();
             hintTextBitmap = null;
         }
-        if (editText != null) {
-            editText.onDestroy();
-            editText = null;
+        if (NekoConfig.alwaysDestroyPhotoViewer.Bool()) {
+            if (editText != null) {
+                editText.onDestroy();
+                editText = null;
+            }
+            if (mentionContainer != null) {
+                mentionContainer.detachedFromWindow();
+                mentionContainer = null;
+            }
+            rootView = null;
         }
-        if (mentionContainer != null) {
-            mentionContainer.detachedFromWindow();
-            mentionContainer = null;
-        }
-        rootView = null;
     }
 
     public void detachedFromWindow() {
-        onDetachedFromWindow();
+        if (NekoConfig.alwaysDestroyPhotoViewer.Bool())
+            onDetachedFromWindow();
     }
 
     public static class PeriodDrawable extends Drawable {
