@@ -1455,7 +1455,7 @@ public class ChatAttachAlert extends BottomSheet implements NotificationCenter.N
 
                 setMeasuredDimension(widthSize, heightSize);
 
-                if (isDismissed()) return;
+                if (isDismissed() || commentTextView == null || topCommentTextView == null) return;
 
                 widthSize -= backgroundPaddingLeft * 2;
 
