@@ -296,7 +296,7 @@ public class NekoConfig {
     public static ConfigItem smallerEmojiInChooser = addConfig(R.string.SmallerEmojisInChooser , "SmallerEmojisInChooser", configTypeBool, true);
     public static ConfigItem chatNameOverride = addConfig(R.string.ChatNameOverride , "ChatNameOverride", configTypeBool, false);
     public static ConfigItem nameAsTitleText = addConfig(R.string.NameAsTitleText , "NameAsTitleText", configTypeBool, GENERAL, false);
-    public static ConfigItem enableUnifiedPush = addConfig(R.string.EnableUnifiedPush , "EnableUnifiedPush", configTypeBool, GENERAL, true);
+    public static ConfigItem enableUnifiedPush = addConfig(R.string.EnableUnifiedPush , "EnableUnifiedPush", configTypeBool, GENERAL, false);
     public static ConfigItem customApiId = addConfig(R.string.CustomApiId , "CustomApiId", configTypeString, GENERAL, "");
     public static ConfigItem customApiHash = addConfig(R.string.CustomApiHash , "CustomApiHash", configTypeString, GENERAL, "");
     public static ConfigItem allowDupLogin = addConfig(R.string.AllowDupLogin , "AllowDupLogin", configTypeBool, EXPERIMENTAL, false);
