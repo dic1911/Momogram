@@ -424,7 +424,7 @@ public class DatabaseMigrationHelper {
             version = 64;
         }
         if (version == 64) {
-            database.executeFast("CREATE TABLE IF NOT EXISTS dialog_filter(id INTEGER PRIMARY KEY, ord INTEGER, unread_count INTEGER, flags INTEGER, title TEXT)").stepThis().dispose();
+            database.executeFast("CREATE TABLE IF NOT EXISTS dialog_filter_neko(id INTEGER PRIMARY KEY, ord INTEGER, unread_count INTEGER, flags INTEGER, title TEXT)").stepThis().dispose();
             database.executeFast("CREATE TABLE IF NOT EXISTS dialog_filter_ep(id INTEGER, peer INTEGER, PRIMARY KEY (id, peer))").stepThis().dispose();
             database.executeFast("PRAGMA user_version = 65").stepThis().dispose();
             version = 65;
@@ -1428,7 +1428,21 @@ public class DatabaseMigrationHelper {
         }
 
         if (version == 143) {
-            database.executeFast("ALTER TABLE dialog_filter ADD COLUMN color INTEGER default -1").stepThis().dispose();
+            try {
+                var cursor = database.queryFinalized("PRAGMA table_info(dialog_filter_neko)");
+                boolean found = false;
+                if (cursor.next()) {
+                    for (int i = 0; i < cursor.getColumnCount(); ++i) {
+                        if (cursor.getTypeOf(i) != SQLiteCursor.FIELD_TYPE_STRING) continue;
+                        if ("emoticon".equals(cursor.stringValue(i))) {
+                            found = true;
+                            break;
+                        }
+                    }
+                }
+                if (!found) database.executeFast("ALTER TABLE dialog_filter_neko ADD COLUMN emoticon TEXT").stepThis().dispose();
+            } catch (Exception ignore) {}
+            database.executeFast("ALTER TABLE dialog_filter_neko ADD COLUMN color INTEGER default -1").stepThis().dispose();
             database.executeFast("PRAGMA user_version = 144").stepThis().dispose();
             version = 144;
         }
@@ -1533,6 +1547,25 @@ public class DatabaseMigrationHelper {
             database.executeFast("ALTER TABLE star_gifts2 ADD COLUMN pos INTEGER default 0;").stepThis().dispose();
             database.executeFast("PRAGMA user_version = 159").stepThis().dispose();
             version = 159;
+        }
+
+        if (version == 159) {
+            database.executeFast("ALTER TABLE dialog_filter_neko ADD COLUMN entities BLOB").stepThis().dispose();
+            database.executeFast("PRAGMA user_version = 160").stepThis().dispose();
+            version = 160;
+        }
+
+        if (version == 160) {
+            database.executeFast("ALTER TABLE dialog_filter_neko ADD COLUMN noanimate INTEGER").stepThis().dispose();
+            database.executeFast("PRAGMA user_version = 161").stepThis().dispose();
+            version = 161;
+        }
+
+        if (version == 161) {
+            database.executeFast("DELETE FROM popular_bots").stepThis().dispose();
+            database.executeFast("ALTER TABLE popular_bots ADD COLUMN pos INTEGER").stepThis().dispose();
+            database.executeFast("PRAGMA user_version = 162").stepThis().dispose();
+            version = 162;
         }
 
         return version;

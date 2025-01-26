@@ -1112,16 +1112,18 @@ public class RecyclerListView extends RecyclerView {
                     View child = currentChildView;
                     if (onItemLongClickListener != null) {
                         if (onItemLongClickListener.onItemClick(currentChildView, currentChildPosition)) {
-                            if (!NekoConfig.disableVibration.Bool()) {
-                                child.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
-                            }
+                            if (!NekoConfig.disableVibration.Bool())
+                                try {
+                                    child.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
+                                } catch (Exception ignored) {}
                             child.sendAccessibilityEvent(AccessibilityEvent.TYPE_VIEW_LONG_CLICKED);
                         }
                     } else {
                         if (onItemLongClickListenerExtended.onItemClick(currentChildView, currentChildPosition, event.getX() - currentChildView.getX(), event.getY() - currentChildView.getY())) {
-                            if (!NekoConfig.disableVibration.Bool()) {
-                                child.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
-                            }
+                            if (!NekoConfig.disableVibration.Bool())
+                                try {
+                                    child.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
+                                } catch (Exception ignored) {}
                             child.sendAccessibilityEvent(AccessibilityEvent.TYPE_VIEW_LONG_CLICKED);
                             longPressCalled = true;
                         }
@@ -1483,7 +1485,10 @@ public class RecyclerListView extends RecyclerView {
 
     private Paint backgroundPaint;
     protected void drawSectionBackground(Canvas canvas, int fromAdapterPosition, int toAdapterPosition, int color) {
-        if (toAdapterPosition < fromAdapterPosition) {
+        drawSectionBackground(canvas, fromAdapterPosition, toAdapterPosition, color, 0, 0);
+    }
+    protected void drawSectionBackground(Canvas canvas, int fromAdapterPosition, int toAdapterPosition, int color, int topMargin, int bottomMargin) {
+        if (toAdapterPosition < fromAdapterPosition || fromAdapterPosition < 0 || toAdapterPosition < 0) {
             return;
         }
 
@@ -1508,7 +1513,7 @@ public class RecyclerListView extends RecyclerView {
                 backgroundPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
             }
             backgroundPaint.setColor(color);
-            canvas.drawRect(0, top, getWidth(), bottom, backgroundPaint);
+            canvas.drawRect(0, top - topMargin, getWidth(), bottom + bottomMargin, backgroundPaint);
         }
     }
 

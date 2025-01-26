@@ -14,6 +14,8 @@ import android.util.Base64;
 import android.util.Log;
 import android.util.SparseArray;
 
+import androidx.annotation.Keep;
+
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
 //import com.google.android.gms.tasks.Task;
 //import com.google.android.play.core.integrity.IntegrityManager;
@@ -1045,7 +1047,6 @@ public void init(int version, int layer, int apiId, String deviceModel, String s
     public static native void native_setRegId(int currentAccount, String regId);
 
     public static native void native_setSystemLangCode(int currentAccount, String langCode);
-
     public static native void native_setJava(boolean useJavaByteBuffers);
 
     public static native void native_setJava(int instanceNum);
@@ -1060,7 +1061,6 @@ public void init(int version, int layer, int apiId, String deviceModel, String s
     public static native void native_discardConnection(int currentAccount, int datacenterId, int connectionType);
     public static native void native_failNotRunningRequest(int currentAccount, int token);
     public static native void native_receivedIntegrityCheckClassic(int currentAccount, int requestToken, String nonce, String token);
-
     public static native boolean native_isGoodPrime(byte[] prime, int g);
 
     public static int generateClassGuid() {
@@ -1452,6 +1452,7 @@ public void init(int version, int layer, int apiId, String deviceModel, String s
     }
 
     public static long lastPremiumFloodWaitShown = 0;
+    @Keep
     public static void onPremiumFloodWait(final int currentAccount, final int requestToken, boolean isUpload) {
         AndroidUtilities.runOnUIThread(() -> {
             if (UserConfig.selectedAccount != currentAccount) {
@@ -1480,6 +1481,7 @@ public void init(int version, int layer, int apiId, String deviceModel, String s
         });
     }
 
+    @Keep
     public static void onIntegrityCheckClassic(final int currentAccount, final int requestToken, final String project, final String nonce) {
         // 030: no safetynet, no play integrity, simply fail silently
         FileLog.e("onIntegrityCheckClassic: fuck durov");

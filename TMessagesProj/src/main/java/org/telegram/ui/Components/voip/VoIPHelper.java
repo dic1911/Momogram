@@ -40,6 +40,7 @@ import org.telegram.messenger.voip.Instance;
 import org.telegram.messenger.voip.VoIPService;
 import org.telegram.tgnet.ConnectionsManager;
 import org.telegram.tgnet.TLRPC;
+import org.telegram.tgnet.tl.TL_phone;
 import org.telegram.ui.ActionBar.AlertDialog;
 import org.telegram.ui.ActionBar.BaseFragment;
 import org.telegram.ui.ActionBar.Theme;
@@ -400,7 +401,7 @@ public class VoIPHelper {
 
 	public static void sendCallRating(final long callID, final long accessHash, final int account, int rating) {
 		final int currentAccount = UserConfig.selectedAccount;
-		final TLRPC.TL_phone_setCallRating req = new TLRPC.TL_phone_setCallRating();
+		final TL_phone.setCallRating req = new TL_phone.setCallRating();
 		req.rating = rating;
 		req.comment = "";
 		req.peer = new TLRPC.TL_inputPhoneCall();
@@ -576,20 +577,20 @@ public class VoIPHelper {
 				((InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(commentBox.getWindowToken(), 0);
 			}
 			*/
-            ((TextView) btn).setText((rating < 4 ? LocaleController.getString(R.string.Next) : LocaleController.getString(R.string.Send)).toUpperCase());
-        });
-        btn.setOnClickListener(v -> {
-            int rating = bar.getRating();
-            if (rating >= 4 || page[0] == 1) {
-                final int currentAccount = UserConfig.selectedAccount;
-                final TLRPC.TL_phone_setCallRating req = new TLRPC.TL_phone_setCallRating();
-                req.rating = bar.getRating();
-                ArrayList<String> problemTags = new ArrayList<>();
-                for (int i = 0; i < problemsWrap.getChildCount(); i++) {
-                    CheckBoxCell check = (CheckBoxCell) problemsWrap.getChildAt(i);
-                    if (check.isChecked())
-                        problemTags.add("#" + check.getTag());
-                }
+			((TextView) btn).setText((rating < 4 ? LocaleController.getString(R.string.Next) : LocaleController.getString(R.string.Send)).toUpperCase());
+		});
+		btn.setOnClickListener(v -> {
+			int rating = bar.getRating();
+			if (rating >= 4 || page[0] == 1) {
+				final int currentAccount = UserConfig.selectedAccount;
+				final TL_phone.setCallRating req = new TL_phone.setCallRating();
+				req.rating = bar.getRating();
+				ArrayList<String> problemTags = new ArrayList<>();
+				for (int i = 0; i < problemsWrap.getChildCount(); i++) {
+					CheckBoxCell check = (CheckBoxCell) problemsWrap.getChildAt(i);
+					if (check.isChecked())
+						problemTags.add("#" + check.getTag());
+				}
 
 				if (req.rating < 5) {
 					req.comment = commentBox.getText().toString();
