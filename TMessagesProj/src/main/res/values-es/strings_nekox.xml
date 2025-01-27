@@ -204,4 +204,16 @@
     <string name="AllowDupLogin">Permitir el inicio de sesión en cuentas existentes</string>
     <string name="AllowDupLoginInfo">Esto puede causar varios problemas, asegúrese de mantener solo una de las sesiones después de realizar el trabajo.</string>
     <string name="CustomApiHash">Hash de API personalizado</string>
+    <string name="AlwaysDestroyPhotoViewer">Cerrar siempre el visor de fotos</string>
+    <string name="GenerateMonetTheme">Generar tema Monet</string>
+    <string name="MonetLightMode">Claro</string>
+    <string name="MonetGradient">Gradiente</string>
+    <string name="MonetAvatarGradient">Gradiente para fotos de perfil</string>
+    <string name="MonetNickname">Monet para apodos</string>
+    <string name="MonetAlterOut">Estilo alternativo de mensajes salientes</string>
+    <string name="HideChannelBottomNotiToggle">Ocultar botón de notificaciones en la parte inferior de los canales</string>
+    <string name="CustomMaxCacheSize">Tamaño personalizado de la caché</string>
+    <string name="CustomMaxCacheSizeHint">Tamaño en MB (ej. 512)</string>
+    <string name="CustomMaxCacheSizeBulletin">El tamaño máximo de la caché está establecido en %1$s MB</string>
+    <string name="UseCamera2API">Usar la API de Cámara 2</string>
 </resources>
