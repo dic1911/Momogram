@@ -243,6 +243,7 @@ import org.telegram.ui.Stories.UserListPoller;
 import org.telegram.ui.Stories.recorder.HintView2;
 import org.telegram.ui.Stories.recorder.StoryRecorder;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -6870,20 +6871,19 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
                 }
                 filterTabsView.removeTabs();
                 for (int a = 0, N = filters.size(); a < N; a++) {
-                    MessagesController.DialogFilter dialogFilter = filters.get(a);
-                    if (filters.get(a).isDefault()) {
-                        filterTabsView.addTab(a, 0, LocaleController.getString(R.string.FilterAllChats), dialogFilter.emoticon, filter.entities, filter.title_noanimate, true, filters.get(a).locked);
+                    MessagesController.DialogFilter filter = filters.get(a);
+                    if (filter.isDefault()) {
+                        filterTabsView.addTab(a, 0, LocaleController.getString(R.string.FilterAllChats), filter.emoticon, filter.entities, filter.title_noanimate, true, filters.get(a).locked);
                     } else {
-                        final MessagesController.DialogFilter filter = filters.get(a);
                         switch (NekoConfig.tabsTitleType.Int()) {
                             case NekoXConfig.TITLE_TYPE_TEXT:
-                                filterTabsView.addTab(a, filter.localId, filter.name, dialogFilter.name, filter.entities, filter.title_noanimate, false, false);
+                                filterTabsView.addTab(a, filter.localId, filter.name, filter.name, filter.entities, filter.title_noanimate, false, false);
                                 break;
                             case NekoXConfig.TITLE_TYPE_ICON:
-                                filterTabsView.addTab(a, filter.localId, filter.name, dialogFilter.emoticon != null ? dialogFilter.emoticon : "📂", filter.entities, filter.title_noanimate, false, false);
+                                filterTabsView.addTab(a, filter.localId, filter.name, filter.emoticon != null ? filter.emoticon : "📂", filter.entities, filter.title_noanimate, false, false);
                                 break;
                             case NekoXConfig.TITLE_TYPE_MIX:
-                                filterTabsView.addTab(a, filter.localId, filter.name, dialogFilter.emoticon != null ? dialogFilter.emoticon : "\uD83D\uDCC1 " + dialogFilter.name, filter.entities, filter.title_noanimate, false, false);
+                                filterTabsView.addTab(a, filter.localId, filter.name, filter.emoticon != null ? filter.emoticon : "\uD83D\uDCC1 " + filter.name, filter.entities, filter.title_noanimate, false, false);
                                 break;
                         }
                     }

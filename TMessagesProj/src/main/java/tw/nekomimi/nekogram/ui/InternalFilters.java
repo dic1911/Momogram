@@ -172,7 +172,7 @@ public class InternalFilters {
 
         suggestedFilter.filter.id = currId;
 
-        suggestedFilter.filter.title = name;
+        suggestedFilter.filter.title.text = name;
         suggestedFilter.filter.flags = flag;
 
         builder.apply(suggestedFilter.filter);

@@ -29,6 +29,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import org.telegram.messenger.AndroidUtilities;
 import org.telegram.messenger.Emoji;
+import org.telegram.messenger.LocaleController;
 import org.telegram.messenger.NotificationCenter;
 import org.telegram.messenger.R;
 import org.telegram.tgnet.TLRPC;
@@ -141,7 +142,7 @@ public class BotCommandsMenuView extends View {
     public void onInitializeAccessibilityNodeInfo(AccessibilityNodeInfo info) {
         super.onInitializeAccessibilityNodeInfo(info);
         info.addAction(isOpened()? AccessibilityNodeInfo.AccessibilityAction.ACTION_COLLAPSE : AccessibilityNodeInfo.AccessibilityAction.ACTION_EXPAND);
-        info.setContentDescription(LocaleController.getString("AccDescrBotCommands",R.string.AccDescrBotCommands));
+        info.setContentDescription(LocaleController.getString(R.string.AccDescrBotCommands));
     }
 
     @Override

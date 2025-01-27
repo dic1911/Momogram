@@ -6220,15 +6220,16 @@ public class StoryRecorder implements NotificationCenter.NotificationCenterDeleg
             dualHint.show();
         }
         if (qrScanner == null) {
-            qrScanner = new QRScanner(getContext(), d -> {
-                if (qrScanner == null) return;
-                qrLinkView.setLink(d == null ? null : d.link);
-                if (collageLayoutView != null) {
-                    collageLayoutView.qrDrawer.setQrDetected(qrLinkView.isResolved() ? qrScanner.getDetected() : null);
-                }
-            });
+            FileLog.w("gms vision not available, skip qrScanner creation");
+//            qrScanner = new QRScanner(getContext(), d -> {
+//                if (qrScanner == null) return;
+//                qrLinkView.setLink(d == null ? null : d.link);
+//                if (collageLayoutView != null) {
+//                    collageLayoutView.qrDrawer.setQrDetected(qrLinkView.isResolved() ? qrScanner.getDetected() : null);
+//                }
+//            });
         }
-        qrScanner.attach(cameraView);
+        // qrScanner.attach(cameraView);
         if (qrLinkView != null) {
             qrLinkView.setBlurRenderNode(collageLayoutView, collageLayoutView.getBlurRenderNode());
         }
