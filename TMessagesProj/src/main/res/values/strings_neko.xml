@@ -314,4 +314,5 @@
     <string name="CloudflareCredentialsObtainDesc">1. Open Cloudflare dashboard and login with your account\n\n2. Expand AI from side menu and click on Workers AI\n\n3. Click on "Use REST API"\n\n4. Note your "Account ID" then create an API token in that page.</string>
     <string name="SwipeActionInTopicList">Swipe action in topic list (Hide/Show)</string>
     <string name="AllowBotInDirectShare">Allow bots as direct share target</string>
+    <string name="AllowTestingUpdate">Check for testing builds when looking for updates</string>
 </resources>

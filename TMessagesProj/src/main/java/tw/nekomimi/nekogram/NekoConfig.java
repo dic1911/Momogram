@@ -77,6 +77,7 @@ public class NekoConfig {
 
     public static ConfigItem nextPromptUpdateTime = addConfig("nextPromptUpdateTime", configTypeLong, 0L);
     public static ConfigItem checkUpdate = addConfig(R.string.AutoCheckUpdate, "AutoCheckUpdate", configTypeBool, GENERAL, true);
+    public static ConfigItem allowTestingUpdate = addConfig(R.string.AllowTestingUpdate, "AllowTestingUpdate", configTypeBool, GENERAL, false);
 
     // From NekoConfig
     public static ConfigItem useIPv6 = addConfig(R.string.IPv6, "IPv6", configTypeBool, GENERAL, false);

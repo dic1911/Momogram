@@ -43,7 +43,9 @@ public class MomoUpdater {
                 List<UpdateMetadata> metas = new ArrayList<>();
                 for (TLRPC.Message message : res.messages) {
                     if (!(message instanceof TLRPC.TL_message)) continue;
-                    if (!message.message.contains("#release")) continue;
+                    if (!message.message.contains("#release")) {
+                        if (!NekoConfig.allowTestingUpdate.Bool() || !message.message.contains("#testing")) continue;
+                    }
                     UpdateMetadata metaData = new UpdateMetadata(message.id, message.message);
                     metas.add(metaData);
                     if (BuildVars.DEBUG_PRIVATE_VERSION || metaData.versionCode > localVersionCode) {

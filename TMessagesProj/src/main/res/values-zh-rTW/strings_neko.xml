@@ -312,4 +312,5 @@
     <string name="CloudflareCredentialsObtainDesc">1. 開啟 Cloudflare 儀錶板並登入您的帳戶\n\n2. 展開側邊選單的 AI 分類並點選 Workers AI\n\n3. 點擊 "Use REST API"\n\n4. 記下您的 "Account ID" 後於同一頁面建立 API token.</string>
     <string name="SwipeActionInTopicList">話題清單滑動操作 (隱藏/顯示)</string>
     <string name="AllowBotInDirectShare">允許機器人出現在快速分享選單</string>
+    <string name="AllowTestingUpdate">自動檢查更新時包含測試版</string>
 </resources>

@@ -315,4 +315,5 @@
     <string name="AutoCheckUpdateInfo">发现更新版本：%1$s</string>
     <string name="AlwaysLoadStickerSetFromServer">查看详情时从服务器加载贴纸集</string>
     <string name="EnableUnifiedPush">启用 UnifiedPush</string>
+    <string name="AllowTestingUpdate">自动检查更新时包含测试版</string>
 </resources>
