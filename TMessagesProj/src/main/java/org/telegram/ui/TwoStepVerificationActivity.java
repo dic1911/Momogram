@@ -167,7 +167,7 @@ public class TwoStepVerificationActivity extends BaseFragment implements Notific
         passwordEntered = false;
     }
 
-    public TwoStepVerificationActivity(int account, TLRPC.TL_account_password password) {
+    public TwoStepVerificationActivity(int account, TL_account.Password password) {
         this(account);
         currentPassword = password;
         passwordEntered = currentPasswordHash != null && currentPasswordHash.length > 0 || !currentPassword.has_password;

@@ -9593,7 +9593,7 @@ public class MessagesController extends BaseController implements NotificationCe
         offlineSent = !online;
         AndroidUtilities.runOnUIThread(() -> NotificationCenter.getGlobalInstance().postNotificationName(NotificationCenter.updateUserStatus, (Object) null));
 
-        TLRPC.TL_account_updateStatus req = new TLRPC.TL_account_updateStatus();
+        TL_account.updateStatus req = new TL_account.updateStatus();
         req.offline = !online;
         statusRequest = getConnectionsManager().sendRequest(req, (response, error) -> {
             if (error == null) {

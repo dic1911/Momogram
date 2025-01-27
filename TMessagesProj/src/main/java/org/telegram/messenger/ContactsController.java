@@ -3174,7 +3174,7 @@ public class ContactsController extends BaseController {
     }
 
     private void sendLastSeenReq(ArrayList<TLRPC.InputPrivacyRule> newRuleSet, Runnable callback) {
-        TLRPC.TL_account_setPrivacy req = new TLRPC.TL_account_setPrivacy();
+        TL_account.setPrivacy req = new TL_account.setPrivacy();
         req.key = new TLRPC.TL_inputPrivacyKeyStatusTimestamp();
         req.rules = newRuleSet;
         ConnectionsManager.getInstance(currentAccount).sendRequest(req, (res, err) -> AndroidUtilities.runOnUIThread(() -> {

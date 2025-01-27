@@ -7618,7 +7618,7 @@ public class Theme {
         }
         ConnectionsManager.getInstance(currentAccount).sendRequest(req, (response, error) -> AndroidUtilities.runOnUIThread(() -> {
             loadingRemoteThemes.put(currentAccount, false);
-            if (response instanceof TLRPC.TL_account_themes) {
+            if (response instanceof TL_account.TL_themes) {
                 TL_account.TL_themes res = (TL_account.TL_themes) response;
                 remoteThemesHash.put(currentAccount, res.hash);
                 lastLoadingThemesTime.put(currentAccount, (int) (System.currentTimeMillis() / 1000));
@@ -7744,7 +7744,7 @@ public class Theme {
                     PatternsLoader.createLoader(true);
                 }
                 MediaDataController.getInstance(currentAccount).generateEmojiPreviewThemes(emojiPreviewThemes, currentAccount);
-            } else if (response instanceof TLRPC.TL_account_themesNotModified) {
+            } else if (response instanceof TL_account.TL_themesNotModified) {
                 if (defaultEmojiThemes.isEmpty() && !tryToFixMissingEmojiThemes) {
                     // Fix Missing Emoji Themes in v8.3.0-preview01?
                     remoteThemesHash.put(currentAccount, 0);

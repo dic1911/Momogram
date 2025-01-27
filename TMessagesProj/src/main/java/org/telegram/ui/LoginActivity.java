@@ -3153,12 +3153,12 @@ public class LoginActivity extends BaseFragment implements NotificationCenter.No
                                 } else {
                                     if (errorI.text.contains("SESSION_PASSWORD_NEEDED")) {
                                         ok = true;
-                                        TLRPC.TL_account_getPassword req2 = new TLRPC.TL_account_getPassword();
+                                        TL_account.getPassword req2 = new TL_account.getPassword();
                                         ConnectionsManager.getInstance(currentAccount).sendRequest(req2, (response1, error1) -> AndroidUtilities.runOnUIThread(() -> {
                                             nextPressed = false;
                                             showDoneButton(false, true);
                                             if (error1 == null) {
-                                                TLRPC.TL_account_password password = (TLRPC.TL_account_password) response1;
+                                                TL_account.Password password = (TL_account.Password) response1;
                                                 if (!TwoStepVerificationActivity.canHandleCurrentPassword(password, true)) {
                                                     AlertsCreator.showUpdateAppAlert(getParentActivity(), LocaleController.getString("UpdateAppAlert", R.string.UpdateAppAlert), true);
                                                     return;
@@ -8716,12 +8716,12 @@ public class LoginActivity extends BaseFragment implements NotificationCenter.No
     private void processError(TLRPC.TL_error error) {
         if (error.text.contains("SESSION_PASSWORD_NEEDED")) {
             exportLoginTokenProgress.show();
-            TLRPC.TL_account_getPassword req2 = new TLRPC.TL_account_getPassword();
+            TL_account.getPassword req2 = new TL_account.getPassword();
             ConnectionsManager.getInstance(currentAccount).sendRequest(req2, (response1, error1) -> AndroidUtilities.runOnUIThread(() -> {
                 exportLoginTokenProgress.dismiss();
                 showDoneButton(false, true);
                 if (error1 == null) {
-                    TLRPC.TL_account_password password = (TLRPC.TL_account_password) response1;
+                    TL_account.Password password = (TL_account.Password) response1;
                     if (!TwoStepVerificationActivity.canHandleCurrentPassword(password, true)) {
                         AlertsCreator.showUpdateAppAlert(getParentActivity(), LocaleController.getString("UpdateAppAlert", R.string.UpdateAppAlert), true);
                         return;

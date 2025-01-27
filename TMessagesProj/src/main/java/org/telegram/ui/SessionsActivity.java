@@ -573,7 +573,7 @@ public class SessionsActivity extends BaseFragment implements NotificationCenter
                     if (!authorization.current) {
                         builder.addTitle(LocaleController.getString("TerminateSessionText", R.string.TerminateSessionText), title);
                         builder.addItem(LocaleController.getString("Terminate", R.string.Terminate), R.drawable.baseline_delete_forever_24, true, __ -> {
-                            TLRPC.TL_account_resetAuthorization req = new TLRPC.TL_account_resetAuthorization();
+                            TL_account.resetAuthorization req = new TL_account.resetAuthorization();
                             req.hash = authorization.hash;
                             ConnectionsManager.getInstance(currentAccount).sendRequest(req, (response, error) -> AndroidUtilities.runOnUIThread(() -> {
                                 if (error != null) {
