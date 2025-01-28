@@ -4885,6 +4885,7 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
                                     } catch (Exception ignore) {}
                                 }
                             }
+                            wasTrackingVibrate = true;
                         } else {
                             wasTrackingVibrate = false;
                         }
