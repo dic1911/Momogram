@@ -26,7 +26,7 @@ public class IconSelectorAlert {
         Context context = fragment.getParentActivity();
 
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setTitle(LocaleController.getString("SelectAnIcon", R.string.SelectAnIcon));
+        builder.setTitle(LocaleController.getString(R.string.SelectAnIcon));
 
         GridAdapter gridAdapter = new GridAdapter();
         RecyclerListView recyclerListView = new RecyclerListView(context);
