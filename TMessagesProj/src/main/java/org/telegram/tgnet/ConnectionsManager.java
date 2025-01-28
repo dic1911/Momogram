@@ -260,27 +260,17 @@ public class ConnectionsManager extends BaseController {
         if (appId != 0) {
             fingerprint = AndroidUtilities.getCertificateSHA256Fingerprint();
             version = BuildConfig.VERSION_CODE;
-            appId = BuildConfig.APP_ID;
-            String versionName = BuildConfig.VERSION_NAME;
-            if (versionName.contains("-")) {
-                versionName = StrUtil.subBefore(versionName, "-", false);
-            }
-            appVersion = versionName + " (" + BuildConfig.VERSION_CODE + ")";
         } else if (getUserConfig().official || !getUserConfig().isClientActivated()) {
             fingerprint = "49C1522548EBACD46CE322B6FD47F6092BB745D0F88082145CAF35E14DCC38E1";
             version = BuildConfig.OFFICIAL_VERSION_CODE * 10 + 9;
             appId = BuildVars.OFFICAL_APP_ID;
-            appVersion = BuildConfig.OFFICIAL_VERSION + " (" + (BuildConfig.OFFICIAL_VERSION_CODE * 10 + 9) + ")";
         } else {
             fingerprint = AndroidUtilities.getCertificateSHA256Fingerprint();
             version = BuildConfig.VERSION_CODE;
             appId = BuildConfig.APP_ID;
-            String versionName = BuildConfig.VERSION_NAME;
-            if (versionName.contains("-")) {
-                versionName = StrUtil.subBefore(versionName, "-", false);
-            }
-            appVersion = versionName + " (" + BuildConfig.VERSION_CODE + ")";
         }
+        // always be following official version code
+        appVersion = BuildConfig.OFFICIAL_VERSION + " (" + (BuildConfig.OFFICIAL_VERSION_CODE * 10 + 9) + ")";
 
         if (systemLangCode.trim().length() == 0) {
             systemLangCode = "en";
@@ -290,7 +280,7 @@ public class ConnectionsManager extends BaseController {
         String pushString = getRegId();
 
         int timezoneOffset = (TimeZone.getDefault().getRawOffset() + TimeZone.getDefault().getDSTSavings()) / 1000;
-SharedPreferences mainPreferences;
+        SharedPreferences mainPreferences;
         if (currentAccount == 0) {
             mainPreferences = ApplicationLoader.applicationContext.getSharedPreferences("mainconfig", Activity.MODE_PRIVATE);
         } else {
@@ -301,7 +291,7 @@ SharedPreferences mainPreferences;
         if (getUserConfig().getCurrentUser() != null) {
             userPremium = getUserConfig().getCurrentUser().premium;
         }
-        init(SharedConfig.buildVersion(), TLRPC.LAYER, BuildVars.APP_ID, deviceModel, systemVersion, appVersion, langCode, systemLangCode, configPath, FileLog.getNetworkLogPath(), pushString, fingerprint, timezoneOffset, getUserConfig().getClientUserId(), userPremium, enablePushConnection);
+        init(version, TLRPC.LAYER, appId, deviceModel, systemVersion, appVersion, langCode, systemLangCode, configPath, FileLog.getNetworkLogPath(), pushString, fingerprint, timezoneOffset, getUserConfig().getClientUserId(), userPremium, enablePushConnection);
     }
 
     private String getRegId() {
@@ -1074,15 +1064,11 @@ public void init(int version, int layer, int apiId, String deviceModel, String s
             if (isUpdating == value) {
                 return;
             }
+            Log.d("030-con", String.format("setIsUpdating - state: %d, updating: %s", connectionState, value));
             isUpdating = value;
             if (connectionState == ConnectionStateConnected) {
                 AccountInstance.getInstance(currentAccount).getNotificationCenter().postNotificationName(NotificationCenter.didUpdateConnectionState);
-            } /*else if (connectionState == ConnectionStateConnectingToProxy && !alertShowed) {
-                if (getCurrentDatacenterId() == 4 && SharedConfig.currentProxy instanceof SharedConfig.WsProxy) {
-                    alertShowed = true;
-                    AccountInstance.getInstance(currentAccount).getNotificationCenter().postNotificationName(NotificationCenter.needShowAlert, 3, Unit.INSTANCE);
-                }
-            }*/
+            }
         });
     }
 
