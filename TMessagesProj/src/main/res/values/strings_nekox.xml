@@ -221,4 +221,5 @@
     <string name="ForceExternalBrowserForBots">Use external browser for bots/mini-apps</string>
     <string name="ForceExternalBrowserForBotsDesc">Some bots that require custom APIs from Telegram may malfunction</string>
     <string name="OpenLinkInApp">Open in app</string>
+    <string name="DebugSendLogsExt">Share logs to external app</string>
 </resources>

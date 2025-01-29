@@ -638,6 +638,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
     private int helpSectionCell;
     private int debugHeaderRow;
     private int sendLogsRow;
+    private int sendLogsExtRow;
     private int sendLastLogsRow;
     private int clearLogsRow;
     private int switchBackendRow;
@@ -4204,6 +4205,8 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                 Browser.openUrl(getParentActivity(), LocaleController.getString(R.string.PrivacyPolicyUrl));
             } else if (position == sendLogsRow) {
                 sendLogs(getParentActivity(), false);
+            } else if (position == sendLogsExtRow) {
+                sendLogs(getParentActivity(), false, true);
             } else if (position == sendLastLogsRow) {
                 sendLogs(getParentActivity(), true);
             } else if (position == clearLogsRow) {
@@ -9315,6 +9318,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
         helpSectionCell = -1;
         debugHeaderRow = -1;
         sendLogsRow = -1;
+        sendLogsExtRow = -1;
         sendLastLogsRow = -1;
         clearLogsRow = -1;
         switchBackendRow = -1;
@@ -9481,6 +9485,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                 }
                 if (BuildVars.LOGS_ENABLED) {
                     sendLogsRow = rowCount++;
+                    sendLogsExtRow = rowCount++;
                     sendLastLogsRow = -1;
                     // disable send last logs
                     clearLogsRow = rowCount++;
@@ -11492,6 +11497,10 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
     }
 
     public static void sendLogs(Activity activity, boolean last) {
+        sendLogs(activity, last, false);
+    }
+
+    public static void sendLogs(Activity activity, boolean last, boolean ext) {
         if (activity == null) {
             return;
         }
@@ -11507,7 +11516,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                     return;
                 }
 
-                File logcatFile = new File(dir, "NekoX-" + System.currentTimeMillis() + ".log");
+                File logcatFile = new File(dir, "momo-" + System.currentTimeMillis() + ".log");
                 try {
                     RuntimeUtil.exec("logcat", "-df", logcatFile.getPath()).waitFor();
                     RuntimeUtil.exec("logcat", "-c").waitFor();
@@ -11586,6 +11595,22 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                         } else {
                             uri = Uri.fromFile(zipFile);
                         }
+
+                        if (ext) {
+                            Intent intent = new Intent(Intent.ACTION_SEND);
+                            intent.setType("message/rfc822");
+                            if (Build.VERSION.SDK_INT >= 24) {
+                                try {
+                                    intent.putExtra(Intent.EXTRA_STREAM, FileProvider.getUriForFile(activity, ApplicationLoader.getApplicationId() + ".provider", zipFile));
+                                    intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                                } catch (Exception ignore) {
+                                    intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(zipFile));
+                                }
+                            }
+                            activity.startActivity(Intent.createChooser(intent, getString(R.string.ShareFile)));
+                            return;
+                        }
+
 
                         Intent i = new Intent(Intent.ACTION_SEND);
                         if (Build.VERSION.SDK_INT >= 24) {
@@ -12314,6 +12339,8 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                         textCell.setTextAndIcon(LocaleController.getString(R.string.PrivacyPolicy), R.drawable.msg2_policy, false);
                     } else if (position == sendLogsRow) {
                         textCell.setText(LocaleController.getString(R.string.DebugSendLogs), true);
+                    } else if (position == sendLogsExtRow) {
+                        textCell.setText(LocaleController.getString(R.string.DebugSendLogsExt), true);
                     } else if (position == sendLastLogsRow) {
                         textCell.setText(LocaleController.getString(R.string.DebugSendLastLogs), true);
                     } else if (position == clearLogsRow) {
@@ -12714,7 +12741,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                         position == clearLogsRow || position == switchBackendRow || position == setAvatarRow ||
                         position == addToGroupButtonRow || position == premiumRow || position == premiumGiftingRow ||
                         position == businessRow || position == liteModeRow || position == birthdayRow || position == channelRow ||
-                        position == starsRow;
+                        position == starsRow || position == sendLogsExtRow;
             }
             if (holder.itemView instanceof UserCell) {
                 UserCell userCell = (UserCell) holder.itemView;
@@ -12754,7 +12781,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                     position == sendMessageRow || position == notificationRow || position == privacyRow ||
                     position == languageRow || position == dataRow || position == chatRow ||
                     position == questionRow || position == devicesRow || position == filtersRow || position == stickersRow ||
-                    position == faqRow || position == policyRow || position == sendLogsRow || position == sendLastLogsRow ||
+                    position == faqRow || position == policyRow || position == sendLogsRow || position == sendLogsExtRow || position == sendLastLogsRow ||
                     position == clearLogsRow || position == switchBackendRow || position == setAvatarRow || position == addToGroupButtonRow ||
                     position == addToContactsRow || position == liteModeRow || position == premiumGiftingRow || position == businessRow || position == botStarsBalanceRow || position == botTonBalanceRow || position == channelBalanceRow || position == botPermissionLocation || position == botPermissionBiometry || position == botPermissionEmojiStatus) {
                 return VIEW_TYPE_TEXT;
@@ -14087,6 +14114,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
             put(++pointer, helpSectionCell, sparseIntArray);
             put(++pointer, debugHeaderRow, sparseIntArray);
             put(++pointer, sendLogsRow, sparseIntArray);
+            put(++pointer, sendLogsExtRow, sparseIntArray);
             put(++pointer, sendLastLogsRow, sparseIntArray);
             put(++pointer, clearLogsRow, sparseIntArray);
             put(++pointer, switchBackendRow, sparseIntArray);
