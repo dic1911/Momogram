@@ -59,7 +59,7 @@
     <string name="FilterNameUsersDescription">仅来自私聊的消息</string>
     <string name="FilterNameContacts">联系人</string>
     <string name="FilterNameContactsDescription">仅来自已保存用户的消息</string>
-    <string name="FilterNameGroups">群組</string>
+    <string name="FilterNameGroups">群组</string>
     <string name="FilterNameGroupsDescription">仅来自群聊的消息</string>
     <string name="FilterNameChannels">频道</string>
     <string name="FilterNameChannelsDescription">仅来自频道的消息</string>
@@ -129,7 +129,7 @@
     <string name="CCTT">台湾正体</string>
     <string name="CCSC">简体中文</string>
     <string name="CCSP">简体中文 (中国)</string>
-    <string name="CCJP">日文新字體</string>
+    <string name="CCJP">日文新字体</string>
     <string name="TabletMode">平板模式</string>
     <string name="TabletModeDefault">基于设备</string>
     <string name="ReplaceText">替换文本</string>
@@ -195,8 +195,8 @@
     <string name="doubleTapDisable">禁用</string>
     <string name="disableReactionsWhenSelecting">选择消息时隐藏回应菜单</string>
     <string name="ShowSelfInsteadOfSavedMessages">显示自己而不是收藏夹</string>
-    <string name="DisableCustomWallpaperUser">停用使用者自订背景</string>
-    <string name="DisableCustomWallpaperChannel">停用频道自订背景</string>
+    <string name="DisableCustomWallpaperUser">停用使用者自定义背景</string>
+    <string name="DisableCustomWallpaperChannel">停用频道自定义背景</string>
     <string name="FasterReconnectHack">自动开关代理以更快速的重新连线</string>
     <string name="UnsupportedProxy">不支持的代理</string>
     <string name="FasterReconnectHackAbout">只在良好的网路环境下工作.</string>
@@ -207,13 +207,13 @@
     <string name="UseOldAppName">使用旧应用名称 (NekoX)</string>
     <string name="UseOldAppNameDesc">变更此设置时会自动退回桌面, 且图示将被重设.</string>
     <string name="HideChannelBottomNotiToggle">隐藏频道底部通知开关</string>
-    <string name="CustomMaxCacheSize">自定缓存大小</string>
-    <string name="CustomMaxCacheSizeHint">單位: MB (ex. 512)</string>
+    <string name="CustomMaxCacheSize">自定义缓存大小</string>
+    <string name="CustomMaxCacheSizeHint">单位: MB (ex. 512)</string>
     <string name="CustomMaxCacheSizeBulletin">最大缓存大小已设为 %1$s MB</string>
     <string name="UseCamera2API">使用 Camera 2 API</string>
     <string name="HideCameraInAttachMenu">隐藏附件菜单中的相机</string>
     <string name="ForceExternalBrowserForBots">使用外部浏览器开启机器人网页/小程序</string>
-    <string name="ForceExternalBrowserForBotsDesc">部份依赖 Telegram 内部 API 的网页可能无法正常工作</string>
+    <string name="ForceExternalBrowserForBotsDesc">部分依赖 Telegram 内部 API 的网页可能无法正常工作</string>
     <string name="OpenLinkInApp">于应用内开启</string>
     <string name="MonetLightMode">浅色</string>
     <string name="MonetAmoled">AMOLED</string>
