@@ -134,6 +134,7 @@ android {
             appId = System.getenv("TELEGRAM_APP_ID") ?: appId
             appHash = System.getenv("TELEGRAM_APP_HASH") ?: appHash
         }
+        System.out.printf("api_id=%s", appId)
 
 
         buildConfigField "String", "OFFICIAL_VERSION", "\"" + officialVer + "\""
