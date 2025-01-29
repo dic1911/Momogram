@@ -82,6 +82,7 @@ import cn.hutool.core.util.StrUtil;
 import tw.nekomimi.nekogram.NekoConfig;
 import tw.nekomimi.nekogram.proxynext.Utils;
 import tw.nekomimi.nekogram.utils.DnsFactory;
+import tw.nekomimi.nekogram.utils.TelegramUtil;
 
 public class ConnectionsManager extends BaseController {
 
@@ -817,6 +818,21 @@ public class ConnectionsManager extends BaseController {
                 getInstance(currentAccount).connectionState = state;
                 AccountInstance.getInstance(currentAccount).getNotificationCenter().postNotificationName(NotificationCenter.didUpdateConnectionState);
             });
+        } catch (Exception e) {
+            FileLog.e(e);
+        }
+    }
+
+    private static long lastError = 0L;
+    public static void onConnectionError(final int state, final int currentAccount) {
+        try {
+            Log.e("030-con", String.format("error occurred, state = %d", state));
+            long t = System.currentTimeMillis();
+            if (state < 1000 && !SharedConfig.getProxyEnable() && (t - lastError) > 2000) {
+                Log.d("030-con", "triggered proxy toggle by error");
+                TelegramUtil.toggleProxyOnOff(false);
+                lastError = t;
+            }
         } catch (Exception e) {
             FileLog.e(e);
         }

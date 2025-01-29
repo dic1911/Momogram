@@ -28,6 +28,7 @@ jmethodID jclass_ConnectionsManager_onUpdate;
 jmethodID jclass_ConnectionsManager_onSessionCreated;
 jmethodID jclass_ConnectionsManager_onLogout;
 jmethodID jclass_ConnectionsManager_onConnectionStateChanged;
+jmethodID jclass_ConnectionsManager_onConnectionError;
 jmethodID jclass_ConnectionsManager_onInternalPushReceived;
 jmethodID jclass_ConnectionsManager_onUpdateConfig;
 jmethodID jclass_ConnectionsManager_onBytesSent;
@@ -350,6 +351,12 @@ class Delegate : public ConnectiosManagerDelegate {
                                                   state, instanceNum);
     }
 
+    void onConnectionError(int32_t state, int32_t instanceNum) {
+        jniEnv[instanceNum]->CallStaticVoidMethod(jclass_ConnectionsManager,
+                                                  jclass_ConnectionsManager_onConnectionError,
+                                                  state, instanceNum);
+    }
+
     void onUnparsedMessageReceived(int64_t reqMessageId, NativeByteBuffer *buffer,
                                    ConnectionType connectionType, int32_t instanceNum) {
         if (connectionType == ConnectionTypeGeneric) {
@@ -666,6 +673,11 @@ extern "C" int registerNativeTgNetFunctions(JavaVM *vm, JNIEnv *env) {
     jclass_ConnectionsManager_onConnectionStateChanged = env->GetStaticMethodID(
             jclass_ConnectionsManager, "onConnectionStateChanged", "(II)V");
     if (jclass_ConnectionsManager_onConnectionStateChanged == 0) {
+        return JNI_FALSE;
+    }
+    jclass_ConnectionsManager_onConnectionError = env->GetStaticMethodID(
+            jclass_ConnectionsManager, "onConnectionError", "(II)V");
+    if (jclass_ConnectionsManager_onConnectionError == 0) {
         return JNI_FALSE;
     }
     jclass_ConnectionsManager_onInternalPushReceived = env->GetStaticMethodID(

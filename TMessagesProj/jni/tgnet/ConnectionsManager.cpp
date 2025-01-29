@@ -937,6 +937,7 @@ void ConnectionsManager::onConnectionDataReceived(Connection *connection, Native
 
         if (messageSessionId != connection->getSessionId()) {
             if (LOGS_ENABLED) DEBUG_E("connection(%p) received invalid message session id (0x%" PRIx64 " instead of 0x%" PRIx64 ")", connection, (uint64_t) messageSessionId, (uint64_t) connection->getSessionId());
+            delegate->onConnectionError(123, instanceNum);
             return;
         }
 
@@ -2578,6 +2579,7 @@ void ConnectionsManager::processRequestQueue(uint32_t connectionTypes, uint32_t 
                         delete error;
                         DEBUG_D("12) erase request %d 0x%" PRIx64, request->requestToken, request->messageId);
                         iter = runningRequests.erase(iter);
+                        delegate->onConnectionError(169, instanceNum);
                         continue;
                     }
                 }
@@ -2749,6 +2751,7 @@ void ConnectionsManager::processRequestQueue(uint32_t connectionTypes, uint32_t 
                 }
                 if (LOGS_ENABLED)
                     DEBUG_D("skip queue, token = %d: no authkey for dc", request->requestToken);
+                delegate->onConnectionError(69, instanceNum);
                 iter++;
                 continue;
             } else if (!(request->requestFlags & RequestFlagEnableUnauthorized) && !requestDatacenter->authorized && request->datacenterId != DEFAULT_DATACENTER_ID && request->datacenterId != currentDatacenterId) {
@@ -2757,6 +2760,7 @@ void ConnectionsManager::processRequestQueue(uint32_t connectionTypes, uint32_t 
                 }
                 if (LOGS_ENABLED)
                     DEBUG_D("skip queue, token = %d: dc is unauthorized", request->requestToken);
+                delegate->onConnectionError(6969, instanceNum);
                 iter++;
                 continue;
             }
