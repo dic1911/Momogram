@@ -176,17 +176,17 @@ public class ConnectionsManager extends BaseController {
 
     private static class ResolvedDomain {
 
-        public InetAddress[] addresses;
+        public ArrayList<String> addresses;
         long ttl;
 
-        public ResolvedDomain(InetAddress[] a, long t) {
+        public ResolvedDomain(ArrayList<String> a, long t) {
             addresses = a;
             ttl = t;
         }
 
         public String getAddress() {
-            if (addresses.length == 0) return "";
-            return addresses[Utilities.random.nextInt(addresses.length)].getHostAddress();
+            if (addresses.isEmpty()) return "";
+            return addresses.get(Utilities.random.nextInt(addresses.size()));
         }
     }
 
@@ -1192,17 +1192,75 @@ public class ConnectionsManager extends BaseController {
         }
 
         protected ResolvedDomain doInBackground(Void... voids) {
-
-            InetAddress[] result;
-
+            ByteArrayOutputStream outbuf = null;
+            InputStream httpConnectionStream = null;
+            boolean done = false;
             try {
-                result = DnsFactory.lookup(currentHostName).toArray(new InetAddress[0]);
-            } catch (Exception e) {
-                result = new InetAddress[0];
+                URL downloadUrl = new URL("https://www.google.com/resolve?name=" + currentHostName + "&type=A");
+                URLConnection httpConnection = downloadUrl.openConnection();
+                httpConnection.addRequestProperty("User-Agent", "Mozilla/5.0 (iPhone; CPU iPhone OS 10_0 like Mac OS X) AppleWebKit/602.1.38 (KHTML, like Gecko) Version/10.0 Mobile/14A5297c Safari/602.1");
+                httpConnection.addRequestProperty("Host", "dns.google.com");
+                httpConnection.setConnectTimeout(1000);
+                httpConnection.setReadTimeout(2000);
+                httpConnection.connect();
+                httpConnectionStream = httpConnection.getInputStream();
+
+                outbuf = new ByteArrayOutputStream();
+
+                byte[] data = new byte[1024 * 32];
+                while (true) {
+                    int read = httpConnectionStream.read(data);
+                    if (read > 0) {
+                        outbuf.write(data, 0, read);
+                    } else if (read == -1) {
+                        break;
+                    } else {
+                        break;
+                    }
+                }
+
+                JSONObject jsonObject = new JSONObject(new String(outbuf.toByteArray()));
+                if (jsonObject.has("Answer")) {
+                    JSONArray array = jsonObject.getJSONArray("Answer");
+                    int len = array.length();
+                    if (len > 0) {
+                        ArrayList<String> addresses = new ArrayList<>(len);
+                        for (int a = 0; a < len; a++) {
+                            addresses.add(array.getJSONObject(a).getString("data"));
+                        }
+                        return new ResolvedDomain(addresses, SystemClock.elapsedRealtime());
+                    }
+                }
+                done = true;
+            } catch (Throwable e) {
+                FileLog.e(e, false);
+            } finally {
+                try {
+                    if (httpConnectionStream != null) {
+                        httpConnectionStream.close();
+                    }
+                } catch (Throwable e) {
+                    FileLog.e(e, false);
+                }
+                try {
+                    if (outbuf != null) {
+                        outbuf.close();
+                    }
+                } catch (Exception ignore) {
+
+                }
             }
-
-            return new ResolvedDomain(result, SystemClock.elapsedRealtime());
-
+            if (!done) {
+                try {
+                    InetAddress address = InetAddress.getByName(currentHostName);
+                    ArrayList<String> addresses = new ArrayList<>(1);
+                    addresses.add(address.getHostAddress());
+                    return new ResolvedDomain(addresses, SystemClock.elapsedRealtime());
+                } catch (Exception e) {
+                    FileLog.e(e, false);
+                }
+            }
+            return null;
         }
 
         @Override
