@@ -260,14 +260,17 @@ public class ConnectionsManager extends BaseController {
         if (appId != 0) {
             fingerprint = AndroidUtilities.getCertificateSHA256Fingerprint();
             version = BuildConfig.VERSION_CODE;
+            Log.d("030-api", "using custom app id");
         } else if (getUserConfig().official || !getUserConfig().isClientActivated()) {
             fingerprint = "49C1522548EBACD46CE322B6FD47F6092BB745D0F88082145CAF35E14DCC38E1";
             version = BuildConfig.OFFICIAL_VERSION_CODE * 10 + 9;
             appId = BuildVars.OFFICAL_APP_ID;
+            Log.d("030-api", "(temp) using official app id");
         } else {
             fingerprint = AndroidUtilities.getCertificateSHA256Fingerprint();
             version = BuildConfig.VERSION_CODE;
             appId = BuildConfig.APP_ID;
+            Log.d("030-api", "using builtin app id");
         }
         // always be following official version code
         appVersion = BuildConfig.OFFICIAL_VERSION + " (" + (BuildConfig.OFFICIAL_VERSION_CODE * 10 + 9) + ")";
@@ -583,10 +586,19 @@ public class ConnectionsManager extends BaseController {
         native_applyDatacenterAddress(currentAccount, datacenterId, ipAddress, port);
     }
 
+    boolean oldUpdating = false;
+    int oldState = -1, oldState2 = -1;
     public int getConnectionState() {
         if (connectionState == ConnectionStateConnected && isUpdating) {
+            if (oldState != ConnectionStateConnected || oldUpdating != isUpdating)
+                Log.d("030-con?", "getConnectionState - connected & updating");
+            oldState = connectionState;
+            oldUpdating = isUpdating;
             return ConnectionStateUpdating;
         }
+        if (oldState != connectionState)
+            Log.d("030-con?", String.format("getConnectionState - state: %d, updating: %s", connectionState, isUpdating));
+        oldState = connectionState;
         return connectionState;
     }
 
@@ -606,7 +618,7 @@ public class ConnectionsManager extends BaseController {
     public void setPushConnectionEnabled(boolean value) {
         native_setPushConnectionEnabled(currentAccount, value);
     }
-public void init(int version, int layer, int apiId, String deviceModel, String systemVersion, String appVersion, String langCode, String systemLangCode, String configPath, String logPath, String regId, String cFingerprint, int timezoneOffset, long userId, boolean userPremium, boolean enablePushConnection) {
+    public void init(int version, int layer, int apiId, String deviceModel, String systemVersion, String appVersion, String langCode, String systemLangCode, String configPath, String logPath, String regId, String cFingerprint, int timezoneOffset, long userId, boolean userPremium, boolean enablePushConnection) {
         SharedPreferences preferences = ApplicationLoader.applicationContext.getSharedPreferences("mainconfig", Activity.MODE_PRIVATE);
         String proxyAddress = preferences.getString("proxy_ip", "");
         String proxyUsername = preferences.getString("proxy_user", "");
@@ -645,7 +657,13 @@ public void init(int version, int layer, int apiId, String deviceModel, String s
         }
 
         native_init(currentAccount, version, layer, apiId, deviceModel, systemVersion, appVersion, langCode, systemLangCode, configPath, logPath, regId, cFingerprint, installer, packageId, timezoneOffset, userId, userPremium, enablePushConnection, ApplicationLoader.isNetworkOnline(), ApplicationLoader.getCurrentNetworkType(), SharedConfig.measureDevicePerformanceClass());
-        checkConnection();
+        Utilities.stageQueue.postRunnable(() -> {
+            if (SharedConfig.isProxyEnabled()) {
+                native_setProxySettings(currentAccount, SharedConfig.currentProxy.address, SharedConfig.currentProxy.port, SharedConfig.currentProxy.username, SharedConfig.currentProxy.password, SharedConfig.currentProxy.secret);
+            }
+            checkConnection();
+
+        });
     }
 
     public static void setLangCode(String langCode) {
@@ -792,6 +810,9 @@ public void init(int version, int layer, int apiId, String deviceModel, String s
 
     public static void onConnectionStateChanged(final int state, final int currentAccount) {
         try {
+            if (state != getInstance(currentAccount).oldState2)
+                Log.d("030-con", String.format("onConnectionStateChanged - state: %d, updating: %s", state, getInstance(currentAccount).isUpdating));
+            getInstance(currentAccount).oldState2 = state;
             AndroidUtilities.runOnUIThread(() -> {
                 getInstance(currentAccount).connectionState = state;
                 AccountInstance.getInstance(currentAccount).getNotificationCenter().postNotificationName(NotificationCenter.didUpdateConnectionState);
