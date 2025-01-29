@@ -206,4 +206,21 @@
     <string name="AllowDupLogin">Mevcut hesaba/hesaplara girişe izin ver</string>
     <string name="AllowDupLoginInfo">Bu birçok soruna yol açabileceğinden işiniz bittikten sonra bu istemcide aynı numaradan sadece bir oturumun açık kaldığına emin olun.</string>
     <string name="CustomApiId">Kişisel API ID</string>
+    <string name="ForceExternalBrowserForBotsDesc">Telegram\'daki bazı kişisel altyapılara gereksinim duyan botlar çökebilir</string>
+    <string name="OpenLinkInApp">Uygulamada aç</string>
+    <string name="GenerateMonetTheme">Monet teması oluştur</string>
+    <string name="MonetNickname">Takma adlar için monet</string>
+    <string name="HideCameraInAttachMenu">Ataç menüsünde kamerayı gizle</string>
+    <string name="MonetAmoled">AMOLED</string>
+    <string name="CustomMaxCacheSize">Kişisel önbellek boyutu</string>
+    <string name="ForceExternalBrowserForBots">Botlar/mini uygulamalar için harici tarayıcı kullan</string>
+    <string name="MonetLightMode">Aydınlık</string>
+    <string name="MonetGradient">Gradyan</string>
+    <string name="MonetAvatarGradient">Profil resimleri için gradyan</string>
+    <string name="MonetAlterOut">Alternatif giden mesaj stili</string>
+    <string name="AlwaysDestroyPhotoViewer">Her zaman PhotoViewer\'ı yok et (bellek sızıntılarını bir nebze önler)</string>
+    <string name="HideChannelBottomNotiToggle">Kanalların alt kısmındaki bildirim aç/kapat barını gizle</string>
+    <string name="CustomMaxCacheSizeHint">MB cinsinden boyut (ör. 512)</string>
+    <string name="CustomMaxCacheSizeBulletin">En fazla önbellek miktarı %1$s MB\'a ayarlandı</string>
+    <string name="UseCamera2API">Camera 2 altyapısına geç</string>
 </resources>
