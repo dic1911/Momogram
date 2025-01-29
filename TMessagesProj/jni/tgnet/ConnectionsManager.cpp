@@ -1545,6 +1545,13 @@ void ConnectionsManager::processServerResponse(TLObject *message, int64_t messag
 
     } else if (typeInfo == typeid(TL_bad_msg_notification)) {
         auto result = (TL_bad_msg_notification *) message;
+        static auto last_seqno = 0;
+        if (last_seqno == result->bad_msg_seqno) {
+            delegate->onConnectionError(1, instanceNum);
+            last_seqno = 0;
+        } else {
+            last_seqno = result->bad_msg_seqno;
+        }
         if (LOGS_ENABLED) DEBUG_E("bad message notification %d for messageId 0x%" PRIx64 ", seqno %d", result->error_code, result->bad_msg_id, result->bad_msg_seqno);
         switch (result->error_code) {
             case 16:
