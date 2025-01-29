@@ -98,6 +98,9 @@ public class TelegramUtil {
             return;
         }
         ++proxyToggleCount;
+        if (SharedConfig.proxyList.isEmpty()) {
+            SharedConfig.addProxy(new SharedConfig.ProxyInfo("dummyProxy", 1080, "", "", ""));
+        }
         toggleProxyOnOffThread = new Thread(toggleProxyOnOffRunnable);
         toggleProxyOnOffThread.start();
     }
