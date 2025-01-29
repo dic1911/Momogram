@@ -26616,7 +26616,7 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
                         bottomOverlayChatText.setEnabled(true);
                     }
                     showBottomOverlayProgress(false, bottomOverlayProgress.getTag() != null);
-                    showGiftButton = chatInfo != null && chatInfo.stargifts_available;
+                    showGiftButton = !NekoConfig.removePremiumAnnoyance.Bool() && chatInfo != null && chatInfo.stargifts_available;
                 } else if (forumTopic != null && forumTopic.closed) {
                     if (!ChatObject.canManageTopic(currentAccount, currentChat, forumTopic)) {
                         Drawable lock = getContext().getResources().getDrawable(R.drawable.msg_mini_lock2).mutate();

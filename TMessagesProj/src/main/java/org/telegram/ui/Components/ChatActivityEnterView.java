@@ -3363,7 +3363,7 @@ public class ChatActivityEnterView extends BlurredFrameLayout implements Notific
     }
 
     private void createGiftButton() {
-        if (giftButton != null || parentFragment == null) {
+        if (NekoConfig.removePremiumAnnoyance.Bool() || giftButton != null || parentFragment == null) {
             return;
         }
 
