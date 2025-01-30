@@ -7806,7 +7806,7 @@ public class ChatMessageCell extends BaseCell implements SeekBar.SeekBarDelegate
                 }
 
                 CharSequence questionText = question;
-                questionText = Emoji.replaceEmoji(questionText, Theme.chat_audioTitlePaint.getFontMetricsInt(),  false, AndroidUtilities.dp(16));
+                questionText = Emoji.replaceEmoji(questionText, Theme.chat_audioTitlePaint.getFontMetricsInt(),  false);
                 if (media.poll.question.entities != null) {
                     questionText = MessageObject.replaceAnimatedEmoji(questionText, media.poll.question.entities, Theme.chat_audioTitlePaint.getFontMetricsInt(), true);
                     MessageObject.addEntitiesToText(questionText, media.poll.question.entities, currentMessageObject.isOutOwner(), false, false, false);
@@ -7961,7 +7961,7 @@ public class ChatMessageCell extends BaseCell implements SeekBar.SeekBarDelegate
                     } else {
                         answerText = pollAnswer.text.text;
                     }
-                    answerText = Emoji.replaceEmoji(answerText, Theme.chat_audioTitlePaint.getFontMetricsInt(), false, AndroidUtilities.dp(16));
+                    answerText = Emoji.replaceEmoji(answerText, Theme.chat_audioTitlePaint.getFontMetricsInt(), false);
                     if (pollAnswer.text.entities != null) {
                         answerText = MessageObject.replaceAnimatedEmoji(answerText, pollAnswer.text.entities, Theme.chat_audioPerformerPaint.getFontMetricsInt(), true);
                         MessageObject.addEntitiesToText(answerText, pollAnswer.text.entities, currentMessageObject.isOutOwner(), false, false, false);
