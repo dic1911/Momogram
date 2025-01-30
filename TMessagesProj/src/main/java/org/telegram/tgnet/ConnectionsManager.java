@@ -61,6 +61,7 @@ import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -364,19 +365,55 @@ public class ConnectionsManager extends BaseController {
 
     public int sendRequestSync(final TLObject object, final RequestDelegate onComplete, final QuickAckDelegate onQuickAck, final WriteToSocketDelegate onWriteToSocket, final int flags, final int datacenterId, final int connectionType, final boolean immediate) {
         final int requestToken = lastRequestToken.getAndIncrement();
-        sendRequestInternal(object, onComplete, null, onQuickAck, onWriteToSocket, flags, datacenterId, connectionType, immediate, requestToken);
+        StackTraceElement[] st;
+        if (BuildVars.LOGS_ENABLED) {
+            st = Arrays.stream(Thread.currentThread().getStackTrace()).skip(2).toArray(StackTraceElement[]::new);
+            try {
+                String cls = object.getClass().getName();
+                reqMap.put(cls, reqMap.getOrDefault(cls, 0) + 1);
+                if (cnt.getAndIncrement() % 1000 == 0) {
+                    for (var r : reqMap.entrySet()) {
+                        Log.d("030-req", String.format("%s : %d", r.getKey(), r.getValue()));
+                    }
+                }
+            } catch (Exception ignore) {}
+        } else {
+            st = null;
+        }
+        sendRequestInternal(object, onComplete, null, onQuickAck, onWriteToSocket, flags, datacenterId, connectionType, immediate, requestToken, (!BuildVars.LOGS_ENABLED ? null : () -> {
+            Log.e("030-tgnetSync", String.format("%s error - %s", object.getClass().getName(), Arrays.toString(st)));
+        }));
         return requestToken;
     }
 
     public int sendRequest(final TLObject object, final RequestDelegate onComplete, final RequestDelegateTimestamp onCompleteTimestamp, final QuickAckDelegate onQuickAck, final WriteToSocketDelegate onWriteToSocket, final int flags, final int datacenterId, final int connectionType, final boolean immediate) {
         final int requestToken = lastRequestToken.getAndIncrement();
+        StackTraceElement[] st;
+        if (BuildVars.LOGS_ENABLED) {
+            st = Arrays.stream(Thread.currentThread().getStackTrace()).skip(2).toArray(StackTraceElement[]::new);
+            try {
+                String cls = object.getClass().getName();
+                reqMap.put(cls, reqMap.getOrDefault(cls, 0) + 1);
+                if (cnt.getAndIncrement() % 1000 == 0) {
+                    for (var r : reqMap.entrySet()) {
+                        Log.d("030-req", String.format("%s : %d", r.getKey(), r.getValue()));
+                    }
+                }
+            } catch (Exception ignore) {}
+        } else {
+            st = null;
+        }
         Utilities.stageQueue.postRunnable(() -> {
-            sendRequestInternal(object, onComplete, onCompleteTimestamp, onQuickAck, onWriteToSocket, flags, datacenterId, connectionType, immediate, requestToken);
+            sendRequestInternal(object, onComplete, onCompleteTimestamp, onQuickAck, onWriteToSocket, flags, datacenterId, connectionType, immediate, requestToken, (!BuildVars.LOGS_ENABLED ? null : () -> {
+                Log.e("030-tgnet", String.format("%s error - %s", object.getClass().getName(), Arrays.toString(st)));
+            }));
         });
         return requestToken;
     }
 
-    private void sendRequestInternal(TLObject object, RequestDelegate onComplete, RequestDelegateTimestamp onCompleteTimestamp, QuickAckDelegate onQuickAck, WriteToSocketDelegate onWriteToSocket, int flags, int datacenterId, int connectionType, boolean immediate, int requestToken) {
+    public static ConcurrentHashMap<String, Integer> reqMap = new ConcurrentHashMap<>(100);
+    static AtomicInteger cnt = new AtomicInteger(0);
+    private void sendRequestInternal(TLObject object, RequestDelegate onComplete, RequestDelegateTimestamp onCompleteTimestamp, QuickAckDelegate onQuickAck, WriteToSocketDelegate onWriteToSocket, int flags, int datacenterId, int connectionType, boolean immediate, int requestToken, Runnable onError) {
         if (BuildVars.LOGS_ENABLED) {
             FileLog.d("send request " + object + " with token = " + requestToken);
         }
@@ -415,6 +452,7 @@ public class ConnectionsManager extends BaseController {
                         error.text = errorText;
                         if (BuildVars.LOGS_ENABLED && error.code != -2000) {
                             FileLog.e(object + " got error " + error.code + " " + error.text);
+                            if (onError != null) onError.run();
                         }
                     }
                     if ((connectionType & ConnectionTypeDownload) != 0 && VideoPlayer.activePlayers.isEmpty()) {
