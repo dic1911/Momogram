@@ -5564,9 +5564,7 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
         contentView.addView(dialogStoriesCell, LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, DialogStoriesCell.HEIGHT_IN_DP));
         updateStoriesVisibility(false);
 
-        if (new Random().nextInt(100) < 50)
-            PrivacyUtil.postCheckAll(getParentActivity(), currentAccount);
-        else if (new Random().nextInt(100) < 20)
+        if (new Random().nextInt(100) < 20)
             UpdateUtil.postCheckFollowChannel(getParentActivity(), currentAccount);
 
 
