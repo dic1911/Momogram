@@ -396,6 +396,7 @@ public class ChatEditActivity extends BaseFragment implements ImageUpdater.Image
     }
 
     private void loadLinksCount() {
+        if (!ChatObject.hasAdminRights(currentChat)) return;
         TLRPC.TL_messages_getExportedChatInvites req = new TLRPC.TL_messages_getExportedChatInvites();
         req.peer = getMessagesController().getInputPeer(-chatId);
         req.admin_id = getMessagesController().getInputUser(getUserConfig().getCurrentUser());
