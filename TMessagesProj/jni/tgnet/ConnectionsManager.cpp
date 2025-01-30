@@ -1301,7 +1301,7 @@ void ConnectionsManager::processServerResponse(TLObject *message, int64_t messag
                         static std::string integrityCheckClassic = "INTEGRITY_CHECK_CLASSIC_";
                         bool processEvenFailed = error->error_code == 500 && error->error_message.find(authRestart) != std::string::npos;
                         bool isWorkerBusy = error->error_code == 500 && error->error_message.find(workerBusy) != std::string::npos;
-                        if (LOGS_ENABLED) DEBUG_E("request %p rpc error %d: %s", request, error->error_code, error->error_message.c_str());
+                        if (LOGS_ENABLED) DEBUG_E("request %p seqno %d retry %d rpc error %d: %s", request, request->messageSeqNo, request->retryCount, error->error_code, error->error_message.c_str());
 
                         if (error->error_code == 401 && error->error_message.find(authKeyPermEmpty) != std::string::npos) {
                             discardResponse = true;
