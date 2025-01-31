@@ -212,4 +212,7 @@
     <string name="ForceExternalBrowserForBots">外部ブラウザでボットアプリを開く</string>
     <string name="ForceExternalBrowserForBotsDesc">一部のボットは Telegram 内部の API を依存しているため作動しない可能性もあります</string>
     <string name="OpenLinkInApp">アプリ内で開く</string>
+    <string name="FeatureRemoved">本機能は削除されました.</string>
+    <string name="FeatureRemovedWhy">原因?</string>
+    <string name="FeatureRemovedWhyDetail">バージョン 11.7.0 以降, 一部の API が作動しないため, アプリが不安定になる可能性もあります, 未来のアプデで解決可能性もありますけど, チャットグループ内でETAを尋ねるのはご遠慮ください.</string>
 </resources>

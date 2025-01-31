@@ -211,4 +211,7 @@
     <string name="ForceExternalBrowserForBots">使用外部瀏覽器打開機器人網頁/小程式</string>
     <string name="ForceExternalBrowserForBotsDesc">部分依賴 Telegram 內部 API 的網頁可能無法正常運作</string>
     <string name="OpenLinkInApp">於應用內開啟</string>
+    <string name="FeatureRemoved">本功能已被移除.</string>
+    <string name="FeatureRemovedWhy">原因?</string>
+    <string name="FeatureRemovedWhyDetail">在 11.7.0 版本更新後, 部份 API 已無法正常使用, 或導致程式不穩定, 這可能會也可能不會在未來被解決, 請勿在群組催更修復.</string>
 </resources>

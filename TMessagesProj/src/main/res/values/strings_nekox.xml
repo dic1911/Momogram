@@ -222,4 +222,7 @@
     <string name="ForceExternalBrowserForBotsDesc">Some bots that require custom APIs from Telegram may malfunction</string>
     <string name="OpenLinkInApp">Open in app</string>
     <string name="DebugSendLogsExt">Share logs to external app</string>
+    <string name="FeatureRemoved">This feature was removed.</string>
+    <string name="FeatureRemovedWhy">Why?</string>
+    <string name="FeatureRemovedWhyDetail">With upstream changes starts from 11.7.0, some API no longer works, results in the client being unstable, this may or may not be resolved in the future, do not spam to ask for ETA.</string>
 </resources>

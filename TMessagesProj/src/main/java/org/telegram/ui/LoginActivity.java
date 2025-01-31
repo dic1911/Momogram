@@ -112,6 +112,7 @@ import com.google.zxing.common.detector.MathUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.telegram.PhoneFormat.PhoneFormat;
+import org.telegram.messenger.AccountInstance;
 import org.telegram.messenger.AndroidUtilities;
 import org.telegram.messenger.ApplicationLoader;
 import org.telegram.messenger.AuthTokensHelper;
@@ -143,6 +144,7 @@ import org.telegram.ui.ActionBar.ActionBar;
 import org.telegram.ui.ActionBar.ActionBarMenuItem;
 import org.telegram.ui.ActionBar.AlertDialog;
 import org.telegram.ui.ActionBar.BaseFragment;
+import org.telegram.ui.ActionBar.SimpleTextView;
 import org.telegram.ui.ActionBar.Theme;
 import org.telegram.ui.ActionBar.ThemeDescription;
 import org.telegram.ui.Cells.CheckBoxCell;
@@ -746,16 +748,16 @@ public class LoginActivity extends BaseFragment implements NotificationCenter.No
         menu.setSubMenuOpenSide(1);
         menu.setBackground(Theme.createSelectorDrawable(Theme.getColor(Theme.key_listSelector)));
 
-        menu.addSubItem(menu_proxy, R.drawable.msg2_proxy_on, LocaleController.getString("Proxy", R.string.Proxy))
-                .setContentDescription(LocaleController.getString("Proxy", R.string.Proxy));
-        menu.addSubItem(menu_language, R.drawable.ic_translate, LocaleController.getString("Language", R.string.Language))
-                .setContentDescription(LocaleController.getString("Language", R.string.Language));
-        menu.addSubItem(menu_bot_login, R.drawable.list_bot, LocaleController.getString("BotLogin", R.string.BotLogin))
-                .setContentDescription(LocaleController.getString("BotLogin", R.string.BotLogin));
-        menu.addSubItem(menu_qr_login, R.drawable.wallet_qr, LocaleController.getString("ImportLogin", R.string.ImportLogin))
-                .setContentDescription(LocaleController.getString("ImportLogin", R.string.ImportLogin));
-        menu.addSubItem(menu_custom_dc, R.drawable.baseline_sync_24, LocaleController.getString("CustomBackend", R.string.CustomBackend))
-                .setContentDescription(LocaleController.getString("CustomBackend", R.string.CustomBackend));
+        menu.addSubItem(menu_proxy, R.drawable.msg2_proxy_on, LocaleController.getString(R.string.Proxy))
+                .setContentDescription(LocaleController.getString(R.string.Proxy));
+        menu.addSubItem(menu_language, R.drawable.ic_translate, LocaleController.getString(R.string.Language))
+                .setContentDescription(LocaleController.getString(R.string.Language));
+        menu.addSubItem(menu_bot_login, R.drawable.list_bot, LocaleController.getString(R.string.BotLogin))
+                .setContentDescription(LocaleController.getString(R.string.BotLogin));
+        menu.addSubItem(menu_qr_login, R.drawable.wallet_qr, LocaleController.getString(R.string.ImportLogin))
+                .setContentDescription(LocaleController.getString(R.string.ImportLogin));
+        menu.addSubItem(menu_custom_dc, R.drawable.baseline_sync_24, LocaleController.getString(R.string.CustomBackend))
+                .setContentDescription(LocaleController.getString(R.string.CustomBackend));
         menu.addSubItem(menu_custom_api, R.drawable.baseline_vpn_key_24, LocaleController.getString(R.string.CustomApi));
 
         menu.setOnClickListener(v -> {
@@ -8556,8 +8558,18 @@ public class LoginActivity extends BaseFragment implements NotificationCenter.No
     }
 
     private void doBotLogin(Context context) {
+        if (true || !NekoXConfig.isDeveloper()) {
+            BulletinFactory.of(this).createSimpleBulletin(R.raw.info, LocaleController.getString(R.string.FeatureRemoved), LocaleController.getString(R.string.FeatureRemovedWhy), () -> {
+                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                builder.setTitle(LocaleController.getString(R.string.BotLogin));
+                builder.setMessage(LocaleController.getString(R.string.FeatureRemovedWhyDetail));
+                builder.setPositiveButton(LocaleController.getString(R.string.OK), null);
+                builder.show();
+            }).show();
+            return;
+        }
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setTitle(LocaleController.getString("BotLogin", R.string.BotLogin));
+        builder.setTitle(LocaleController.getString(R.string.BotLogin));
 
         final EditTextBoldCursor editText = new EditTextBoldCursor(context) {
             @Override
@@ -8567,7 +8579,7 @@ public class LoginActivity extends BaseFragment implements NotificationCenter.No
         };
         editText.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 18);
         editText.setTextColor(Theme.getColor(Theme.key_dialogTextBlack));
-        editText.setHintText(LocaleController.getString("BotToken", R.string.BotToken));
+        editText.setHintText(LocaleController.getString(R.string.BotToken));
         editText.setHeaderHintColor(Theme.getColor(Theme.key_windowBackgroundWhiteBlueHeader));
         editText.setSingleLine(true);
         editText.setFocusable(true);
@@ -8590,14 +8602,14 @@ public class LoginActivity extends BaseFragment implements NotificationCenter.No
         }
         builder.setView(layout);
 
-        builder.setPositiveButton(LocaleController.getString("OK", R.string.OK), (dialogInterface, i) -> {
+        builder.setPositiveButton(LocaleController.getString(R.string.OK), (dialogInterface, i) -> {
             if (getParentActivity() == null) {
                 return;
             }
             String token = editText.getText().toString();
 
             if (token.length() == 0) {
-                needShowAlert(getAppName(), LocaleController.getString("InvalidAccessToken", R.string.InvalidAccessToken));
+                needShowAlert(getAppName(), LocaleController.getString(R.string.InvalidAccessToken));
                 return;
             }
 
@@ -8630,9 +8642,9 @@ public class LoginActivity extends BaseFragment implements NotificationCenter.No
                     }
                     if (error.text != null) {
                         if (error.text.contains("ACCESS_TOKEN_INVALID")) {
-                            needShowAlert(getAppName(), LocaleController.getString("InvalidAccessToken", R.string.InvalidAccessToken));
+                            needShowAlert(getAppName(), LocaleController.getString(R.string.InvalidAccessToken));
                         } else if (error.text.startsWith("FLOOD_WAIT")) {
-                            needShowAlert(getAppName(), LocaleController.getString("FloodWait", R.string.FloodWait));
+                            needShowAlert(getAppName(), LocaleController.getString(R.string.FloodWait));
                         } else if (error.code != -1000) {
                             needShowAlert(getAppName(), error.code + ": " + error.text);
                         }
@@ -8642,7 +8654,7 @@ public class LoginActivity extends BaseFragment implements NotificationCenter.No
             }), ConnectionsManager.RequestFlagFailOnServerErrors | ConnectionsManager.RequestFlagWithoutLogin | ConnectionsManager.RequestFlagTryDifferentDc | ConnectionsManager.RequestFlagEnableUnauthorized);
             needShowProgress(reqId);
         });
-        builder.setNegativeButton(LocaleController.getString("Cancel", R.string.Cancel), null);
+        builder.setNegativeButton(LocaleController.getString(R.string.Cancel), null);
         builder.show().setOnShowListener(dialog -> {
             editText.requestFocus();
             AndroidUtilities.showKeyboard(editText);

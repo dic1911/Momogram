@@ -223,4 +223,7 @@
     <string name="MonetAlterOut">替代发送消息样式</string>
     <string name="AlwaysDestroyPhotoViewer">始终销毁图片查看器</string>
     <string name="GenerateMonetTheme">生成莫奈主题</string>
+    <string name="FeatureRemoved">本功能已被移除.</string>
+    <string name="FeatureRemovedWhy">原因?</string>
+    <string name="FeatureRemovedWhyDetail">在 11.7.0 版本更新后, 部份 API 已无法正常使用, 或导致程序不稳定, 这可能会也可能不会在未来版本中解决, 请勿在群组催更修复.</string>
 </resources>
