@@ -122,6 +122,7 @@ public class BotWebViewSheet extends Dialog implements NotificationCenter.Notifi
     public final static int FLAG_FROM_SIDE_MENU = 2;
     private int lineColor;
     private boolean inApp = !NekoConfig.forceExternalBrowserForBots.Bool();
+    private String initialUrl = null;
 
     public static HashSet<BotWebViewSheet> activeSheets = new HashSet<>();
 
@@ -1603,6 +1604,13 @@ public class BotWebViewSheet extends Dialog implements NotificationCenter.Notifi
             });
             o.addGap();
         }
+
+        if (initialUrl != null) {
+            o.add(R.drawable.msg_openin, LocaleController.getString(R.string.OpenInExternalApp), () -> {
+                Browser.openUrl(fragment.getContext(), initialUrl);
+            });
+        }
+
         o
             .add(R.drawable.msg_bot, LocaleController.getString(R.string.BotWebViewOpenBot), () -> {
                 if (parentActivity instanceof LaunchActivity) {
@@ -1786,6 +1794,7 @@ public class BotWebViewSheet extends Dialog implements NotificationCenter.Notifi
             queryId = 0;
             url = resultUrl.url;
         }
+        initialUrl = url;
         if (url != null && !fromTab) {
             MediaDataController.getInstance(currentAccount).increaseWebappRating(requestProps.botId);
             if (!inApp) {
