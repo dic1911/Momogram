@@ -172,7 +172,7 @@
     <string name="AutoArchiveAndMuteAbout">副作用: 本功能使用本地数据库检查是否為未知私讯, 无法达到完全准确, 本地数据库不完整时可能有误判情况</string>
     <string name="AutoArchiveAndMute">自动将未知私讯归档并停用通知</string>
     <string name="AutoArchiveAndMuteNoCommonGroupOnly">仅针对无共同群组的私信自动归档及停用通知</string>
-    <string name="AutoArchiveAndMuteNoCommonGroupOnlyAbout">需要从服务器查询资料，可能导致动作前的延迟</string>
+    <string name="AutoArchiveAndMuteNoCommonGroupOnlyAbout">需要查询远程服务器，可能导致操作前出现延迟。</string>
     <string name="IncreasedMaxPhotoResolution">增加上传图片最大宽度 (2560px)</string>
     <string name="CopyPhotoAsSticker">作為贴纸复制</string>
     <string name="OpenAvatarInsteadOfExpand">点击时开啟完整头像显示界面而不是在原页面放大</string>
@@ -264,8 +264,8 @@
     <string name="CopySticker">复制贴纸</string>
     <string name="CopyPhotoSticker">复制图像贴纸</string>
     <string name="ChooseBestVideoQualityByDefault">预设选择最高影片品质</string>
-    <string name="CrashDialogTitle">NekoX 发生错误 &gt;&lt;</string>
-    <string name="CrashDialogMomoTitle">Momogram 发生错误 &gt;&lt;</string>
+    <string name="CrashDialogTitle">NekoX 崩溃了！</string>
+    <string name="CrashDialogMomoTitle">Momogram 崩溃了！</string>
     <string name="CrashDialogMessage">是否分享除错信息以利开发者解决问题?</string>
     <string name="TriggerCrash">触发闪退</string>
     <string name="MapMobileDataSaverToRoaming">在启用省流模式时使用漫游设定</string>
@@ -311,4 +311,8 @@
     <string name="CloudflareCredentialsObtainDesc">1. 开启 Cloudflare 仪表板并登入您的账户\n\n2. 展开侧边选单的 AI 分类并点选 Workers AI\n\n3. 点击 "Use REST API"\n\n4. 记下您的 "Account ID" 后于同一页面创建 API token.</string>
     <string name="SwipeActionInTopicList">话题列表滑动操作 (隐藏/显示)</string>
     <string name="AllowBotInDirectShare">允许机器人出现在快速分享选单</string>
+    <string name="AutoCheckUpdate">自动检查更新</string>
+    <string name="AutoCheckUpdateInfo">发现更新版本：%1$s</string>
+    <string name="AlwaysLoadStickerSetFromServer">查看详情时从服务器加载贴纸集</string>
+    <string name="EnableUnifiedPush">启用 UnifiedPush</string>
 </resources>
