@@ -318,6 +318,7 @@ public class NekoConfig {
     public static String[] transcribeOptions;
 
     public static ConfigItem allowBotInDirectShare = addConfig(R.string.AllowBotInDirectShare , "AllowBotInDirectShare", configTypeBool, GENERAL, false);
+    public static ConfigItem showQuickReconnect = addConfig(R.string.ShowQuickReconnect , "AllowBotInDirectShare", configTypeBool, EXPERIMENTAL, false);
 
     public static ConfigItem profileShowLinkedChat = addConfig("profileShowLinkedChat", configTypeBool, CHAT, true);
     public static ConfigItem profileShowAddToFolder = addConfig("profileShowAddToFolder", configTypeBool, CHAT, true);

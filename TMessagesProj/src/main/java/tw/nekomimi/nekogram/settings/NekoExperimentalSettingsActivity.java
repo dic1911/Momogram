@@ -87,6 +87,7 @@ public class NekoExperimentalSettingsActivity extends BaseFragment {
     private final AbstractConfigCell useMediaStreamInVoipRow = cellGroup.appendCell(new ConfigCellTextCheck(NekoConfig.useMediaStreamInVoip));
     private final AbstractConfigCell customAudioBitrateRow = cellGroup.appendCell(new ConfigCellCustom(CellGroup.ITEM_TYPE_TEXT_SETTINGS_CELL, true));
     private final AbstractConfigCell fasterReconnectHackRow = cellGroup.appendCell(new ConfigCellTextCheck(NekoConfig.fasterReconnectHack, LocaleController.getString(R.string.FasterReconnectHackAbout)));
+    private final AbstractConfigCell showQuickReconnectRow = cellGroup.appendCell(new ConfigCellTextCheck(NekoConfig.showQuickReconnect, LocaleController.getString(R.string.ShowQuickReconnectDesc)));
     private final AbstractConfigCell autoArchiveAndMuteRow = cellGroup.appendCell(new ConfigCellTextCheck(NekoConfig.autoArchiveAndMute, LocaleController.getString(R.string.AutoArchiveAndMuteAbout)));
     private final AbstractConfigCell autoArchiveAndMuteNoCommonGroupOnlyRow = cellGroup.appendCell(new ConfigCellTextCheck(NekoConfig.autoArchiveAndMuteNoCommonGroupOnly, LocaleController.getString(R.string.AutoArchiveAndMuteNoCommonGroupOnlyAbout)));
     private final AbstractConfigCell removePremiumAnnoyanceRow = cellGroup.appendCell(new ConfigCellTextCheck(NekoConfig.removePremiumAnnoyance, LocaleController.getString(R.string.RemovePremiumAnnoyanceDesc)));

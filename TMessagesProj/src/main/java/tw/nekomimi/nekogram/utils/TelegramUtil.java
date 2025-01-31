@@ -79,7 +79,12 @@ public class TelegramUtil {
             SharedConfig.setProxyEnable(false);
         }
     };
+
     public static void toggleProxyOnOff(boolean cancel) {
+        toggleProxyOnOff(cancel, false);
+    }
+
+    public static void toggleProxyOnOff(boolean cancel, boolean force) {
         if (toggleProxyOnOffThread != null) {
             if (cancel) {
                 toggleProxyOnOffThread.interrupt();
@@ -93,7 +98,7 @@ public class TelegramUtil {
             }
             toggleProxyOnOffThread = null;
             return;
-        } else if (cancel || !NekoConfig.fasterReconnectHack.Bool() || !isConnecting()) {
+        } else if (cancel || (!force && !NekoConfig.fasterReconnectHack.Bool()) || !isConnecting()) {
             proxyToggleCount = 0;
             return;
         }

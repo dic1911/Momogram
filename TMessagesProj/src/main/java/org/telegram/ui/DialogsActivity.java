@@ -257,6 +257,7 @@ import tw.nekomimi.nekogram.NekoConfig;
 import tw.nekomimi.nekogram.NekoXConfig;
 import tw.nekomimi.nekogram.utils.PrivacyUtil;
 import tw.nekomimi.nekogram.utils.ProxyUtil;
+import tw.nekomimi.nekogram.utils.TelegramUtil;
 import tw.nekomimi.nekogram.utils.UpdateUtil;
 
 public class DialogsActivity extends BaseFragment implements NotificationCenter.NotificationCenterDelegate, FloatingDebugProvider {
@@ -428,6 +429,7 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
     private boolean downloadsItemVisible;
     private ActionBarMenuItem proxyItem;
     private boolean proxyItemVisible;
+    private boolean proxyItemVisibleForWorkaround;
     public ActionBarMenuItem scanItem;
     private ActionBarMenuItem searchItem;
     private ActionBarMenuItem optionsItem;
@@ -3808,6 +3810,10 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
                     getNotificationsController().showNotifications();
                     updatePasscodeButton();
                 } else if (id == 2) {
+                    if (proxyItemVisibleForWorkaround) {
+                        TelegramUtil.toggleProxyOnOff(false, true);
+                        return;
+                    }
                     presentFragment(new ProxyListActivity());
                 } else if (id == 3) {
                     showSearch(true, true, true);
@@ -10321,10 +10327,21 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
         String proxyAddress = preferences.getString("proxy_ip", "");
         boolean proxyEnabled;
         proxyEnabled = preferences.getBoolean("proxy_enabled", false);
-        if (!downloadsItemVisible && !NekoConfig.useProxyItem.Bool() && (!NekoConfig.hideProxyByDefault.Bool() || (proxyEnabled && !TextUtils.isEmpty(proxyAddress)) || getMessagesController().blockedCountry && !SharedConfig.proxyList.isEmpty())) {
+        if (NekoConfig.showQuickReconnect.Bool() && currentConnectionState != ConnectionsManager.ConnectionStateConnected &&
+                currentConnectionState != ConnectionsManager.ConnectionStateWaitingForNetwork && currentConnectionState != ConnectionsManager.ConnectionStateConnectingToProxy) {
+            proxyItem.setIcon(R.drawable.msg_retry);
             if (!actionBar.isSearchFieldVisible() && (doneItem == null || doneItem.getVisibility() != View.VISIBLE)) {
                 proxyItem.setVisibility(View.VISIBLE);
             }
+            proxyItemVisibleForWorkaround = proxyItemVisible = true;
+        } else if (!downloadsItemVisible && !NekoConfig.useProxyItem.Bool() &&
+                (!NekoConfig.hideProxyByDefault.Bool() || (proxyEnabled && !TextUtils.isEmpty(proxyAddress)) ||
+                        getMessagesController().blockedCountry && !SharedConfig.proxyList.isEmpty())) {
+            if (!actionBar.isSearchFieldVisible() && (doneItem == null || doneItem.getVisibility() != View.VISIBLE)) {
+                proxyItem.setVisibility(View.VISIBLE);
+            }
+            proxyItem.setIcon(proxyDrawable);
+            proxyItemVisibleForWorkaround = false;
             proxyItemVisible = true;
             proxyDrawable.setConnected(true, currentConnectionState == ConnectionsManager.ConnectionStateConnected || currentConnectionState == ConnectionsManager.ConnectionStateUpdating, animated);
         } else {
