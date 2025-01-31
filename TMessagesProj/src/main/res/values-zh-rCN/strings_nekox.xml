@@ -215,4 +215,12 @@
     <string name="ForceExternalBrowserForBots">使用外部浏览器开启机器人网页/小程序</string>
     <string name="ForceExternalBrowserForBotsDesc">部份依赖 Telegram 内部 API 的网页可能无法正常工作</string>
     <string name="OpenLinkInApp">于应用内开启</string>
+    <string name="MonetLightMode">浅色</string>
+    <string name="MonetAmoled">AMOLED</string>
+    <string name="MonetGradient">渐变</string>
+    <string name="MonetAvatarGradient">头像渐变</string>
+    <string name="MonetNickname">昵称莫奈主题</string>
+    <string name="MonetAlterOut">替代发送消息样式</string>
+    <string name="AlwaysDestroyPhotoViewer">始终销毁图片查看器</string>
+    <string name="GenerateMonetTheme">生成莫奈主题</string>
 </resources>
