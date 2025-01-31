@@ -165,7 +165,7 @@
     <string name="AutoSendMessageIfBlockedBySlowModeDesc">只支持单一文字/贴图/GIF, 不支持其他媒体或文件</string>
     <string name="ProviderTelegramAPI">Telegram API</string>
     <string name="ConfirmToSendCommand">您确定要送出指令吗?</string>
-    <string name="AlwaysShowDownloads">永远显示下载按纽</string>
+    <string name="AlwaysShowDownloads">永远显示下载按钮</string>
     <string name="UseBotWebviewForGames">为游戏及其他网页使用小程序界面</string>
     <string name="OpenWebViewTabWithoutBot">开启小程序分页时不重新开启机器人对话</string>
     <string name="CloseWebViewWithoutConfirmation">关闭小程序时不需确认</string>
@@ -237,9 +237,9 @@
     <string name="RemovePremiumAnnoyanceDesc">并防止显示 premium 预览</string>
     <string name="NoTextToTranslate">没有可翻译的文字 :(</string>
     <string name="AlwaysDisableSafeBrowsingInWebView">停用 Google 安全浏览</string>
-    <string name="AlwaysShowBotCommandButton">永远显示机器人指令按纽</string>
+    <string name="AlwaysShowBotCommandButton">永远显示机器人指令按钮</string>
     <string name="ShowEditTimestampInPopupMenu">在弹出菜单显示编辑时间</string>
-    <string name="AlwaysHideBotCommandButton">永远隐藏机器人指令按纽</string>
+    <string name="AlwaysHideBotCommandButton">永远隐藏机器人指令按钮</string>
     <string name="DisableBirthdayReminder">停用联络人生日提醒</string>
     <string name="ForceAllowChooseBrowser">开启链接时强制允许选择浏览器</string>
     <string name="HideWebViewTabOverlayWhenSharing">选择分享对话时隐藏底部分页界面</string>
@@ -253,7 +253,7 @@
     <string name="ConfirmToSendCommandToggle">以点击传送指令前需经过确认</string>
     <string name="CopyPhoto">复制图片</string>
     <string name="IgnoreAllReactions">忽略表情符号回应</string>
-    <string name="ForceHideShowAsList">搜寻时隐藏\"以列表显示\"按纽文字</string>
+    <string name="ForceHideShowAsList">搜寻时隐藏\"以列表显示\"按钮文字</string>
     <string name="IgnoreFilterEmoticonUpdate">忽略来自服务器的文件夹图标</string>
     <string name="CleanupLeftovers">清理缓存</string>
     <string name="CleanupLeftoversDetail">清理非使用中的缓存路径及上传用的缓存.</string>
@@ -271,7 +271,7 @@
     <string name="MapMobileDataSaverToRoaming">在启用省流模式时使用漫游设定</string>
     <string name="MapMobileDataSaverToRoamingNote">仅适用于 Android 9 或更新版本的系统</string>
     <string name="ImageMessageSizeTweak">调整图片信息的最大大小并启用比例缩放</string>
-    <string name="KeepBlockedBotChatHistory">封锁厚保留与机器人的对话记录</string>
+    <string name="KeepBlockedBotChatHistory">封锁后保留与机器人的对话记录</string>
     <string name="DontSendStartCmdOnUnblockBot">解除封锁机器人后不发送 /start</string>
     <string name="SmallerEmojisInChooser">输入时使用较小的颜文字</string>
     <string name="ChatNameOverride">使用本地自定义对话名称</string>
