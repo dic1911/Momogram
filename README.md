@@ -10,6 +10,7 @@ Built with unique customization and features, get ready and let Momogram take yo
 ## New Features
 
 ### General
+- Additional translation provider (Lingva)
 - Allow chat preview for tablet mode if in portrait mode
 - Disable auto login with Telegram account when opening certain links
 - Filter languages shown in translate target
