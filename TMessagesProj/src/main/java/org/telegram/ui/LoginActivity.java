@@ -8558,7 +8558,7 @@ public class LoginActivity extends BaseFragment implements NotificationCenter.No
     }
 
     private void doBotLogin(Context context) {
-        if (true || !NekoXConfig.isDeveloper()) {
+        if (!NekoXConfig.isDeveloper()) {
             BulletinFactory.of(this).createSimpleBulletin(R.raw.info, LocaleController.getString(R.string.FeatureRemoved), LocaleController.getString(R.string.FeatureRemovedWhy), () -> {
                 AlertDialog.Builder builder = new AlertDialog.Builder(context);
                 builder.setTitle(LocaleController.getString(R.string.BotLogin));
