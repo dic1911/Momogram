@@ -316,4 +316,5 @@
     <string name="AlwaysLoadStickerSetFromServer">查看详情时从服务器加载贴纸包</string>
     <string name="EnableUnifiedPush">启用 UnifiedPush</string>
     <string name="AllowTestingUpdate">自动检查更新时包含测试版</string>
+    <string name="enhancedFileLoaderWarning">本功能可能导致实际下载速度变得更慢, 对非高级用户帐号更是如此, 是否确认开启?</string>
 </resources>

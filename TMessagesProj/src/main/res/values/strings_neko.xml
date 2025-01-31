@@ -315,4 +315,5 @@
     <string name="SwipeActionInTopicList">Swipe action in topic list (Hide/Show)</string>
     <string name="AllowBotInDirectShare">Allow bots as direct share target</string>
     <string name="AllowTestingUpdate">Check for testing builds when looking for updates</string>
+    <string name="enhancedFileLoaderWarning">This may have negative effect on actual download speed, especially when not on a premium account, proceed?</string>
 </resources>

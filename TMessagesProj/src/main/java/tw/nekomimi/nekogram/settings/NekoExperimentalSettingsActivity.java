@@ -153,6 +153,20 @@ public class NekoExperimentalSettingsActivity extends BaseFragment {
         listView.setOnItemClickListener((view, position, x, y) -> {
             AbstractConfigCell a = cellGroup.rows.get(position);
             if (a instanceof ConfigCellTextCheck) {
+                if (position == cellGroup.rows.indexOf(enhancedFileLoaderRow)) {
+                    ConfigCellTextCheck check = ((ConfigCellTextCheck) a);
+                    if (!check.cell.isChecked()) {
+                        new AlertDialog.Builder(context)
+                                .setTitle(LocaleController.getString(R.string.enhancedFileLoader))
+                                .setMessage(LocaleController.getString(R.string.enhancedFileLoaderWarning))
+                                .setPositiveButton(LocaleController.getString(R.string.OK), (__, ___) -> {
+                                    ((ConfigCellTextCheck) a).onClick((TextCheckCell) view);
+                                })
+                                .setNegativeButton(LocaleController.getString(R.string.Cancel), null)
+                                .show();
+                        return;
+                    }
+                }
                 ((ConfigCellTextCheck) a).onClick((TextCheckCell) view);
             } else if (a instanceof ConfigCellSelectBox) {
                 ((ConfigCellSelectBox) a).onClick(view);
