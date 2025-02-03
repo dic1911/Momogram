@@ -107,8 +107,8 @@ public class ApplicationLoader extends Application {
         }
         Thread.currentThread().setUncaughtExceptionHandler((thread, error) -> {
             Log.e("nekox", "from " + thread, error);
-            String errStr = String.format("%s\n%s\n%s: %s | %s\n%s",
-                    BuildConfig.VERSION_NAME,
+            String errStr = String.format("%s %s\n%s\n%s: %s | %s\n%s",
+                    BuildConfig.VERSION_NAME, FileUtil.getAbi(),
                     AndroidUtilities.getSystemProperty("ro.build.fingerprint"),
                     error.getClass().getName(), error.getMessage(), error.getCause(),
                     TelegramUtil.getStackTraceAsString(error.getStackTrace()));
