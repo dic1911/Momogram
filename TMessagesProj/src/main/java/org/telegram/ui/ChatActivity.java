@@ -18001,7 +18001,7 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
                 scrollToPositionOnRecreate = -1;
             }
 
-            if (searchCountText != null && searchGoToBeginningButton != null && searchExpandList != null &&
+            if (searchContainer != null && searchCountText != null && searchGoToBeginningButton != null && searchExpandList != null &&
                     (NekoConfig.forceHideShowAsList.Bool() || (searchGoToBeginningButton.getVisibility() == View.VISIBLE
                     && searchCountText.getX() < (dp(4) + searchGoToBeginningButton.getX())))) {
                 // hide text first
