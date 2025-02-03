@@ -292,4 +292,26 @@
     <string name="LoadingInstantView">Hızlı görüntüleme yüklenmeye çalışılıyor…</string>
     <string name="BlacklistedQueryRemoved">Seçili olmayan sorgular karalisteden kaldırıldı.</string>
     <string name="OpenExternalOnInstantViewFail">Hızlı görüntüleme mevcut değilken harici tarayıcı kullan</string>
+    <string name="DataCleared">Veri temizlendi</string>
+    <string name="MarkdownCode">Kod</string>
+    <string name="TranscribeProviderWorkersAI">Whisper (Workers AI)</string>
+    <string name="TranscribeProviderAuto">Otomatik seç</string>
+    <string name="EnhancedVideoBitrate">Paylaşılan videonun bit hızını iyileştir</string>
+    <string name="SpoilerOnAllMedia">Tüm medyaları bulanıklaştır</string>
+    <string name="ProfileMenu">Profil menüsü</string>
+    <string name="AutoCheckUpdate">Güncellemeleri otomatik denetle</string>
+    <string name="AutoCheckUpdateInfo">Güncel sürüm bulundu: %1$s</string>
+    <string name="ShowChannelMsgFwdCount">Kanallarda mesajların iletilme sayısını göster</string>
+    <string name="ResetIVFailDomainsConfirm">Geçmişte saklanmış anlık görünüm hataları verisi tamamen temizlenecek! Devam et?</string>
+    <string name="UnarchiveOnSwipe">Kaydırınca sohbeti arşivden çıkar</string>
+    <string name="TranscribeProviderDesc">Otomatik seç özelliği etkinken %s Telegram Premium olmadığında kullanılacak.</string>
+    <string name="CloudflareCredentials">Cloudflare hesap bilgileri</string>
+    <string name="CloudflareCredentialsNotSet">Cloudflare hesap bilgileri ayarlanmamış.</string>
+    <string name="EnhancedVideoBitrateInfo">Daha iyi kalite sunar ancak dosya boyutunu arttırır</string>
+    <string name="TranscribeProvider">Transkript sağlayıcısı</string>
+    <string name="CloudflareAccountID">Hesap ID</string>
+    <string name="CloudflareAPIToken">API Anahtarı</string>
+    <string name="CloudflareCredentialsDialog">Cloudflare Hesap ID ve API anahtarını ayarlayın.\n**Nasıl elde edebilirim?**</string>
+    <string name="CloudflareCredentialsObtainDesc">1. Cloudflare panelini açın ve kendi hesabınızla oturum açın\n\n2. AI seçeneğini yan menüden genişletin ve Workers AI seçeneğine tıklayın\n\n3. REST API Kullan seçeneğine tıklayın\n\n4. Bu ekrandaki Hesap ID\'yi not edin ve bir API anahtarı oluşturun.</string>
+    <string name="SwipeActionInTopicList">Konu listesinde kaydırma eylemi (Gizle/Göster)</string>
 </resources>
