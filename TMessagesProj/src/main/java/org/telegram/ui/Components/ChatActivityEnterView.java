@@ -3439,6 +3439,7 @@ public class ChatActivityEnterView extends BlurredFrameLayout implements Notific
         AndroidUtilities.updateViewVisibilityAnimated(botButton, false, 0.1f, false);
         attachLayout.addView(botButton, 0, LayoutHelper.createLinear(48, 48));
         botButton.setOnClickListener(v -> {
+            if (parentFragment.cantSendMessage != null) return;
 //            if (hasBotWebView() && botCommandsMenuIsShowing()) {
 //                botWebViewMenuContainer.dismiss(v::callOnClick);
 //                return;
@@ -4118,7 +4119,11 @@ public class ChatActivityEnterView extends BlurredFrameLayout implements Notific
         }
         if (DialogObject.isChatDialog(dialog_id)) {
             TLRPC.Chat chat = accountInstance.getMessagesController().getChat(-dialog_id);
-            BulletinFactory.of(parentFragment).createSimpleBulletin(R.raw.passcode_lock_close, LocaleController.formatString("SendPlainTextRestrictionHint", R.string.SendPlainTextRestrictionHint, ChatObject.getAllowedSendString(chat)), 3).show();
+            BulletinFactory.of(parentFragment).createSimpleBulletin(R.raw.passcode_lock_close,
+                    (parentFragment.cantSendMessage != null) ? parentFragment.cantSendMessage :
+                            LocaleController.formatString("SendPlainTextRestrictionHint",
+                                    R.string.SendPlainTextRestrictionHint, ChatObject.getAllowedSendString(chat)), 3)
+                    .show();
         }
     }
 

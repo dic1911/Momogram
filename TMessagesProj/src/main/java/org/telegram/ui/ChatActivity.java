@@ -1139,6 +1139,7 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
     private boolean switchingFromTopics;
     private float switchingFromTopicsProgress;
     private boolean forwarding = false;
+    public String cantSendMessage = null;
 
     private final static int OPTION_RETRY = 0;
     private final static int OPTION_DELETE = 1;
@@ -18314,12 +18315,17 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
             } else {
                 bottomOverlayText.setText(LocaleController.formatString("SendMessageRestricted", R.string.SendMessageRestricted, LocaleController.formatDateForBan(currentChat.banned_rights.until_date)));
             }
-            bottomOverlay.setVisibility(View.VISIBLE);
+            boolean dev = NekoXConfig.isDeveloper();
+            if (dev) {
+                cantSendMessage = bottomOverlayText.getText().toString();
+            } else {
+                bottomOverlay.setVisibility(View.VISIBLE);
+            }
             if (mentionListAnimation != null) {
                 mentionListAnimation.cancel();
                 mentionListAnimation = null;
             }
-            mentionContainer.setVisibility(View.GONE);
+            if (!dev) mentionContainer.setVisibility(View.GONE);
             mentionContainer.setTag(null);
             updateMessageListAccessibilityVisibility();
             hideKeyboard = true;
@@ -18333,6 +18339,7 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
                 if (suggestEmojiPanel != null && chatActivityEnterView != null && chatActivityEnterView.hasText()) {
                     suggestEmojiPanel.fireUpdate();
                 }
+                cantSendMessage = null;
                 return;
             }
             if (currentEncryptedChat instanceof TLRPC.TL_encryptedChatRequested) {
