@@ -12591,7 +12591,7 @@ public class ChatActivityEnterView extends BlurredFrameLayout implements Notific
                 }
 
                 if (NekoXConfig.saveBotHasWebView(dialog_id, hasBotWebView()))
-                    parentFragment.addOpenAppMenuButton();
+                    parentFragment.checkOpenAppMenuButton();
                 if (NekoConfig.alwaysShowBotCommandButton.Bool()) createBotButton();
                 updateBotButton(false);
             }
@@ -13601,7 +13601,7 @@ public class ChatActivityEnterView extends BlurredFrameLayout implements Notific
                 botMenuButtonType = BotMenuButtonType.NO_BUTTON;
             }
             if (NekoXConfig.saveBotHasWebView(dialog_id, hasBotWebView()))
-                parentFragment.addOpenAppMenuButton();
+                parentFragment.checkOpenAppMenuButton();
         } else {
             botMenuButtonType = BotMenuButtonType.NO_BUTTON;
         }

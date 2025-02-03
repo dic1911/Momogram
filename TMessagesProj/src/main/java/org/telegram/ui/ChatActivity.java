@@ -82,7 +82,6 @@ import android.text.style.ForegroundColorSpan;
 import android.text.style.ImageSpan;
 import android.text.style.URLSpan;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.util.Pair;
 import android.util.Property;
 import android.util.SparseArray;
@@ -4298,11 +4297,7 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
             if (allowShowPinned) {
                 headerItem.lazilyAddSubItem(nkheaderbtn_show_pinned, R.drawable.deproko_baseline_pin_24, LocaleController.getString(R.string.PinnedMessage));
             }
-            if (NekoConfig.forceExternalBrowserForBots.Bool()) {
-                TLRPC.User bot = getMessagesController().getUser(dialog_id);
-                if (bot != null && bot.bot_has_main_app)
-                    addOpenAppMenuButton();
-            }
+            checkOpenAppMenuButton();
             // NekoX - end
             if (ChatObject.isBoostSupported(currentChat) && (getUserConfig().isPremium() || ChatObject.isBoosted(chatInfo) || ChatObject.hasAdminRights(currentChat))) {
                 RLottieDrawable drawable = new RLottieDrawable(R.raw.boosts, "" + R.raw.boosts, dp(24), dp(24));
@@ -42707,6 +42702,19 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
             options.add(R.drawable.msg_language, getString(R.string.OpenInSystemBrowser), () -> {
                 Browser.openInExternalBrowser(getParentActivity(), str, false);
             });
+        } else if (NekoConfig.forceExternalBrowserForBots.Bool()) {
+            options.add(R.drawable.msg_openin, getString(R.string.OpenLinkInApp), () -> {
+                TLRPC.Peer p = messageObject.messageOwner.from_id;
+                if (p.user_id == 0) return;
+                TLRPC.User u = getMessagesController().getUser(p.user_id);
+                WebViewRequestProps props = WebViewRequestProps.of(currentAccount, p.user_id, p.user_id, "", str, BotWebViewAttachedSheet.TYPE_BOT_MENU_BUTTON, 0, false, null, false, null, u, 0, false, true);
+                BotWebViewSheet webViewSheet = new BotWebViewSheet(getContext(), getResourceProvider());
+                webViewSheet.setDefaultFullsize(false);
+                webViewSheet.setNeedsContext(true);
+                webViewSheet.setParentActivity(getParentActivity());
+                webViewSheet.requestWebView(this, props);
+                webViewSheet.show();
+            });
         }
 
         TLRPC.MessageMedia media = MessageObject.getMedia(messageObject);
@@ -43734,7 +43742,14 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
     }
 
     boolean addedOpenAppMenuButton = false;
-    public void addOpenAppMenuButton() {
+    public void checkOpenAppMenuButton() {
+        TLRPC.User usr = getMessagesController().getUser(dialog_id);
+        if (((usr == null || !usr.bot_has_main_app) && !NekoXConfig.botHasWebView(dialog_id))
+                || !NekoConfig.forceExternalBrowserForBots.Bool()) {
+            headerItem.hideSubItem(nkheaderbtn_bot_app);
+            addedOpenAppMenuButton = false;
+            return;
+        }
         if (addedOpenAppMenuButton) return;
         headerItem.addSubItem(nkheaderbtn_bot_app, R.drawable.msg_bot, LocaleController.getString(R.string.OpenLinkInApp));
         addedOpenAppMenuButton = true;
