@@ -1797,7 +1797,7 @@ public class BotWebViewSheet extends Dialog implements NotificationCenter.Notifi
         initialUrl = url;
         if (url != null && !fromTab) {
             MediaDataController.getInstance(currentAccount).increaseWebappRating(requestProps.botId);
-            if (!inApp) {
+            if (!inApp && NekoConfig.forceExternalBrowserForBots.Bool()) {
                 Browser.openUrl(parentActivity, url);
                 dismiss(false, null);
                 return;
