@@ -1553,7 +1553,10 @@ public class ChatAttachAlert extends BottomSheet implements NotificationCenter.N
                             paddingBottom += pollLayout.getEmojiPadding();
                         }
                     } else {
-                        paddingBottom += !isDismissed() && keyboardSize <= dp(20) && !AndroidUtilities.isInMultiwindow && !AndroidUtilities.isTablet() ? getCommentView().getEmojiPadding() : 0;
+                        EditTextEmoji commentView = getCommentView();
+                        if (commentView != null && !isDismissed()) {
+                            paddingBottom += keyboardSize <= dp(20) && !AndroidUtilities.isInMultiwindow && !AndroidUtilities.isTablet() ? commentView.getEmojiPadding() : 0;
+                        }
                     }
                 }
                 setBottomClip(paddingBottom);
