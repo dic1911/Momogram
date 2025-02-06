@@ -296,6 +296,7 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
     private boolean chatOpened;
     private boolean tabsWasHidden = false;
     private boolean forceHideTabs = false;
+    private boolean reselectTab = false;
     private DownloadProgressIcon downloadIcon;
 
     public TopicsFragment topicsFragment;
@@ -3522,7 +3523,7 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
 
                 @Override
                 public void onPageSelected(FilterTabsView.Tab tab, boolean forward) {
-                    if (viewPages[0].selectedType == tab.id) {
+                    if (viewPages[0].selectedType == tab.id && !reselectTab) {
                         return;
                     }
                     if (tab.isLocked) {
@@ -5573,6 +5574,7 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
         if (new Random().nextInt(100) < 20)
             UpdateUtil.postCheckFollowChannel(getParentActivity(), currentAccount);
 
+        reselectTab = true;
 
         return fragmentView;
     }
@@ -6874,10 +6876,12 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
                     selectWithStableId = true;
                 }
                 filterTabsView.removeTabs();
+                boolean shouldReselectTab = false;
                 for (int a = 0, N = filters.size(); a < N; a++) {
                     MessagesController.DialogFilter filter = filters.get(a);
                     if (filter.isDefault()) {
                         filterTabsView.addTab(a, 0, LocaleController.getString(R.string.FilterAllChats), filter.emoticon, filter.entities, filter.title_noanimate, true, filters.get(a).locked);
+                        shouldReselectTab = (a != 0) && reselectTab;
                     } else {
                         switch (NekoConfig.tabsTitleType.Int()) {
                             case NekoXConfig.TITLE_TYPE_TEXT:
@@ -6921,8 +6925,9 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
                 }
                 isFirstTab = id == filterTabsView.getFirstTabId();
                 updateDrawerSwipeEnabled();
-                if (filterTabsView.isLocked(filterTabsView.getCurrentTabId())) {
+                if (shouldReselectTab || filterTabsView.isLocked(filterTabsView.getCurrentTabId())) {
                     filterTabsView.selectFirstTab();
+                    reselectTab = false;
                 }
             }
         } else {
