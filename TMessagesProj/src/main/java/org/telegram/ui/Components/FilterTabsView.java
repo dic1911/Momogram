@@ -30,6 +30,7 @@ import android.text.SpannableStringBuilder;
 import android.text.StaticLayout;
 import android.text.TextPaint;
 import android.text.TextUtils;
+import android.util.Log;
 import android.util.Property;
 import android.util.SparseIntArray;
 import android.view.HapticFeedbackConstants;
@@ -69,6 +70,7 @@ import cn.hutool.core.util.StrUtil;
 import tw.nekomimi.nekogram.NekoXConfig;
 import tw.nekomimi.nekogram.NekoConfig;
 import tw.nekomimi.nekogram.folder.FolderIconHelper;
+import tw.nekomimi.nekogram.ui.MessageDetailsActivity;
 
 public class FilterTabsView extends FrameLayout {
 
@@ -129,7 +131,13 @@ public class FilterTabsView extends FrameLayout {
             if (NekoConfig.tabsTitleType.Int() != NekoXConfig.TITLE_TYPE_ICON) {
                 title = new SpannableStringBuilder(t);
                 title = Emoji.replaceEmoji(title, textPaint.getFontMetricsInt(), false);
-                title = MessageObject.replaceAnimatedEmoji(title, e, textPaint.getFontMetricsInt());
+                try {
+                    title = MessageObject.replaceAnimatedEmoji(title, e, textPaint.getFontMetricsInt());
+                } catch (Exception ex) {
+                    Log.e("030-tab", MessageDetailsActivity.gson.toJson(e), ex);
+                    NekoConfig.customAllChatsTextEntities = null;
+                    NekoConfig.customAllChatsName.setConfigString(t);
+                }
             } else {
                 title = "";
             }
@@ -314,7 +322,6 @@ public class FilterTabsView extends FrameLayout {
         protected void onDraw(Canvas canvas) {
             boolean reorderEnabled = true;
 //            boolean reorderEnabled = (!currentTab.isDefault);
-            // TODO: NekoX try to unlock
             boolean showRemove = !currentTab.isDefault && reorderEnabled;
             if (reorderEnabled && editingAnimationProgress != 0) {
                 canvas.save();
@@ -1547,9 +1554,17 @@ public class FilterTabsView extends FrameLayout {
             int width = MeasureSpec.getSize(widthMeasureSpec) - AndroidUtilities.dp(7) - AndroidUtilities.dp(7);
             Tab firstTab = findDefaultTab();
             if (firstTab != null) {
-                firstTab.setTitle(LocaleController.getString(R.string.FilterAllChats), null, false);
+                String[] spl = NekoConfig.customAllChatsName.String().split("\n");
+                String title = spl[0];
+                boolean defaultName = title.isBlank();
+                ArrayList<TLRPC.MessageEntity> entities = null;
+                if (defaultName) title = LocaleController.getString(R.string.FilterAllChats);
+                else entities = NekoConfig.customAllChatsTextEntities;
+
+                firstTab.setTitle(title, entities, false);
                 int tabWidth = firstTab.getWidth(false);
-                firstTab.setTitle(allTabsWidth > width ? LocaleController.getString(R.string.FilterAllChatsShort) : LocaleController.getString(R.string.FilterAllChats), null, false);
+                if (defaultName)
+                    firstTab.setTitle(allTabsWidth > width ? LocaleController.getString(R.string.FilterAllChatsShort) : LocaleController.getString(R.string.FilterAllChats), null, false);
                 int trueTabsWidth = allTabsWidth - tabWidth;
                 trueTabsWidth += firstTab.getWidth(false);
                 int prevWidth = additionalTabWidth;

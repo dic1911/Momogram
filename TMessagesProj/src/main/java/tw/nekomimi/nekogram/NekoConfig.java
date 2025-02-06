@@ -14,8 +14,10 @@ import org.telegram.messenger.LocaleController;
 import org.telegram.messenger.MessagesController;
 import org.telegram.messenger.R;
 import org.telegram.messenger.SharedConfig;
+import org.telegram.messenger.UserConfig;
 import org.telegram.messenger.Utilities;
 import org.telegram.messenger.browser.Browser;
+import org.telegram.tgnet.TLRPC;
 import org.telegram.ui.ActionBar.AlertDialog;
 import org.telegram.ui.ActionBar.BaseFragment;
 import org.telegram.ui.LaunchActivity;
@@ -255,6 +257,7 @@ public class NekoConfig {
     public static ConfigItem alwaysShowDownloads = addConfig(R.string.AlwaysShowDownloads, "AlwaysShowDownloads", ConfigItem.configTypeBool, GENERAL, false);
     public static ConfigItem openAvatarInsteadOfExpand = addConfig(R.string.OpenAvatarInsteadOfExpand, "OpenAvatarInsteadOfExpand", ConfigItem.configTypeBool, GENERAL, false);
     public static ConfigItem customTitleText = addConfig(R.string.CustomTitleText, "CustomTitleText", configTypeString, GENERAL, "Momogram");
+    public static ConfigItem customAllChatsName = addConfig("CustomAllChatsName", configTypeString, "");
     public static ConfigItem forceAllowChooseBrowser = addConfig(R.string.ForceAllowChooseBrowser, "ForceAllowChooseBrowser", configTypeBool, CHAT, false);
     public static ConfigItem patchAndCleanupLinks = addConfig(R.string.PatchAndCleanupLinks, "PatchAndCleanupLinks", configTypeBool, CHAT, false);
     public static ConfigItem showSharedMediaOnOpeningProfile = addConfig(R.string.ShowSharedMediaOnOpeningProfile, "ShowSharedMediaOnOpeningProfile", configTypeBool, GENERAL, false);
@@ -823,6 +826,50 @@ public class NekoConfig {
         SharedConfig.overrideDevicePerformanceClass((c == 0) ? -1 : (c - 1));
     }
 
+
+    public static ArrayList<TLRPC.MessageEntity> customAllChatsTextEntities = null;
+    public static void loadCustomAllChatsText() {
+        Log.d("030-???", NekoConfig.customAllChatsName.String());
+        String[] spl = NekoConfig.customAllChatsName.String().split("\n");
+        if (spl.length < 2) {
+            customAllChatsTextEntities = null;
+            return;
+        }
+        try {
+            if (customAllChatsTextEntities == null) customAllChatsTextEntities = new ArrayList<TLRPC.MessageEntity>();
+            else customAllChatsTextEntities.clear();
+
+            ArrayList<TLRPC.TL_messages_stickerSet> packs =
+                    MediaDataController.getInstance(UserConfig.selectedAccount)
+                            .getStickerSets(MediaDataController.TYPE_EMOJIPACKS);
+
+            boolean found;
+            for (int i = 1; i < spl.length; ++i) {
+                found = false;
+                String[] data = spl[i].split(",");
+                TLRPC.TL_messageEntityCustomEmoji e = new TLRPC.TL_messageEntityCustomEmoji();
+                e.offset = Integer.parseInt(data[0]);
+                e.length = Integer.parseInt(data[1]);
+                e.document_id = Long.parseLong(data[2]);
+                // AnimatedEmojiSpan span = null;
+                for (TLRPC.TL_messages_stickerSet p : packs) {
+                    for (TLRPC.Document d : p.documents) {
+                        if (d.id == e.document_id) {
+                            e.document = d;
+                            // span = new AnimatedEmojiSpan(d, null);
+                            found = true;
+                            break;
+                        }
+                    }
+                    if (found) break;
+                }
+                customAllChatsTextEntities.add((TLRPC.MessageEntity) e);
+            }
+        } catch (Exception ex) {
+            Log.e("030-aci", "error while recreating entity, skipping", ex);
+        }
+    }
+
     public static void init() {
         initStrings();
         try {
@@ -856,6 +903,7 @@ public class NekoConfig {
             applyCustomGetQueryBlacklist();
             applySearchBlacklist();
             applyPerformanceClassOverride(null);
+            loadCustomAllChatsText();
 
             if (!NekoConfig.enableUnifiedPush.Bool() || UnifiedPush.getSavedDistributor(ApplicationLoader.applicationContext) != null)
                 return;

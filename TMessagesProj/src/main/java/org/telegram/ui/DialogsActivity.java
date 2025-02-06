@@ -3680,8 +3680,8 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
                                 filterTabsView.setIsEditing(true);
                                 showDoneItem(true);
                             })
-                            .add(R.drawable.msg_edit, defaultTab ? LocaleController.getString(R.string.FilterEditAll) : LocaleController.getString(R.string.FilterEdit), () -> {
-                                presentFragment(defaultTab ? new FiltersSetupActivity() : new FilterCreateActivity(dialogFilter));
+                            .add(R.drawable.msg_edit, LocaleController.getString(R.string.FilterEdit), () -> {
+                                presentFragment(new FilterCreateActivity(dialogFilter, defaultTab));
                             })
                             .addIf(dialogFilter != null && !dialogs.isEmpty(), muteAll ? R.drawable.msg_mute : R.drawable.msg_unmute, muteAll ? LocaleController.getString(R.string.FilterMuteAll) : LocaleController.getString(R.string.FilterUnmuteAll), () -> {
                                 int count = 0;
@@ -6880,8 +6880,14 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
                 for (int a = 0, N = filters.size(); a < N; a++) {
                     MessagesController.DialogFilter filter = filters.get(a);
                     if (filter.isDefault()) {
-                        filterTabsView.addTab(a, 0, LocaleController.getString(R.string.FilterAllChats), filter.emoticon, filter.entities, filter.title_noanimate, true, filters.get(a).locked);
                         shouldReselectTab = (a != 0) && reselectTab;
+
+                        String[] spl = NekoConfig.customAllChatsName.String().split("\n");
+                        String title = spl[0];
+                        if (title.isBlank()) title = LocaleController.getString(R.string.FilterAllChats);
+                        else filter.entities = NekoConfig.customAllChatsTextEntities;
+
+                        filterTabsView.addTab(a, 0, title, filter.emoticon, filter.entities, filter.title_noanimate, true, filters.get(a).locked);
                     } else {
                         switch (NekoConfig.tabsTitleType.Int()) {
                             case NekoXConfig.TITLE_TYPE_TEXT:

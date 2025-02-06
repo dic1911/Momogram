@@ -29,6 +29,7 @@ import android.text.TextWatcher;
 import android.text.style.DynamicDrawableSpan;
 import android.text.style.ImageSpan;
 import android.text.style.ReplacementSpan;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
@@ -54,6 +55,7 @@ import org.telegram.messenger.DialogObject;
 import org.telegram.messenger.Emoji;
 import org.telegram.messenger.FileLog;
 import org.telegram.messenger.LocaleController;
+import org.telegram.messenger.MediaDataController;
 import org.telegram.messenger.MessageObject;
 import org.telegram.messenger.MessagesController;
 import org.telegram.messenger.NotificationCenter;
@@ -125,6 +127,7 @@ public class FilterCreateActivity extends BaseFragment {
     private boolean includeExpanded;
     private boolean excludeExpanded;
     private boolean hasUserChanged;
+    private boolean isAllChats;
 
     private boolean nameChangedManually;
 
@@ -220,17 +223,37 @@ public class FilterCreateActivity extends BaseFragment {
     }
 
     public FilterCreateActivity() {
-        this(null, null);
+        this(null, null, false);
     }
 
     public FilterCreateActivity(MessagesController.DialogFilter dialogFilter) {
-        this(dialogFilter, null);
+        this(dialogFilter, null, false);
+    }
+
+    public FilterCreateActivity(MessagesController.DialogFilter dialogFilter, boolean allChats) {
+        this(dialogFilter, null, allChats);
     }
 
     public FilterCreateActivity(MessagesController.DialogFilter dialogFilter, ArrayList<Long> alwaysShow) {
+        this(dialogFilter, alwaysShow, false);
+    }
+
+    public FilterCreateActivity(MessagesController.DialogFilter dialogFilter, ArrayList<Long> alwaysShow, boolean allChats) {
         super();
         filter = dialogFilter;
-        if (filter == null) {
+        if (allChats) {
+            filter = new MessagesController.DialogFilter();
+            while (getMessagesController().dialogFiltersById.get(filter.id) != null) {
+                filter.id++;
+            }
+            String title = NekoConfig.customAllChatsName.String();
+            String[] spl = null;
+            boolean isDefault = title.isBlank();
+            if (isDefault) title = LocaleController.getString(R.string.FilterAllChats);
+            else filter.entities = NekoConfig.customAllChatsTextEntities;
+            filter.name = isDefault ? title : title.split("\n")[0];
+            isAllChats = true;
+        } else if (filter == null) {
             filter = new MessagesController.DialogFilter();
             filter.id = 2;
             while (getMessagesController().dialogFiltersById.get(filter.id) != null) {
@@ -246,7 +269,9 @@ public class FilterCreateActivity extends BaseFragment {
         paint.setTextSize(dp(17));
         newFilterName = new SpannableStringBuilder(filter.name);
         newFilterName = Emoji.replaceEmoji(newFilterName, paint.getFontMetricsInt(), false);
-        newFilterName = MessageObject.replaceAnimatedEmoji(newFilterName, filter.entities, paint.getFontMetricsInt());
+        try {
+            newFilterName = MessageObject.replaceAnimatedEmoji(newFilterName, filter.entities, paint.getFontMetricsInt());
+        } catch (Exception ignore) {}
         newFilterAnimations = !filter.title_noanimate;
         AnimatedEmojiDrawable.toggleAnimations(currentAccount, newFilterAnimations);
         newFilterFlags = filter.flags;
@@ -334,13 +359,14 @@ public class FilterCreateActivity extends BaseFragment {
         nameRow = items.size();
         items.add(ItemInner.asEdit());
         items.add(ItemInner.asShadow(null));
-        ItemInner iconChooser = ItemInner.asHeader(LocaleController.getString(R.string.SelectAnIcon));
-        iconChooser.onClickListener = (__) -> IconSelectorAlert.show(this, (String emo) -> {
-            this.newFilterEmoticon = emo;
-            checkDoneButton(true);
-        });
-        items.add(iconChooser);
+        items.add(ItemInner.asButton(0, LocaleController.getString(R.string.SelectAnIcon), false).whenClicked((__) -> {
+            IconSelectorAlert.show(this, (String emo) -> {
+                this.newFilterEmoticon = emo;
+                checkDoneButton(true);
+            });
+        }));
         items.add(ItemInner.asShadow(null));
+        int trimTo = isAllChats ? items.size() - 1 : -1;
         items.add(ItemInner.asHeader(LocaleController.getString(R.string.FilterInclude)));
         items.add(ItemInner.asButton(R.drawable.msg2_chats_add, LocaleController.getString(R.string.FilterAddChats), false).whenClicked(v -> selectChatsFor(true)));
 
@@ -434,6 +460,12 @@ public class FilterCreateActivity extends BaseFragment {
             items.add(ItemInner.asShadow(null));
         }
 
+        if (trimTo != -1) {
+            var tmp = items;
+            items = new ArrayList<>(items.subList(0, trimTo));
+            tmp.clear();
+        }
+
         if (adapter != null) {
             if (animated) {
                 adapter.setItems(oldItems, items);
@@ -456,7 +488,9 @@ public class FilterCreateActivity extends BaseFragment {
             Paint.FontMetricsInt fontMetricsInt = actionBar.getTitleFontMetricsInt();
             CharSequence title = filter.name;
             title = Emoji.replaceEmoji(title, fontMetricsInt, false);
-            title = MessageObject.replaceAnimatedEmoji(title, filter.entities, fontMetricsInt);
+            try {
+                title = MessageObject.replaceAnimatedEmoji(title, filter.entities, fontMetricsInt);
+            } catch (Exception ignored) {}
             actionBar.setTitle(title);
 
             if (actionBar != null) {
@@ -1078,7 +1112,28 @@ public class FilterCreateActivity extends BaseFragment {
 
     private void save(boolean progress, Runnable after) {
         final CharSequence[] parsedTitle = new CharSequence[] { newFilterName };
-        final ArrayList<TLRPC.MessageEntity> entities = getMediaDataController().getEntities(parsedTitle, false);
+        MediaDataController mediaDataController = getMediaDataController();
+        final ArrayList<TLRPC.MessageEntity> entities = mediaDataController.getEntities(parsedTitle, false);
+        if (isAllChats) {
+            NekoConfig.customAllChatsTextEntities = entities;
+            StringBuilder str = new StringBuilder(newFilterName.toString());
+            if (!str.toString().endsWith("\n")) str.append("\n");
+            ArrayList<TLRPC.TL_messages_stickerSet> packs = null;
+            for (TLRPC.MessageEntity _e : entities) {
+                if (!(_e instanceof TLRPC.TL_messageEntityCustomEmoji)) continue;
+                if (packs == null) packs = new ArrayList<>(mediaDataController.getStickerSets(MediaDataController.TYPE_EMOJIPACKS));
+                try {
+                    TLRPC.TL_messageEntityCustomEmoji e = (TLRPC.TL_messageEntityCustomEmoji) _e;
+                    str.append(String.format("%d,%d,%d\n", e.offset, e.length, e.document_id));
+                } catch (Exception ex) {
+                    Log.e("030-se", "failed to save entity data", ex);
+                }
+            }
+            String data = str.substring(0, str.length() - 1);
+            NekoConfig.customAllChatsName.setConfigString(data);
+            if (after != null) after.run();
+            return;
+        }
         saveFilterToServer(filter, newFilterFlags, newFilterEmoticon, parsedTitle[0].toString(), entities, !newFilterAnimations, newFilterColor, newAlwaysShow, newNeverShow, newPinned, creatingNew, false, hasUserChanged, true, progress, this, () -> {
 
             hasUserChanged = false;
@@ -1302,7 +1357,7 @@ public class FilterCreateActivity extends BaseFragment {
     private void checkDoneButton(boolean animated) {
         boolean enabled = !TextUtils.isEmpty(newFilterName) && newFilterName.length() <= MAX_NAME_LENGTH;
         if (enabled) {
-            enabled = (newFilterFlags & MessagesController.DIALOG_FILTER_FLAG_ALL_CHATS) != 0 || !newAlwaysShow.isEmpty();
+            enabled = isAllChats || (newFilterFlags & MessagesController.DIALOG_FILTER_FLAG_ALL_CHATS) != 0 || !newAlwaysShow.isEmpty();
             if (enabled && !creatingNew) {
                 enabled = hasChanges();
             }
@@ -2461,7 +2516,9 @@ public class FilterCreateActivity extends BaseFragment {
                 Paint.FontMetricsInt fontMetricsInt = textView == null ? null : textView.getPaint().getFontMetricsInt();
                 name = new SpannableStringBuilder(filter.name);
                 name = Emoji.replaceEmoji(name, fontMetricsInt, false);
-                name = MessageObject.replaceAnimatedEmoji(name, filter.entities, fontMetricsInt);
+                try {
+                    name = MessageObject.replaceAnimatedEmoji(name, filter.entities, fontMetricsInt);
+                } catch (Exception ignored) {}
             }
             return LocaleController.formatSpannable(R.string.FolderLinkShareTitle2, name);
         }
