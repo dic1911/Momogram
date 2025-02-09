@@ -226,4 +226,7 @@
     <string name="FeatureRemoved">本功能已被移除.</string>
     <string name="FeatureRemovedWhy">原因?</string>
     <string name="FeatureRemovedWhyDetail">在 11.7.0 版本更新后, 部份 API 已无法正常使用, 或导致程序不稳定, 这可能会也可能不会在未来版本中解决, 请勿在群组催更修复.</string>
+    <string name="DebugSendLogsExt">将日志共享到外部应用程序</string>
+    <string name="ShowQuickReconnectDesc">就像以前的重新连接hack一样，但手动触发。</string>
+    <string name="ShowQuickReconnect">重新连接时显示快速重新连接按钮</string>
 </resources>
