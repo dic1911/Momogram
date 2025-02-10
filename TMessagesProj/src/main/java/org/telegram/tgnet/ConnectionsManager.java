@@ -81,6 +81,7 @@ import javax.net.ssl.SSLException;
 
 import cn.hutool.core.util.StrUtil;
 import tw.nekomimi.nekogram.NekoConfig;
+import tw.nekomimi.nekogram.NekoXConfig;
 import tw.nekomimi.nekogram.proxynext.Utils;
 import tw.nekomimi.nekogram.utils.DnsFactory;
 import tw.nekomimi.nekogram.utils.TelegramUtil;
@@ -263,7 +264,7 @@ public class ConnectionsManager extends BaseController {
             fingerprint = AndroidUtilities.getCertificateSHA256Fingerprint();
             version = BuildConfig.VERSION_CODE;
             Log.d("030-api", "using custom app id");
-        } else if (getUserConfig().official || !getUserConfig().isClientActivated()) {
+        } else if (getUserConfig().official || (!getUserConfig().isClientActivated() && NekoXConfig.loginApiType.get() == 0)) {
             fingerprint = "49C1522548EBACD46CE322B6FD47F6092BB745D0F88082145CAF35E14DCC38E1";
             version = BuildConfig.OFFICIAL_VERSION_CODE * 10 + 9;
             appId = BuildVars.OFFICAL_APP_ID;
