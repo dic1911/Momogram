@@ -9713,23 +9713,15 @@ public class LoginActivity extends BaseFragment implements NotificationCenter.No
     }
 
     public void doCustomApi() {
-        boolean isDefault = NekoXConfig.loginApiType.get() == 0
-                || StrUtil.isBlank(NekoConfig.customApiId.String())
-                || StrUtil.isBlank(NekoConfig.customApiHash.String());
+        boolean hasCustomApiCreds = StrUtil.isNotBlank(NekoConfig.customApiId.String())
+                && StrUtil.isNotBlank(NekoConfig.customApiHash.String());
         BottomBuilder builder = new BottomBuilder(getParentActivity());
 
         EditText[] inputs = new EditText[2];
         inputs[0] = builder.addEditText("App Id");
         inputs[0].setInputType(InputType.TYPE_CLASS_NUMBER);
-        if (StrUtil.isNotBlank(NekoConfig.customApiId.String())) {
+        if (hasCustomApiCreds) {
             inputs[0].setText(customApiCredential[0] = NekoConfig.customApiId.String());
-            if (customApiCredential[0] == null) {
-                customApiCredential[0] = "";
-                NekoXConfig.loginApiType.set(0);
-                isDefault = true;
-            }
-        } else {
-            isDefault = true;
         }
         inputs[0].addTextChangedListener(new TextWatcher() {
             @Override
@@ -9752,7 +9744,7 @@ public class LoginActivity extends BaseFragment implements NotificationCenter.No
         });
         inputs[1] = builder.addEditText("App Hash");
         inputs[1].setFilters(new InputFilter[]{new InputFilter.LengthFilter(BuildVars.OFFICAL_APP_HASH.length())});
-        if (StrUtil.isNotBlank(NekoConfig.customApiHash.String())) {
+        if (hasCustomApiCreds) {
             inputs[1].setText(customApiCredential[1] = NekoConfig.customApiHash.String());
         }
         inputs[1].addTextChangedListener(new TextWatcher() {
@@ -9769,7 +9761,7 @@ public class LoginActivity extends BaseFragment implements NotificationCenter.No
             public void afterTextChanged(Editable s) {
             }
         });
-        if (isDefault) {
+        if (NekoXConfig.loginApiType.get() != 1) {
             for (EditText input : inputs) {
                 input.setVisibility(View.GONE);
             }
@@ -9787,7 +9779,7 @@ public class LoginActivity extends BaseFragment implements NotificationCenter.No
             return Unit.INSTANCE;
         });
         builder.addRadioItem(LocaleController.getString(R.string.CustomApiOfficial),
-                NekoXConfig.loginApiType.get() == 0 && inputs[0].getText().length() < 2, (cell) -> {
+                NekoXConfig.loginApiType.get() == 0, (cell) -> {
             NekoXConfig.loginApiType.set(0);
             builder.doRadioCheck(cell);
             for (EditText input : inputs) {
@@ -9796,7 +9788,7 @@ public class LoginActivity extends BaseFragment implements NotificationCenter.No
             return Unit.INSTANCE;
         });
         builder.addRadioItem(LocaleController.getString(R.string.CustomApiInput),
-                !isDefault && inputs[0].getText().length() > 1, (cell) -> {
+                hasCustomApiCreds && NekoXConfig.loginApiType.get() == 1, (cell) -> {
             builder.doRadioCheck(cell);
             NekoXConfig.loginApiType.set(1);
             for (EditText input : inputs) {

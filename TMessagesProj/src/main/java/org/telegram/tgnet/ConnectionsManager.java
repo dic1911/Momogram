@@ -260,11 +260,13 @@ public class ConnectionsManager extends BaseController {
             FileLog.e(e);
         }
 
-        if (appId != 0) {
+        final boolean loggedIn = getUserConfig().isClientActivated();
+        final int loginApiType = NekoXConfig.loginApiType.get();
+        if (appId != 0 && (loggedIn || loginApiType == 1)) {
             fingerprint = AndroidUtilities.getCertificateSHA256Fingerprint();
             version = BuildConfig.VERSION_CODE;
             Log.d("030-api", "using custom app id");
-        } else if (getUserConfig().official || (!getUserConfig().isClientActivated() && NekoXConfig.loginApiType.get() == 0)) {
+        } else if (getUserConfig().official || (!loggedIn && loginApiType == 0)) {
             fingerprint = "49C1522548EBACD46CE322B6FD47F6092BB745D0F88082145CAF35E14DCC38E1";
             version = BuildConfig.OFFICIAL_VERSION_CODE * 10 + 9;
             appId = BuildVars.OFFICAL_APP_ID;
