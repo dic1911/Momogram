@@ -1076,15 +1076,15 @@ public class LaunchActivity extends BasePermissionsActivity implements INavigati
 
                 @Override
                 protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-                    if (!AndroidUtilities.isTablet()) {
-                        Log.w("030-tablet", "not tablet mode but in tablet mode launchLayout.onMeasure");
-                        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-                        return;
-                    }
                     inLayout = true;
                     int width = MeasureSpec.getSize(widthMeasureSpec);
                     int height = MeasureSpec.getSize(heightMeasureSpec);
                     setMeasuredDimension(width, height);
+                    if (!AndroidUtilities.isTablet()) {
+                        Log.w("030-tablet", "not tablet mode but in tablet mode launchLayout.onMeasure");
+                        inLayout = false;
+                        return;
+                    }
 
                     if (!AndroidUtilities.isInMultiwindow && (!AndroidUtilities.isSmallTablet() || getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE)) {
                         tabletFullSize = false;
