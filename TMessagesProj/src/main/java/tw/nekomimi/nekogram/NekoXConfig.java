@@ -23,6 +23,7 @@ import java.io.FileReader;
 import java.util.HashSet;
 import java.util.Locale;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -81,6 +82,7 @@ public class NekoXConfig {
 //    public static int customApi = preferences.getInt("custom_api", 0);
 //    public static int customAppId = preferences.getInt("custom_app_id", 0);
 //    public static String customAppHash = preferences.getString("custom_app_hash", "");
+    public static AtomicInteger loginApiType = new AtomicInteger(0);
 
     static {
         for (long id : developers) devSet.add(id);

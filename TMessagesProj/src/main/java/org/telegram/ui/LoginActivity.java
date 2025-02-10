@@ -381,6 +381,7 @@ public class LoginActivity extends BaseFragment implements NotificationCenter.No
     // NekoX Definitions
 
     ActionBarMenuItem menu = null;
+    private final String[] customApiCredential = {"", ""};
 
     private static final int menu_proxy = 2;
     private static final int menu_language = 3;
@@ -9712,17 +9713,23 @@ public class LoginActivity extends BaseFragment implements NotificationCenter.No
     }
 
     public void doCustomApi() {
-        boolean isDefault = StrUtil.isBlank(NekoConfig.customApiId.String())
+        boolean isDefault = NekoXConfig.loginApiType.get() == 0
+                || StrUtil.isBlank(NekoConfig.customApiId.String())
                 || StrUtil.isBlank(NekoConfig.customApiHash.String());
-        AtomicInteger targetApi = new AtomicInteger(-1);
         BottomBuilder builder = new BottomBuilder(getParentActivity());
-        final String[] inputStr = {null, null};
 
         EditText[] inputs = new EditText[2];
         inputs[0] = builder.addEditText("App Id");
         inputs[0].setInputType(InputType.TYPE_CLASS_NUMBER);
-        if (!isDefault && StrUtil.isNotBlank(NekoConfig.customApiId.String())) {
-            inputs[0].setText(inputStr[0] = NekoConfig.customApiId.String());
+        if (StrUtil.isNotBlank(NekoConfig.customApiId.String())) {
+            inputs[0].setText(customApiCredential[0] = NekoConfig.customApiId.String());
+            if (customApiCredential[0] == null) {
+                customApiCredential[0] = "";
+                NekoXConfig.loginApiType.set(0);
+                isDefault = true;
+            }
+        } else {
+            isDefault = true;
         }
         inputs[0].addTextChangedListener(new TextWatcher() {
             @Override
@@ -9731,10 +9738,11 @@ public class LoginActivity extends BaseFragment implements NotificationCenter.No
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (!NumberUtil.isInteger(s.toString())) {
+                String value = s.toString();
+                if (!NumberUtil.isInteger(value)) {
                     inputs[0].setText("0");
                 } else {
-                    inputStr[0] = s.toString();
+                    customApiCredential[0] = value;
                 }
             }
 
@@ -9744,8 +9752,8 @@ public class LoginActivity extends BaseFragment implements NotificationCenter.No
         });
         inputs[1] = builder.addEditText("App Hash");
         inputs[1].setFilters(new InputFilter[]{new InputFilter.LengthFilter(BuildVars.OFFICAL_APP_HASH.length())});
-        if (!isDefault && StrUtil.isNotBlank(NekoConfig.customApiHash.String())) {
-            inputs[1].setText(inputStr[1] = NekoConfig.customApiHash.String());
+        if (StrUtil.isNotBlank(NekoConfig.customApiHash.String())) {
+            inputs[1].setText(customApiCredential[1] = NekoConfig.customApiHash.String());
         }
         inputs[1].addTextChangedListener(new TextWatcher() {
             @Override
@@ -9754,7 +9762,7 @@ public class LoginActivity extends BaseFragment implements NotificationCenter.No
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                inputStr[1] = s.toString();
+                customApiCredential[1] = s.toString();
             }
 
             @Override
@@ -9770,8 +9778,8 @@ public class LoginActivity extends BaseFragment implements NotificationCenter.No
         builder.addTitle(LocaleController.getString(R.string.CustomApi),
                 true,
                 LocaleController.getString(R.string.UseCustomApiNotice));
-        builder.addRadioItem(LocaleController.getString(R.string.CustomApiNo), isDefault, (cell) -> {
-            targetApi.set(0);
+        builder.addRadioItem(LocaleController.getString(R.string.CustomApiNo), NekoXConfig.loginApiType.get() == -1, (cell) -> {
+            NekoXConfig.loginApiType.set(-1);
             builder.doRadioCheck(cell);
             for (EditText input : inputs) {
                 input.setVisibility(View.GONE);
@@ -9779,8 +9787,8 @@ public class LoginActivity extends BaseFragment implements NotificationCenter.No
             return Unit.INSTANCE;
         });
         builder.addRadioItem(LocaleController.getString(R.string.CustomApiOfficial),
-                !isDefault && inputs[0].getText().length() < 2, (cell) -> {
-            targetApi.set(0);
+                NekoXConfig.loginApiType.get() == 0 && inputs[0].getText().length() < 2, (cell) -> {
+            NekoXConfig.loginApiType.set(0);
             builder.doRadioCheck(cell);
             for (EditText input : inputs) {
                 input.setVisibility(View.GONE);
@@ -9790,7 +9798,7 @@ public class LoginActivity extends BaseFragment implements NotificationCenter.No
         builder.addRadioItem(LocaleController.getString(R.string.CustomApiInput),
                 !isDefault && inputs[0].getText().length() > 1, (cell) -> {
             builder.doRadioCheck(cell);
-            targetApi.set(1);
+            NekoXConfig.loginApiType.set(1);
             for (EditText input : inputs) {
                 input.setVisibility(View.VISIBLE);
             }
@@ -9798,20 +9806,23 @@ public class LoginActivity extends BaseFragment implements NotificationCenter.No
         });
         builder.addCancelButton();
         builder.addButton(LocaleController.getString(R.string.Set), (it) -> {
-            int target = targetApi.get();
+            int target = NekoXConfig.loginApiType.get();
+            if (StrUtil.isBlank(customApiCredential[0]) || StrUtil.isBlank(customApiCredential[1])) {
+                target = 0;
+            }
             if (target == 1) {
-                if (inputStr[0].length() < 2) {
+                if (customApiCredential[0].length() < 2) {
                     inputs[0].requestFocus();
                     AndroidUtilities.showKeyboard(inputs[0]);
                     return Unit.INSTANCE;
-                } else if (StrUtil.isBlank(inputStr[1])) {
+                } else if (StrUtil.isBlank(customApiCredential[1])) {
                     inputs[1].requestFocus();
                     AndroidUtilities.showKeyboard(inputs[1]);
                     return Unit.INSTANCE;
                 }
 
-                NekoConfig.customApiId.setConfigString(inputStr[0].trim());
-                NekoConfig.customApiHash.setConfigString(inputStr[1].trim());
+                NekoConfig.customApiId.setConfigString(customApiCredential[0].trim());
+                NekoConfig.customApiHash.setConfigString(customApiCredential[1].trim());
             } else {
                 NekoConfig.customApiId.setConfigString("");
                 NekoConfig.customApiHash.setConfigString("");
