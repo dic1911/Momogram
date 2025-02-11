@@ -248,6 +248,7 @@ public class ChatActivityEnterView extends BlurredFrameLayout implements Notific
     private boolean sendButtonEnabled = true;
     private TLRPC.UserFull userInfo;
     public HintView2 birthdayHint;
+    private AlertDialog translateSpinner;
 
     public boolean voiceOnce;
     public boolean onceVisible;
@@ -4755,6 +4756,10 @@ public class ChatActivityEnterView extends BlurredFrameLayout implements Notific
                 transBeforeSendButton.setTextAndIcon(getString(NekoConfig.dontSendRightAfterTranslated.Bool() ? R.string.Translate : R.string.TranslateBeforeSend), R.drawable.ic_translate);
                 transBeforeSendButton.setMinimumWidth(dp(196));
                 transBeforeSendButton.setOnClickListener(v -> {
+                    if (translateSpinner == null)
+                        translateSpinner = new AlertDialog(parentFragment.getParentActivity(), AlertDialog.ALERT_TYPE_SPINNER);
+
+                    translateSpinner.show();
                     if (messageEditText == null) {
                         BulletinFactory.of(parentFragment).createErrorBulletin(LocaleController.getString("TranslationFailedAlert2", R.string.TranslationFailedAlert2)).show();
                         return;
@@ -12604,10 +12609,15 @@ public class ChatActivityEnterView extends BlurredFrameLayout implements Notific
             sendButton.setLoading(false, SendButton.INFINITE_LOADING);
             CharSequence translated = (CharSequence) args[0];
 
+            if (translateSpinner != null) translateSpinner.dismiss();
             if (parentExists) {
+                ChatAttachAlert chatAttachAlert = getParentFragment().chatAttachAlert;
+                if (chatAttachAlert != null && chatAttachAlert.translateSpinner != null)
+                    chatAttachAlert.translateSpinner.dismiss();
                 if (!parentFragment.isFullyVisible) return;
                 // media selector opened
-                if (parentFragment.chatAttachAlert != null && parentFragment.chatAttachAlert.hasSelectedItem()) {
+                if (parentFragment.chatAttachAlert != null && parentFragment.chatAttachAlert.hasSelectedItem() &&
+                        parentFragment.chatAttachAlert.commentTextView != null) {
                     PhotoViewer viewer = PhotoViewer.getInstance();
                     parentFragment.chatAttachAlert.commentTextView.setText(translated);
                     if (viewer.waitingForTranslation) {
@@ -12617,21 +12627,24 @@ public class ChatActivityEnterView extends BlurredFrameLayout implements Notific
                     }
                     parentFragment.finishPreviewFragment();
                     parentFragment.chatAttachAlert.handleTranslatedMessage(translated, dontSend);
+                    return;
                 }
-            } else {
-                // normal text msg
-                setFieldText(translated, false, true);
-                if (messageSendPreview != null) {
-                    messageSendPreview.dismiss(!dontSend);
-                    messageSendPreview = null;
-                }
-                if (dontSend) return;
-                sendMessageInternal(true, 0, false);
             }
+
+            // normal text msg
+            setFieldText(translated, false, true);
+            if (messageSendPreview != null) {
+                messageSendPreview.dismiss(!dontSend);
+                messageSendPreview = null;
+            }
+            if (!dontSend) sendMessageInternal(true, 0, false);
         } else if (id == NotificationCenter.forwardingMessageTranslated) {
             Log.d("030-tx", String.format("forwardingMessageTranslated %d %s", dialog_id, parentFragment.isFullyVisible));
             sendButton.setLoading(false, SendButton.INFINITE_LOADING);
             if (sendPopupWindow != null) sendPopupWindow.dismiss();
+            ChatAttachAlert chatAttachAlert = getParentFragment().chatAttachAlert;
+            if (chatAttachAlert != null && chatAttachAlert.translateSpinner != null)
+                chatAttachAlert.translateSpinner.dismiss();
             if (!parentFragment.isFullyVisible) return;
 
             if (parentFragment.messagePreviewParamsForTranslate == null) {
