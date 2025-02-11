@@ -185,6 +185,7 @@ public class ChatAttachAlert extends BottomSheet implements NotificationCenter.N
 
     public boolean captionAbove;
     private boolean triggeredTranslate = false;
+    public AlertDialog translateSpinner = null;
 
     public TLRPC.Chat getChat() {
         if (baseFragment instanceof ChatActivity) {
@@ -2729,6 +2730,8 @@ public class ChatAttachAlert extends BottomSheet implements NotificationCenter.N
                 Locale toDefault = TranslatorKt.getCode2Locale("en");
                 Translator.translateMessageBeforeSent(currentAccount, text,
                         TranslatorKt.getLocale2code(TranslateDb.getChatLanguage(dialogId, toDefault)));
+                translateSpinner = new AlertDialog(parentFragment.getParentActivity(), AlertDialog.ALERT_TYPE_SPINNER);
+                translateSpinner.show();
                 return;
             }
 
