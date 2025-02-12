@@ -208,6 +208,7 @@ import java.util.Locale;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import cn.hutool.core.io.IoUtil;
+import cn.hutool.core.lang.UUID;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
 import kotlin.Unit;
@@ -252,6 +253,7 @@ public class ChatActivityEnterView extends BlurredFrameLayout implements Notific
 
     public boolean voiceOnce;
     public boolean onceVisible;
+    private String translateUUID;
 
     public void drawRecordedPannel(Canvas canvas) {
         if (getAlpha() == 0 || recordedAudioPanel == null || recordedAudioPanel.getParent() == null || recordedAudioPanel.getVisibility() != View.VISIBLE) {
@@ -3241,7 +3243,7 @@ public class ChatActivityEnterView extends BlurredFrameLayout implements Notific
                 Locale toDefault = TranslatorKt.getCode2Locale("en");
                 Translator.translateMessageBeforeSent(currentAccount, messageEditText.lastText,
                         TranslatorKt.getLocale2code(TranslateDb.getChatLanguage(dialog_id, toDefault)),
-                        !parentFragment.isForwarding(), parentFragment); // ignores fwd msgs by setting the flag to true
+                        !parentFragment.isForwarding(), parentFragment, translateUUID = UUID.fastUUID().toString(true)); // ignores fwd msgs by setting the flag to true
                 return;
             }
 
@@ -4765,14 +4767,19 @@ public class ChatActivityEnterView extends BlurredFrameLayout implements Notific
                         return;
                     }
                     Locale toDefault = TranslatorKt.getCode2Locale("en");
-                    Translator.translateMessageBeforeSent(currentAccount, messageEditText.lastText, TranslatorKt.getLocale2code(TranslateDb.getChatLanguage(dialog_id, toDefault)), !parentFragment.isForwarding(), parentFragment);
+                    Translator.translateMessageBeforeSent(currentAccount, messageEditText.lastText,
+                            TranslatorKt.getLocale2code(TranslateDb.getChatLanguage(dialog_id, toDefault)),
+                            !parentFragment.isForwarding(), parentFragment,
+                            translateUUID = UUID.fastUUID().toString(true));
                 });
                 transBeforeSendButton.setOnLongClickListener(v -> {
                     Translator.showTargetLangSelect(v, true, (locale) -> {
                         if (menuPopupWindow != null && menuPopupWindow.isShowing()) {
                             menuPopupWindow.dismiss();
                         }
-                        Translator.translateMessageBeforeSent(currentAccount, messageEditText.lastText, TranslatorKt.getLocale2code(locale), !parentFragment.isForwarding(), parentFragment);
+                        Translator.translateMessageBeforeSent(currentAccount, messageEditText.lastText,
+                                TranslatorKt.getLocale2code(locale), !parentFragment.isForwarding(),
+                                parentFragment, translateUUID = UUID.fastUUID().toString(true));
                         TranslateDb.saveChatLanguage(dialog_id, locale);
                         return Unit.INSTANCE;
                     });
@@ -5016,13 +5023,19 @@ public class ChatActivityEnterView extends BlurredFrameLayout implements Notific
                 return;
             }
             Locale toDefault = TranslatorKt.getCode2Locale("en");
-            Translator.translateMessageBeforeSent(currentAccount, messageEditText.lastText, TranslatorKt.getLocale2code(TranslateDb.getChatLanguage(dialog_id, toDefault)), !parentFragment.isForwarding(), parentFragment);
+            Translator.translateMessageBeforeSent(currentAccount, messageEditText.lastText,
+                    TranslatorKt.getLocale2code(TranslateDb.getChatLanguage(dialog_id, toDefault)),
+                    !parentFragment.isForwarding(), parentFragment,
+                    translateUUID = UUID.fastUUID().toString(true));
         }, () -> {
             Translator.showTargetLangSelect(messageSendPreview.getOptionsView().getLongClickedView(), true, (locale) -> {
                 if (menuPopupWindow != null && menuPopupWindow.isShowing()) {
                     menuPopupWindow.dismiss();
                 }
-                Translator.translateMessageBeforeSent(currentAccount, messageEditText.lastText, TranslatorKt.getLocale2code(locale), !parentFragment.isForwarding(), parentFragment);
+                Translator.translateMessageBeforeSent(currentAccount, messageEditText.lastText,
+                        TranslatorKt.getLocale2code(locale),
+                        !parentFragment.isForwarding(), parentFragment,
+                        translateUUID = UUID.fastUUID().toString(true));
                 TranslateDb.saveChatLanguage(dialog_id, locale);
                 return Unit.INSTANCE;
             });
@@ -12637,7 +12650,11 @@ public class ChatActivityEnterView extends BlurredFrameLayout implements Notific
                 messageSendPreview.dismiss(!dontSend);
                 messageSendPreview = null;
             }
-            if (!dontSend) sendMessageInternal(true, 0, false);
+
+            if (!dontSend && args.length > 1 && args[1] != null) {
+                if (args[1].equals(translateUUID)) sendMessageInternal(true, 0, false);
+                else Log.d("030-txx", String.format("UUID mismatch, expect: %s, got: %s", translateUUID, args[1]));
+            }
         } else if (id == NotificationCenter.forwardingMessageTranslated) {
             Log.d("030-tx", String.format("forwardingMessageTranslated %d %s", dialog_id, parentFragment.isFullyVisible));
             sendButton.setLoading(false, SendButton.INFINITE_LOADING);

@@ -301,7 +301,7 @@ interface Translator {
         }
 
         @JvmStatic
-        fun translateMessageBeforeSent(currentAccount: Int, text: CharSequence?, targetLang: String, isSelfOutgoingMessage: Boolean, maybeChatActivity: ChatActivity?) {
+        fun translateMessageBeforeSent(currentAccount: Int, text: CharSequence?, targetLang: String, isSelfOutgoingMessage: Boolean, maybeChatActivity: ChatActivity?, uuid: String? = null) {
             if (transReqId != null) {
                 ConnectionsManager.getInstance(currentAccount).cancelRequest(transReqId!!, true)
                 transReqId = null
@@ -364,7 +364,7 @@ interface Translator {
                 }
                 // Log.d("030-tx", "ok")
                 AndroidUtilities.runOnUIThread {
-                    NotificationCenter.getInstance(currentAccount).postNotificationName(notiType, result)
+                    NotificationCenter.getInstance(currentAccount).postNotificationName(notiType, result, uuid)
                 }
             }
 
