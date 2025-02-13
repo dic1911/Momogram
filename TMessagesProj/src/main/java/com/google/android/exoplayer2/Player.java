@@ -3075,10 +3075,14 @@ public interface Player {
   ArrayList<VideoListener> videoListeners = new ArrayList<>();
 
   default void addVideoListener(com.google.android.exoplayer2.video.VideoListener listener) {
-    videoListeners.add(listener);
+    synchronized (videoListeners) {
+      videoListeners.add(listener);
+    }
   }
 
   default void removeVideoListener(com.google.android.exoplayer2.video.VideoListener listener) {
-    videoListeners.remove(listener);
+    synchronized (videoListeners) {
+      videoListeners.remove(listener);
+    }
   }
 }
