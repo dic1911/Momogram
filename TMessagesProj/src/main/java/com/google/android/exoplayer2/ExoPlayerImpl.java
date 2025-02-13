@@ -3019,9 +3019,11 @@ import java.util.concurrent.TimeoutException;
 
     @Override
     public boolean onSurfaceTextureDestroyed(SurfaceTexture surfaceTexture) {
-      for (com.google.android.exoplayer2.video.VideoListener videoListener : videoListeners) {
-        if (videoListener.onSurfaceDestroyed(surfaceTexture)) {
-          return false;
+      synchronized (videoListeners) {
+        for (com.google.android.exoplayer2.video.VideoListener videoListener : videoListeners) {
+          if (videoListener.onSurfaceDestroyed(surfaceTexture)) {
+            return false;
+          }
         }
       }
       if (workerQueue != null) {
