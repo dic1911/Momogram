@@ -206,4 +206,27 @@
     <string name="CustomApiHash">Hash de API personalizado</string>
     <string name="AllowDupLogin">Permitir login em conta(s) existentes</string>
     <string name="AllowDupLoginInfo">Isso pode causar vários problemas, certifique-se de manter apenas uma das sessões após a conclusão do trabalho.</string>
+    <string name="HideCameraInAttachMenu">Ocultar câmera no menu de anexos</string>
+    <string name="OpenLinkInApp">Abrir no aplicativo</string>
+    <string name="DebugSendLogsExt">Compartilhar logs com aplicativo externo</string>
+    <string name="FeatureRemoved">Este recurso foi removido.</string>
+    <string name="FeatureRemovedWhy">Por que?</string>
+    <string name="FeatureRemovedWhyDetail">Com as alterações do upstream a partir da versão 11.7.0, algumas APIs não funcionam mais, o que resulta em instabilidade no cliente. Isso pode ou não ser resolvido no futuro. Não envie spam pedindo ETA.</string>
+    <string name="ShowQuickReconnect">Mostrar botão de reconexão rápida ao estar reconectando</string>
+    <string name="ShowQuickReconnectDesc">Assim como o hack de reconexão anterior, mas acionado manualmente.</string>
+    <string name="MonetAmoled">AMOLED</string>
+    <string name="CustomMaxCacheSizeBulletin">O tamanho máximo de cache está definido como %1$s MB</string>
+    <string name="ForceExternalBrowserForBots">Usar navegador externo para bots/mini-apps</string>
+    <string name="GenerateMonetTheme">Gerar tema Monet</string>
+    <string name="HideChannelBottomNotiToggle">Ocultar a alternância de notificação na parte inferior dos canais</string>
+    <string name="CustomMaxCacheSize">Tamanho de cache personalizado</string>
+    <string name="ForceExternalBrowserForBotsDesc">Alguns bots que exigem APIs personalizadas do Telegram podem apresentar mau funcionamento</string>
+    <string name="MonetLightMode">Luz</string>
+    <string name="MonetGradient">Gradiente</string>
+    <string name="MonetAvatarGradient">Gradiente para avatares</string>
+    <string name="MonetNickname">Monet para apelidos</string>
+    <string name="MonetAlterOut">Estilo alternativo de mensagem de saída</string>
+    <string name="AlwaysDestroyPhotoViewer">Sempre destruir o PhotoViewer</string>
+    <string name="CustomMaxCacheSizeHint">Tamanho em MB (ex. 512)</string>
+    <string name="UseCamera2API">Usar API da Câmera 2</string>
 </resources>
