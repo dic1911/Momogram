@@ -297,4 +297,24 @@
     <string name="ResetIVFailDomainsConfirm">Todos os dados de falha da visualização instantânea armazenados anteriormente serão apagados! Continuar?</string>
     <string name="AutoCheckUpdate">Procurar por atualizações automaticamente</string>
     <string name="AutoCheckUpdateInfo">Atualização de versão encontrada: %1$s</string>
+    <string name="AllowTestingUpdate">Verifique se há compilações de teste ao procurar por atualizações</string>
+    <string name="enhancedFileLoaderWarning">Isso pode ter um efeito negativo na velocidade real de download, especialmente quando não estiver em uma conta premium, continuar?</string>
+    <string name="AllowBotInDirectShare">Permitir bots como alvo de compartilhamento direto</string>
+    <string name="BlacklistedQueryRemoved">A(s) consulta(s) desmarcada(s) foi(ram) removida(s) da lista negra.</string>
+    <string name="ShowChannelMsgFwdCount">Mostrar contagem de encaminhamento de mensagens do canal</string>
+    <string name="EnhancedVideoBitrate">Taxa de bits de vídeo compartilhado aprimorada</string>
+    <string name="EnhancedVideoBitrateInfo">Melhor qualidade com tamanho de arquivo significativamente maior</string>
+    <string name="MarkdownCode">Código</string>
+    <string name="UnarchiveOnSwipe">Desarquivar chat ao deslizar</string>
+    <string name="TranscribeProvider">Provedor de transcrição</string>
+    <string name="TranscribeProviderAuto">Auto-selecionar</string>
+    <string name="TranscribeProviderDesc">Com a opção de seleção automática, %s será usado quando o Telegram Premium não estiver disponível.</string>
+    <string name="CloudflareCredentials">Credenciais do Cloudflare</string>
+    <string name="CloudflareCredentialsNotSet">As credenciais do Cloudflare não estão configuradas.</string>
+    <string name="CloudflareAccountID">ID da conta</string>
+    <string name="CloudflareAPIToken">Token de API</string>
+    <string name="TranscribeProviderWorkersAI">Whisper (IA para trabalhadores)</string>
+    <string name="CloudflareCredentialsDialog">Configure o ID da conta Cloudflare e o Token de API\n**Como obter?**</string>
+    <string name="CloudflareCredentialsObtainDesc">1. Abra o painel do Cloudflare e faça login com sua conta\n\n2. Expanda AI no menu lateral e clique em IA para trabalhadores\n\n3. Clique em Usar REST API\n\n4. Anote sua ID de conta e crie um token de API nessa página.</string>
+    <string name="SwipeActionInTopicList">Ação de deslizar na lista de tópicos (Ocultar/Mostrar)</string>
 </resources>
