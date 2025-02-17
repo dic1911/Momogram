@@ -227,4 +227,5 @@
     <string name="FeatureRemovedWhyDetail">With upstream changes starts from 11.7.0, some API no longer works, results in the client being unstable, this may or may not be resolved in the future, do not spam to ask for ETA.</string>
     <string name="ShowQuickReconnect">Show quick reconnect button when reconnecting</string>
     <string name="ShowQuickReconnectDesc">Just like previous reconnect hack, but triggered manually.</string>
+    <string name="ShowPhoneNumTemp">Toggle phone num.</string>
 </resources>

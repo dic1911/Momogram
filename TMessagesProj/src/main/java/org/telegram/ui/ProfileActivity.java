@@ -596,6 +596,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
     private final static int aliasChannelName = 1004;
     private final static int overrideName = 1005;
     private final static int all_media_spoiler = 1006;
+    private final static int show_phone = 1007;
 
     private Rect rect = new Rect();
 
@@ -721,6 +722,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
     private boolean firstLayout = true;
     private boolean invalidateScroll = true;
     private boolean isQrItemVisible = true;
+    private boolean showPhoneTemp = false;
 
     PinchToZoomHelper pinchToZoomHelper;
 
@@ -2834,6 +2836,9 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
 
                     String str = Arrays.toString(NekoConfig.alwaysUseSpoilerForMediaChats.toArray()).replace(" ", "");
                     NekoConfig.alwaysUseSpoilerForMedia.setConfigString(str.substring(1, str.length() - 1));
+                } else if (id == show_phone) {
+                    showPhoneTemp = !showPhoneTemp;
+                    updateListAnimated(false);
                 }
             }
         });
@@ -9508,7 +9513,8 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                 }
                 infoStartRow = rowCount;
                 infoHeaderRow = rowCount++;
-                if (!isBot && (hasPhone || !hasInfo) && !hideNumber) {
+                if (!isBot && (hasPhone || !hasInfo) && !hideNumber &&
+                        !(myProfile && !showPhoneTemp && NekoConfig.hidePhone.Bool())) {
                     phoneRow = rowCount++;
                 }
                 if (userInfo != null && !TextUtils.isEmpty(userInfo.about)) {
@@ -10711,6 +10717,9 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                     setUsernameItem = otherItem.addSubItem(set_username, R.drawable.menu_username_change, getString(R.string.ProfileUsernameEdit));
                     linkItem = otherItem.addSubItem(copy_link_profile, R.drawable.msg_link2, getString(R.string.ProfileCopyLink));
                     updateItemsUsername();
+                    if (NekoConfig.hidePhone.Bool()) {
+                        otherItem.addSubItem(show_phone, R.drawable.msg_voice_phone, getString(R.string.ShowPhoneNumTemp));
+                    }
                 }
                 selfUser = true;
             } else {
