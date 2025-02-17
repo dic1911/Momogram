@@ -675,7 +675,7 @@ public class PipVideoOverlay {
 
             @Override
             public boolean onDown(MotionEvent e) {
-                if (isShowingControls) {
+                if (isShowingControls && contentFrameLayout != null) {
                     for (int i = 1; i < contentFrameLayout.getChildCount(); i++) {
                         View child = contentFrameLayout.getChildAt(i);
                         boolean consumed = child.dispatchTouchEvent(e);
@@ -841,7 +841,7 @@ public class PipVideoOverlay {
                             pipXSpring.start();
                         }
                         onSideToDismiss = false;
-                    } else {
+                    } else if (contentView != null) {
                         if (pipXSpring.isRunning()) {
                             pipXSpring.getSpring().setFinalPosition(newPipX);
                         } else {
