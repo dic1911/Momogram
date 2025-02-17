@@ -229,4 +229,5 @@
     <string name="DebugSendLogsExt">将日志共享到外部应用程序</string>
     <string name="ShowQuickReconnectDesc">就像以前的重新连接hack一样，但手动触发。</string>
     <string name="ShowQuickReconnect">重新连接时显示快速重新连接按钮</string>
+    <string name="ShowPhoneNumTemp">切换电话号码显示</string>
 </resources>
