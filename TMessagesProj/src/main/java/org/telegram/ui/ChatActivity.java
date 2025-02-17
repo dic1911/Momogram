@@ -4284,7 +4284,7 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
             if (currentChat != null) {
                 allowShowPinned = ChatObject.canUserDoAction(currentChat, ChatObject.ACTION_PIN) || ChatObject.isChannel(currentChat);
 
-                if (ChatObject.hasAdminRights(currentChat)) {
+                if (ChatObject.hasAdminRights(currentChat) && (ChatObject.isChannel(currentChat) || currentChat.gigagroup)) {
                     headerItem.lazilyAddSubItem(nkheaderbtn_recent_actions, R.drawable.msg_log, LocaleController.getString(R.string.EventLog));
                 }
             } else if (currentUser != null && currentUser.self) {

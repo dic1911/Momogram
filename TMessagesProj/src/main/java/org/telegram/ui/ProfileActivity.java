@@ -10871,7 +10871,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                     }
                 }
                 if (ChatObject.hasAdminRights(currentChat) && NekoConfig.profileShowRecentActions.Bool()) {
-                    otherItem.addSubItem(event_log, R.drawable.baseline_content_paste_24, LocaleController.getString("EventLog", R.string.EventLog));
+                    otherItem.addSubItem(event_log, R.drawable.baseline_content_paste_24, LocaleController.getString(R.string.EventLog));
                 }
             } else {
                 if (chatInfo != null) {
