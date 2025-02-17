@@ -72,6 +72,25 @@ object StrUtil {
     }
 
     @JvmStatic
+    fun isRTLString(str: String?): Boolean {
+        if (str == null) {
+            return false
+        }
+
+        for (i in str.indices) {
+            val c: Char = str[i]
+            val directionality = Character.getDirectionality(c)
+            if (directionality == Character.DIRECTIONALITY_RIGHT_TO_LEFT ||
+                directionality == Character.DIRECTIONALITY_RIGHT_TO_LEFT_ARABIC
+            ) {
+                return true
+            }
+        }
+
+        return false
+    }
+
+    @JvmStatic
     fun get030Tag(obj: Any): String {
         return "030-${obj.javaClass.simpleName}"
     }
