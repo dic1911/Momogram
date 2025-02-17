@@ -10,6 +10,8 @@ package org.telegram.ui.Components;
 
 import static org.telegram.messenger.AndroidUtilities.dp;
 
+import static tw.nekomimi.nekogram.utils.StrUtil.isRTLString;
+
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
@@ -853,6 +855,9 @@ public class ChatAvatarContainer extends FrameLayout implements NotificationCent
             value = Emoji.replaceEmoji(value, titleTextView.getPaint().getFontMetricsInt(), false);
         }
         titleTextView.setText(value);
+        if (NekoConfig.marqueeForLongChatTitles.Bool()) {
+            titleTextView.setScrollNonFitText(!isRTLString(String.valueOf(value)));
+        }
         if (scam || fake) {
             if (!(titleTextView.getRightDrawable() instanceof ScamDrawable)) {
                 ScamDrawable drawable = new ScamDrawable(11, scam ? 0 : 1);
