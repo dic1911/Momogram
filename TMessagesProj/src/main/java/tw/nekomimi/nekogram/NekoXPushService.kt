@@ -8,7 +8,6 @@ import org.telegram.messenger.ApplicationLoader
 import org.telegram.messenger.KeepAliveJob
 
 @SuppressLint("OverrideAbstract")
-@RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
 class NekoXPushService : NotificationListenerService() {
 
     override fun onCreate() {
