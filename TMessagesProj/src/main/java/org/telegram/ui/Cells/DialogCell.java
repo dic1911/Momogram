@@ -2928,11 +2928,15 @@ public class DialogCell extends BaseCell implements StoriesListPlaceProvider.Ava
                         lastUnreadState = message != null && message.isUnread();
                         TLRPC.Chat localChat = MessagesController.getInstance(currentAccount).getChat(-dialog.id);
                         boolean isForumCell = localChat != null && localChat.forum && !isTopic;
+                        MessagesController messagesController = MessagesController.getInstance(currentAccount);
                         if (localChat != null && localChat.forum) {
-                            int[] counts = MessagesController.getInstance(currentAccount).getTopicsController().getForumUnreadCount(localChat.id);
+                            int[] counts = messagesController.getTopicsController().getForumUnreadCount(localChat.id);
                             unreadCount = counts[0];
                             mentionCount = counts[1];
                             reactionMentionCount = ignoreAllReactions ? 0 : counts[2];
+                            if (ignoreAllReactions && counts[2] > 0) {
+                                messagesController.markReactionsAsRead(-dialog.id, getTopicId());
+                            }
                             hasUnmutedTopics = counts[3] != 0;
                         } else if (dialog instanceof TLRPC.TL_dialogFolder) {
                             unreadCount = MessagesStorage.getInstance(currentAccount).getArchiveUnreadCount();
@@ -2942,6 +2946,9 @@ public class DialogCell extends BaseCell implements StoriesListPlaceProvider.Ava
                             unreadCount = dialog.unread_count;
                             mentionCount = dialog.unread_mentions_count;
                             reactionMentionCount = ignoreAllReactions ? 0 : dialog.unread_reactions_count;
+                            if (ignoreAllReactions && dialog.unread_reactions_count > 0) {
+                                messagesController.markReactionsAsRead(-dialog.id, getTopicId());
+                            }
                         }
                         markUnread = dialog.unread_mark;
                         currentEditDate = message != null ? message.messageOwner.edit_date : 0;
