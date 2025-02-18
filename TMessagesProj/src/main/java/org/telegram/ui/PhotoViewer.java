@@ -18032,11 +18032,9 @@ public class PhotoViewer implements NotificationCenter.NotificationCenterDelegat
 
     public void destroyPhotoViewer() {
         if (parentActivity == null || windowView == null) {
-            Log.d("030-pv", "already destroyed");
             return;
         }
-        Log.d("030-pv", String.format("destroyPhotoViewer %s", TelegramUtil.getStackTraceAsString(null)));
-        if (PipVideoOverlay.isVisible()) {
+        if (this == PipInstance && PipVideoOverlay.isVisible()) {
             PipVideoOverlay.dismiss();
         }
         removeObservers();
