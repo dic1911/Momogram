@@ -157,6 +157,7 @@ import java.util.HashSet;
 import kotlin.Unit;
 import tw.nekomimi.nekogram.ui.BottomBuilder;
 import tw.nekomimi.nekogram.NekoConfig;
+import tw.nekomimi.nekogram.ui.MessageDetailsActivity;
 import tw.nekomimi.nekogram.utils.AlertUtil;
 import tw.nekomimi.nekogram.utils.ProxyUtil;
 
@@ -1583,6 +1584,8 @@ public class ChannelAdminLogActivity extends BaseFragment implements Notificatio
     private final static int OPTION_REPORT_FALSE_POSITIVE = 34;
     private final static int OPTION_BAN = 35;
 
+    private final static int OPTION_DETAILS = 1001;
+
     private boolean createMenu(View v) {
         return createMenu(v, 0, 0);
     }
@@ -1913,6 +1916,12 @@ public class ChannelAdminLogActivity extends BaseFragment implements Notificatio
             scrimPopupWindow.showAtLocation(chatListView, Gravity.LEFT | Gravity.TOP, finalPopupX, finalPopupY);
             scrimPopupWindow.dimBehind();
         };
+
+        if (NekoConfig.showMessageDetails.Bool()) {
+            items.add(getString(R.string.MessageDetails));
+            icons.add(R.drawable.msg_info);
+            options.add(OPTION_DETAILS);
+        }
 
         if (
             ChatObject.canBlockUsers(currentChat) &&
@@ -2327,6 +2336,9 @@ public class ChannelAdminLogActivity extends BaseFragment implements Notificatio
                 }
                 break;
             }
+            case OPTION_DETAILS:
+                presentFragment(new MessageDetailsActivity(selectedObject));
+                break;
         }
         selectedObject = null;
         selectedParticipant = null;
