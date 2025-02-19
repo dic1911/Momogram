@@ -228,4 +228,5 @@
     <string name="ShowQuickReconnect">Show quick reconnect button when reconnecting</string>
     <string name="ShowQuickReconnectDesc">Just like previous reconnect hack, but triggered manually.</string>
     <string name="ShowPhoneNumTemp">Toggle phone num.</string>
+    <string name="PauseInactiveTabAnimation">Pause animation of inactive tabs</string>
 </resources>

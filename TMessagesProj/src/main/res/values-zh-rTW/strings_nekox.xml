@@ -215,4 +215,5 @@
     <string name="FeatureRemovedWhy">原因?</string>
     <string name="FeatureRemovedWhyDetail">在 11.7.0 版本更新後, 部份 API 已無法正常使用, 或導致程式不穩定, 這可能會也可能不會在未來被解決, 請勿在群組催更修復.</string>
     <string name="ShowPhoneNumTemp">切換電話號碼顯示</string>
+    <string name="PauseInactiveTabAnimation">將非目前資料夾名稱的動畫暫停</string>
 </resources>

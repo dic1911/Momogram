@@ -27,6 +27,7 @@ import android.os.Build;
 import android.os.SystemClock;
 import android.text.Layout;
 import android.text.SpannableStringBuilder;
+import android.text.Spanned;
 import android.text.StaticLayout;
 import android.text.TextPaint;
 import android.text.TextUtils;
@@ -430,12 +431,25 @@ public class FilterTabsView extends FrameLayout {
                 textX *= 0.75f;
             }
 
-            if (!TextUtils.equals(currentTab.title, currentText)) {
+            boolean pauseInactiveTabAnimation = NekoConfig.pauseInactiveTabAnimation.Bool();
+            boolean titleChanged = !TextUtils.equals(currentTab.title, currentText);
+            if (titleChanged || pauseInactiveTabAnimation) {
+                boolean shouldPauseAnimation = pauseInactiveTabAnimation && (selectedTabId != currentTab.id);
+                boolean noanimate = currentTab.noanimate || shouldPauseAnimation;
+                boolean shouldRecreate = titleChanged;
+                int cacheType = noanimate ? AnimatedEmojiDrawable.CACHE_TYPE_NOANIMATE_FOLDER : AnimatedEmojiDrawable.CACHE_TYPE_MESSAGES;
                 currentText = currentTab.title;
-                textLayout = new StaticLayout(currentText, textPaint, AndroidUtilities.dp(400), Layout.Alignment.ALIGN_NORMAL, 1.0f, 0, false);
-                textLayoutEmojis = AnimatedEmojiSpan.update(currentTab.noanimate ? AnimatedEmojiDrawable.CACHE_TYPE_NOANIMATE_FOLDER : AnimatedEmojiDrawable.CACHE_TYPE_MESSAGES, this, textLayoutEmojis, textLayout);
-                textHeight = textLayout.getHeight();
-                textOffsetX = (int) -textLayout.getLineLeft(0);
+                if (textLayout != null) {
+                    Spanned spanned = (Spanned) textLayout.getText();
+                    AnimatedEmojiSpan[] spans = spanned.getSpans(0, spanned.length(), AnimatedEmojiSpan.class);
+                    if (spans.length > 0) shouldRecreate |= spans[0].cacheType != cacheType;
+                }
+                if (shouldRecreate) {
+                    textLayout = new StaticLayout(currentText, textPaint, AndroidUtilities.dp(400), Layout.Alignment.ALIGN_NORMAL, 1.0f, 0, false);
+                    textLayoutEmojis = AnimatedEmojiSpan.update(cacheType, this, textLayoutEmojis, textLayout);
+                    textHeight = textLayout.getHeight();
+                    textOffsetX = (int) -textLayout.getLineLeft(0);
+                }
             }
 
             float titleOffsetX = 0;
