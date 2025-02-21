@@ -86,6 +86,8 @@ public class NekoConfig {
     public static ConfigItem useIPv6 = addConfig(R.string.IPv6, "IPv6", configTypeBool, GENERAL, false);
     public static ConfigItem hidePhone = addConfig(R.string.HidePhone, "HidePhone", configTypeBool, GENERAL, true);
     public static ConfigItem ignoreBlocked = addConfig(R.string.IgnoreBlocked, "IgnoreBlocked", configTypeBool, CHAT, false);
+    public static ConfigItem muteBlockedFromGroup = addConfig(R.string.MuteBlockedFromGroup, "MuteBlockedFromGroup", configTypeBool, CHAT, false);
+    public static ConfigItem muteBotsFromGroup = addConfig(R.string.MuteBotsFromGroup, "MuteBotsFromGroup", configTypeBool, CHAT, false);
     public static ConfigItem tabletMode = addConfig(R.string.TabletMode, "TabletMode", configTypeInt, GENERAL, 0);
     public static ConfigItem inappCamera = addConfig(R.string.DebugMenuEnableCamera, "DebugMenuEnableCamera", configTypeBool, GENERAL, true); // fake
     public static ConfigItem smoothKeyboard = addConfig("DebugMenuEnableSmoothKeyboard", configTypeBool, false);// fake

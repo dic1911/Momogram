@@ -231,4 +231,7 @@
     <string name="ShowQuickReconnect">重新连接时显示快速重新连接按钮</string>
     <string name="ShowPhoneNumTemp">切换电话号码显示</string>
     <string name="PauseInactiveTabAnimation">将非目前文件夹的名称动画暂停</string>
+    <string name="MuteBlockedFromGroup">忽略来自封锁账号的群组消息通知</string>
+    <string name="MuteBotsFromGroup">忽略来自封锁机器人的群组消息通知</string>
+    <string name="MuteBotsFromGroupDesc">仍会收到已知的群组管理相关消息</string>
 </resources>

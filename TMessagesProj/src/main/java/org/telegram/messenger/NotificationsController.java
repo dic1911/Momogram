@@ -97,11 +97,14 @@ import java.util.function.Consumer;
 
 import tw.nekomimi.nekogram.NekoXConfig;
 import tw.nekomimi.nekogram.NekoConfig;
+import tw.nekomimi.nekogram.utils.StrUtil;
 
 public class NotificationsController extends BaseController {
 
     public static final String EXTRA_VOICE_REPLY = "extra_voice_reply";
     public static String OTHER_NOTIFICATIONS_CHANNEL = null;
+    public static final String ZERO_WIDTH_SPACE = String.valueOf('\u200B');
+    public static final HashSet<Long> BOTS = new HashSet<>();
 
     private static final DispatchQueue notificationsQueue = new DispatchQueue("notificationsQueue");
     private final ArrayList<MessageObject> pushMessages = new ArrayList<>();
@@ -3933,6 +3936,43 @@ public class NotificationsController extends BaseController {
         return channelId;
     }
 
+    private void filterNotifications(ArrayList<MessageObject> list, boolean blocked, boolean bot) {
+        if (!blocked && !bot) return;
+        MessagesController messagesController = getMessagesController();
+        for (int i = 0; i < list.size(); ++i) {
+            var m = list.get(i);
+            long id = m.getSenderId();
+
+            if (blocked && messagesController.blockePeers.indexOfKey(id) >= 0) {
+                list.remove(i);
+                --i;
+                continue;
+            }
+
+            if (bot) {
+                if (m.getDialogId() == id) continue;
+                boolean isBot = BOTS.contains(id);
+                boolean isAdminPing = isBot && m.messageOwner.message.contains(ZERO_WIDTH_SPACE);
+                if (isAdminPing) {
+                    boolean foundMention = false;
+                    for (TLRPC.MessageEntity e : m.messageOwner.entities) {
+                        if (e instanceof TLRPC.TL_messageEntityMentionName &&
+                                ((TLRPC.TL_messageEntityMentionName) e).user_id == getUserConfig().getClientUserId()) {
+                            foundMention = true;
+                            break;
+                        }
+                    }
+                    isAdminPing = foundMention;
+                }
+                if (!isAdminPing && (isBot || messagesController.getUser(id).bot)) {
+                    delayedPushMessages.remove(i);
+                    --i;
+                    if (!isBot) BOTS.add(id);
+                }
+            }
+        }
+    }
+
     private void showOrUpdateNotification(boolean notifyAboutLast) {
         if (!getUserConfig().isClientActivated() || pushMessages.isEmpty() && storyPushMessages.isEmpty() || !SharedConfig.showNotificationsForAllAccounts && currentAccount != UserConfig.selectedAccount) {
             dismissNotification();
@@ -3960,6 +4000,9 @@ public class NotificationsController extends BaseController {
             if (lastNotification == null) {
                 return;
             }
+
+            filterNotifications(delayedPushMessages, NekoConfig.muteBlockedFromGroup.Bool(), NekoConfig.muteBotsFromGroup.Bool());
+            filterNotifications(pushMessages, NekoConfig.muteBlockedFromGroup.Bool(), NekoConfig.muteBotsFromGroup.Bool());
 
             Bitmap largeBitmap = null;
             MessageObject lastMessageObject;
@@ -4090,14 +4133,14 @@ public class NotificationsController extends BaseController {
                         name = LocaleController.getString(R.string.NotificationHiddenName);
                     }
                 } else {
-                    name = LocaleController.getString(R.string.AppName);
+                    name = StrUtil.getAppName();
                 }
                 replace = false;
             } else {
                 name = chatName;
             }
             if (lastMessageObject != null && (lastMessageObject.isReactionPush || lastMessageObject.isStoryReactionPush) && !preferences.getBoolean("EnableReactionsPreview", true)) {
-                name = LocaleController.getString(R.string.NotificationHiddenName);
+                name = StrUtil.getAppName();
             }
 
             String detailText;

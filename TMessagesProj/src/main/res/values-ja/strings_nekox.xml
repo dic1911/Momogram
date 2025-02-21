@@ -217,4 +217,7 @@
     <string name="FeatureRemovedWhyDetail">バージョン 11.7.0 以降, 一部の API が作動しないため, アプリが不安定になる可能性もあります, 未来のアプデで解決可能性もありますけど, チャットグループ内でETAを尋ねるのはご遠慮ください.</string>
     <string name="ShowPhoneNumTemp">番号表示切替</string>
     <string name="PauseInactiveTabAnimation">非アクティブタブのアニメーションを一時停止</string>
+    <string name="MuteBlockedFromGroup">ブロックしたアカウントのグループメッセージ通知をオフ</string>
+    <string name="MuteBotsFromGroup">ボットのグループメッセージ通知をオフ</string>
+    <string name="MuteBotsFromGroupDesc">既知のグループ管理関連のメッセージは引き続き受信されます</string>
 </resources>

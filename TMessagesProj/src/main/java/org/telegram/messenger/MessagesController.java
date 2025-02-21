@@ -8257,7 +8257,8 @@ public class MessagesController extends BaseController implements NotificationCe
                 }
                 loadingBlockedPeers = false;
                 getNotificationCenter().postNotificationName(NotificationCenter.blockedUsersDidLoad);
-                if (!reset && !blockedEndReached && NekoConfig.ignoreBlocked.Bool()) {
+                if (!reset && !blockedEndReached &&
+                        (NekoConfig.ignoreBlocked.Bool() || NekoConfig.muteBlockedFromGroup.Bool())) {
                     getBlockedPeers(false);
                 }
             }
