@@ -30666,7 +30666,7 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
                                 } else {
                                     td = selectedObjectGroup.messages.get(0).messageOwner.translated;
                                 }
-                                items.add(td ? LocaleController.getString("UndoTranslate", R.string.UndoTranslate) : LocaleController.getString("Translate", R.string.Translate));
+                                items.add(td ? LocaleController.getString(R.string.UndoTranslate) : LocaleController.getString(R.string.Translate));
                                 options.add(nkbtn_translate);
                                 icons.add(R.drawable.ic_translate);
                             }
@@ -30674,25 +30674,25 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
                         if (messageObject != null && StrUtil.isNotBlank(messageObject.messageOwner.message) && StrUtil.isNotBlank(NekoConfig.openPGPApp.String())) {
                             //TODO wtf
                             if (PgpHelper.PGP_CLEARTEXT_SIGNATURE.matcher(selectedObject.messageOwner.message).matches()) {
-                                items.add(LocaleController.getString("PGPVerify", R.string.PGPVerify));
+                                items.add(LocaleController.getString(R.string.PGPVerify));
                                 options.add(nkbtn_PGPVerify);
                                 icons.add(R.drawable.baseline_vpn_key_24);
                             } else if (PgpHelper.PGP_MESSAGE.matcher(selectedObject.messageOwner.message).matches()) {
-                                items.add(LocaleController.getString("PGPDecrypt", R.string.PGPDecrypt));
+                                items.add(LocaleController.getString(R.string.PGPDecrypt));
                                 options.add(nkbtn_PGPDecrypt);
                                 icons.add(R.drawable.baseline_vpn_key_24);
                             } else if (PgpHelper.PGP_PRIVATE_KEY.matcher(selectedObject.messageOwner.message).matches()) {
-                                items.add(LocaleController.getString("PGPImportPrivate", R.string.PGPImportPrivate));
+                                items.add(LocaleController.getString(R.string.PGPImportPrivate));
                                 options.add(nkbtn_PGPImportPrivate);
                                 icons.add(R.drawable.baseline_vpn_key_24);
                             } else if (PgpHelper.PGP_PUBLIC_KEY.matcher(selectedObject.messageOwner.message).matches()) {
-                                items.add(LocaleController.getString("PGPImport", R.string.PGPImport));
+                                items.add(LocaleController.getString(R.string.PGPImport));
                                 options.add(nkbtn_PGPImport);
                                 icons.add(R.drawable.baseline_vpn_key_24);
                             }
                         }
                         if (NekoConfig.showMessageHide.Bool()) {
-                            items.add(LocaleController.getString("Hide", R.string.Hide));
+                            items.add(LocaleController.getString(R.string.Hide));
                             options.add(204);
                             icons.add(R.drawable.baseline_remove_circle_24);
                         }
@@ -30714,7 +30714,7 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
                             boolean editingAdmin;
                             final TLRPC.ChannelParticipant channelParticipant;
 
-                            if (ChatObject.isChannel(currentChat)) {
+                            if (ChatObject.isChannel(currentChat) && (participant instanceof TLRPC.TL_chatChannelParticipant)) {
                                 channelParticipant = ((TLRPC.TL_chatChannelParticipant) participant).channelParticipant;
                                 canEditAdmin = ChatObject.canAddAdmins(currentChat);
                                 if (canEditAdmin && (channelParticipant instanceof TLRPC.TL_channelParticipantCreator || channelParticipant instanceof TLRPC.TL_channelParticipantAdmin && !channelParticipant.can_edit)) {
@@ -30729,13 +30729,13 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
                             }
 
                             if (canEditAdmin && NekoConfig.showAdminActions.Bool()) {
-                                items.add(editingAdmin ? LocaleController.getString("EditAdminRights", R.string.EditAdminRights) : LocaleController.getString("SetAsAdmin", R.string.SetAsAdmin));
+                                items.add(editingAdmin ? LocaleController.getString(R.string.EditAdminRights) : LocaleController.getString(R.string.SetAsAdmin));
                                 icons.add(R.drawable.baseline_stars_24);
                                 options.add(nkbtn_editAdmin);
                                 selectedParticipant = participant;
                             }
                             if (canRestrict && NekoConfig.showChangePermissions.Bool()) {
-                                items.add(LocaleController.getString("ChangePermissions", R.string.ChangePermissions));
+                                items.add(LocaleController.getString(R.string.ChangePermissions));
                                 icons.add(R.drawable.baseline_block_24);
                                 options.add(nkbtn_editPermission);
                                 selectedParticipant = participant;
