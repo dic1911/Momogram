@@ -5,7 +5,6 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.text.TextPaint;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -422,7 +421,7 @@ public class NekoChatSettingsActivity extends BaseFragment implements Notificati
         linearLayoutInviteContainer.setOrientation(LinearLayout.VERTICAL);
         linearLayout.addView(linearLayoutInviteContainer, LayoutHelper.createLinear(LayoutHelper.MATCH_PARENT, LayoutHelper.WRAP_CONTENT));
 
-        int count = 12;
+        int count = 13;
         for (int a = 0; a < count; a++) {
             TextCheckCell textCell = new TextCheckCell(context);
             switch (a) {
@@ -472,6 +471,10 @@ public class NekoChatSettingsActivity extends BaseFragment implements Notificati
                 }
                 case 11: {
                     textCell.setTextAndCheck(LocaleController.getString(R.string.CopyPhotoSticker), NekoConfig.showCopyPhoto.Bool(), false);
+                    break;
+                }
+                case 12: {
+                    textCell.setTextAndCheck(LocaleController.getString(R.string.FBan), NekoConfig.showFBan.Bool(), false);
                 }
             }
             textCell.setTag(a);
@@ -526,6 +529,10 @@ public class NekoChatSettingsActivity extends BaseFragment implements Notificati
                     }
                     case 11: {
                         textCell.setChecked(NekoConfig.showCopyPhoto.toggleConfigBool());
+                        break;
+                    }
+                    case 12: {
+                        textCell.setChecked(NekoConfig.showFBan.toggleConfigBool());
                         break;
                     }
                 }

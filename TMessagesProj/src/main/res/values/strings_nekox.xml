@@ -232,4 +232,7 @@
     <string name="MuteBlockedFromGroup">Mute group chat notifications if from blocked user</string>
     <string name="MuteBotsFromGroup">Mute group chat notifications if from bots</string>
     <string name="MuteBotsFromGroupDesc">Known messages for admins will not be muted</string>
+    <string name="BanForAllModeratingChats">Ban this user from all your moderating chats?</string>
+    <string name="BannedForChats">Banned %1$s for %2$d chat(s)</string>
+    <string name="FBan">FBan</string>
 </resources>

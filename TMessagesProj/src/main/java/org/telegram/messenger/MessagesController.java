@@ -108,6 +108,7 @@ import org.telegram.ui.bots.WebViewRequestProps;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -119,6 +120,7 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 import cn.hutool.core.thread.ThreadUtil;
@@ -22674,6 +22676,82 @@ public class MessagesController extends BaseController implements NotificationCe
 
         AndroidUtilities.cancelRunOnUIThread(this.sendReportMessageDeliver);
         AndroidUtilities.runOnUIThread(this.sendReportMessageDeliver);
+    }
+
+    public Set<TLRPC.Chat> getModeratingChats() {
+        Collection<TLRPC.Chat> allChat = chats.values();
+        HashSet<TLRPC.Chat> ret = new HashSet<>();
+        for (TLRPC.Chat c : allChat) {
+            if (ChatObject.canBlockUsers(c)) {
+                Log.d("030-mod", c.title);
+                ret.add(c);
+            }
+        }
+        Log.d("030-mod", String.format("%d chats", ret.size()));
+        return ret;
+    }
+
+    public void banUserFromChat(long chatId, TLObject user, RequestDelegate delegate) {
+        TLRPC.TL_channels_editBanned req = new TLRPC.TL_channels_editBanned();
+        req.channel = getInputChannel(chatId);
+        req.participant = MessagesController.getInputPeer(user);
+        req.banned_rights = new TLRPC.TL_chatBannedRights();
+        req.banned_rights.view_messages = true;
+        req.banned_rights.send_media = true;
+        req.banned_rights.send_messages = true;
+        req.banned_rights.send_stickers = true;
+        req.banned_rights.send_gifs = true;
+        req.banned_rights.send_games = true;
+        req.banned_rights.send_inline = true;
+        req.banned_rights.embed_links = true;
+        req.banned_rights.pin_messages = true;
+        req.banned_rights.send_polls = true;
+        req.banned_rights.invite_users = true;
+        req.banned_rights.change_info = true;
+        getConnectionsManager().sendRequest(req, delegate);
+    }
+
+    public void banUserFromAllModeratingChat(TLObject user, RequestDelegate delegate) {
+        Set<TLRPC.Chat> targetChats = getModeratingChats();
+        AtomicInteger ban = new AtomicInteger();
+        AtomicInteger err = new AtomicInteger();
+        AtomicInteger remains = new AtomicInteger(targetChats.size());
+        HashSet<String> errors = new HashSet<>();
+
+        for (TLRPC.Chat c : targetChats) {
+            banUserFromChat(c.id, user, (response, error) -> {
+                if (error == null) {
+                    ban.incrementAndGet();
+                } else {
+                    err.incrementAndGet();
+                    String currentErr = String.format("%d_%s", error.code, error.text);
+                    errors.add(currentErr);
+                    Log.d("030-ban", String.format("failed for %d %s -> %s", c.id, c.title, currentErr));
+                }
+
+                boolean finished = remains.decrementAndGet() == 0;
+                if (finished) {
+                    TLRPC.TL_error outErr = null, res = null;
+                    StringBuilder errorStr = new StringBuilder();
+                    for (String e : errors) {
+                        errorStr.append(e).append(",");
+                    }
+                    errorStr.setLength(errorStr.length() - 1);
+                    if (ban.get() == 0) {
+                        Log.e("030-ban", String.format("errors: %d\n%s", err.get(), errorStr.toString()));
+                        outErr = new TLRPC.TL_error();
+                        outErr.code = err.get();
+                        outErr.text = errorStr.toString();
+                    } else {
+                        res = new TLRPC.TL_error();
+                        res.code = ban.get();
+                        res.text = String.valueOf(err.get());
+                    }
+
+                    if (delegate != null) delegate.run(res, outErr);
+                }
+            });
+        }
     }
 
 }

@@ -416,8 +416,8 @@ public class MemberRequestsDelegate implements MemberRequestCell.OnClickListener
     }
 
     @Override
-    public void onBanClicked(TLRPC.TL_chatInviteImporter importer) {
-        hideChatJoinRequest(importer, false, true);
+    public void onBanClicked(TLRPC.TL_chatInviteImporter importer, boolean fban) {
+        hideChatJoinRequest(importer, false, true, fban);
     }
 
     public void setAdapterItemsEnabled(boolean adapterItemsEnabled) {
@@ -468,10 +468,10 @@ public class MemberRequestsDelegate implements MemberRequestCell.OnClickListener
     }
 
     private void hideChatJoinRequest(TLRPC.TL_chatInviteImporter importer, boolean isApproved) {
-        hideChatJoinRequest(importer, isApproved, false);
+        hideChatJoinRequest(importer, isApproved, false, false);
     }
 
-    private void hideChatJoinRequest(TLRPC.TL_chatInviteImporter importer, boolean isApproved, final boolean ban) {
+    private void hideChatJoinRequest(TLRPC.TL_chatInviteImporter importer, boolean isApproved, final boolean ban, final boolean fban) {
         TLRPC.User user = users.get(importer.user_id);
         if (user == null) {
             return;
@@ -479,27 +479,35 @@ public class MemberRequestsDelegate implements MemberRequestCell.OnClickListener
 
         MessagesController messagesController = MessagesController.getInstance(currentAccount);
         if (ban) {
-            TLRPC.TL_channels_editBanned req = new TLRPC.TL_channels_editBanned();
-            req.channel = messagesController.getInputChannel(chatId);
-            req.participant = MessagesController.getInputPeer(user);
-            req.banned_rights = new TLRPC.TL_chatBannedRights();
-            req.banned_rights.view_messages = true;
-            req.banned_rights.send_media = true;
-            req.banned_rights.send_messages = true;
-            req.banned_rights.send_stickers = true;
-            req.banned_rights.send_gifs = true;
-            req.banned_rights.send_games = true;
-            req.banned_rights.send_inline = true;
-            req.banned_rights.embed_links = true;
-            req.banned_rights.pin_messages = true;
-            req.banned_rights.send_polls = true;
-            req.banned_rights.invite_users = true;
-            req.banned_rights.change_info = true;
-            ConnectionsManager.getInstance(currentAccount).sendRequest(req, (response, error) -> {
-                BulletinFactory bulletinFactory = allImporters.isEmpty() ? BulletinFactory.of(fragment)
-                        : BulletinFactory.of(layoutContainer, fragment.getResourceProvider());
+            BulletinFactory bulletinFactory = allImporters.isEmpty() ? BulletinFactory.of(fragment)
+                    : BulletinFactory.of(layoutContainer, fragment.getResourceProvider());
+            if (fban) {
+                messagesController.banUserFromAllModeratingChat(user, (response, error) -> {
+                    if (error == null) {
+                        int amount = ((TLRPC.TL_error) response).code;
+                        if (amount == 0) {
+                            AndroidUtilities.runOnUIThread(() -> {
+                                bulletinFactory.createSimpleBulletin(R.raw.error, "ERR_NO_MODS_INFO").show(true);
+                            });
+                            return;
+                        }
+                        hideChatJoinRequest(importer, false, false, false);
+                        AndroidUtilities.runOnUIThread(() ->
+                                bulletinFactory.createSimpleBulletin(R.raw.done,
+                                LocaleController.formatString(R.string.BannedForChats, user.first_name, amount))
+                                .show(true));
+                    } else {
+                        AndroidUtilities.runOnUIThread(() -> {
+                            String err = String.format("ERR %d - %s", error.code, error.text);
+                            bulletinFactory.createSimpleBulletin(R.raw.error, err).show(true);
+                        });
+                    }
+                });
+                return;
+            }
+            messagesController.banUserFromChat(chatId, user, (response, error) -> {
                 if (error == null) {
-                    hideChatJoinRequest(importer, false, false);
+                    hideChatJoinRequest(importer, false, false, false);
                     AndroidUtilities.runOnUIThread(() -> bulletinFactory.createSimpleBulletin(R.raw.done,
                             LocaleController.formatString(R.string.EventLogChannelRestricted, user.first_name)).show());
                 } else {

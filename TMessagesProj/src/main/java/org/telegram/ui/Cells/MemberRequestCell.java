@@ -16,6 +16,7 @@ import org.telegram.messenger.LocaleController;
 import org.telegram.messenger.R;
 import org.telegram.messenger.UserObject;
 import org.telegram.tgnet.TLRPC;
+import org.telegram.ui.ActionBar.AlertDialog;
 import org.telegram.ui.ActionBar.SimpleTextView;
 import org.telegram.ui.ActionBar.Theme;
 import org.telegram.ui.Components.AvatarDrawable;
@@ -101,8 +102,21 @@ public class MemberRequestCell extends FrameLayout {
         banButton.setTypeface(AndroidUtilities.bold());
         banButton.setOnClickListener(v -> {
             if (clickListener != null && importer != null) {
-                clickListener.onBanClicked(importer);
+                clickListener.onBanClicked(importer, false);
             }
+        });
+        banButton.setOnLongClickListener(v -> {
+            if (clickListener != null && importer != null) {
+                new AlertDialog.Builder(context)
+                    .setTitle(LocaleController.getString(R.string.Ban))
+                    .setMessage(LocaleController.getString(R.string.BanForAllModeratingChats))
+                    .setPositiveButton(LocaleController.getString(R.string.OK), (__, ___) -> {
+                        clickListener.onBanClicked(importer, true);
+                    })
+                    .setNegativeButton(LocaleController.getString(R.string.Cancel), null)
+                    .show();
+            }
+            return true;
         });
         FrameLayout.LayoutParams banLayoutParams = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, AndroidUtilities.dp(32), LocaleController.isRTL ? Gravity.RIGHT : Gravity.LEFT);
         banLayoutParams.topMargin = AndroidUtilities.dp(62);
@@ -167,6 +181,6 @@ public class MemberRequestCell extends FrameLayout {
 
         void onDismissClicked(TLRPC.TL_chatInviteImporter importer);
 
-        void onBanClicked(TLRPC.TL_chatInviteImporter importer);
+        void onBanClicked(TLRPC.TL_chatInviteImporter importer, boolean fban);
     }
 }

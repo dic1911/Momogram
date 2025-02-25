@@ -110,6 +110,7 @@ public class NekoConfig {
     public static ConfigItem showRepeat = addConfig("showRepeat", configTypeBool, CHAT, false);
     public static ConfigItem showShareMessages = addConfig("showShareMessages", configTypeBool, CHAT, false);
     public static ConfigItem showMessageHide = addConfig("showMessageHide", configTypeBool, CHAT, false);
+    public static ConfigItem showFBan = addConfig("showFBan", configTypeBool, CHAT, false);
 
     public static ConfigItem eventType = addConfig("eventType", configTypeInt, 0);
     public static ConfigItem actionBarDecoration = addConfig(R.string.ActionBarDecoration, "ActionBarDecoration", configTypeInt, GENERAL, 0);

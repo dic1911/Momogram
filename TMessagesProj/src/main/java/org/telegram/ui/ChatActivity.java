@@ -82,6 +82,7 @@ import android.text.style.ForegroundColorSpan;
 import android.text.style.ImageSpan;
 import android.text.style.URLSpan;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.util.Pair;
 import android.util.Property;
 import android.util.SparseArray;
@@ -370,6 +371,7 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
     private final static int nkbtn_PGPImportPrivate = 2023;
     private final static int nkbtn_PGPImport = 2024;
     private final static int nkbtn_copy_link_in_pm = 2025;
+    private final static int mmbtn_fban = 2026;
 
     private final static int nkheaderbtn_recent_actions = 3001;
     private final static int nkheaderbtn_bot_app = 3002;
@@ -30102,6 +30104,11 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
                         options.add(OPTION_DELETE);
                         icons.add(selectedObject.messageOwner.ttl_period != 0 ? R.drawable.msg_delete_auto : R.drawable.baseline_delete_24);
                     }
+                    if (NekoConfig.showFBan.Bool() && !selectedObject.isOut()) {
+                        items.add(LocaleController.getString(R.string.FBan));
+                        options.add(mmbtn_fban);
+                        icons.add(R.drawable.group_ban_new);
+                    }
                 } else if (type == 20) {
                     items.add(LocaleController.getString(R.string.Retry));
                     options.add(OPTION_RETRY);
@@ -30547,6 +30554,11 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
                             options.add(OPTION_DELETE);
                             icons.add(selectedObject.messageOwner.ttl_period != 0 ? R.drawable.msg_delete_auto : R.drawable.baseline_delete_24);
                         }
+                        if (NekoConfig.showFBan.Bool() && !selectedObject.isOut()) {
+                            items.add(LocaleController.getString(R.string.FBan));
+                            options.add(mmbtn_fban);
+                            icons.add(R.drawable.group_ban_new);
+                        }
                     } else {
                         if (allowChatActions && !isInsideContainer) {
                             items.add(LocaleController.getString(R.string.Reply));
@@ -30699,6 +30711,11 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
                         items.add(LocaleController.getString(chatMode == MODE_SAVED && threadMessageId != getUserConfig().getClientUserId() ? R.string.Remove : R.string.Delete));
                         options.add(OPTION_DELETE);
                         icons.add(selectedObject.messageOwner.ttl_period != 0 ? R.drawable.msg_delete_auto : R.drawable.baseline_delete_24);
+                        if (NekoConfig.showFBan.Bool() && !selectedObject.isOut()) {
+                            items.add(LocaleController.getString(R.string.FBan));
+                            options.add(mmbtn_fban);
+                            icons.add(R.drawable.group_ban_new);
+                        }
                     }
                     if (chatInfo != null && chatInfo.participants != null && chatInfo.participants.participants != null && selectedObject.messageOwner.from_id != null) {
                         selectedParticipant = null;
@@ -42404,7 +42421,100 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
                 break;
 
             }
+            case mmbtn_fban: {
+                new AlertDialog.Builder(getParentActivity())
+                    .setTitle(LocaleController.getString(R.string.Ban))
+                    .setMessage(LocaleController.getString(R.string.BanForAllModeratingChats))
+                    .setPositiveButton(LocaleController.getString(R.string.OK), (__, ___) -> {
+                        doFBan();
+                    })
+                    .setNegativeButton(LocaleController.getString(R.string.Cancel), null)
+                    .show();
+                doFBan();
+                break;
+            }
         }
+    }
+
+    private void doFBan() {
+        TLObject o = null;
+        long targetId = 0;
+        boolean unsupported = false;
+        if (selectedObjectGroup != null) {
+            for (MessageObject object : selectedObjectGroup.messages) {
+                o = object.getFromPeerObject();
+                if (o instanceof TLRPC.User u) {
+                    if (targetId != 0 && targetId != u.id) {
+                        unsupported = true;
+                        break;
+                    }
+                    targetId = u.id;
+                } else if (o instanceof TLRPC.Chat c) {
+                    if (targetId != 0 && targetId != c.id) {
+                        unsupported = true;
+                        break;
+                    }
+                    targetId = c.id;
+                } else {
+                    unsupported = true;
+                    break;
+                }
+            }
+        } else if (selectedObject != null) {
+            o = selectedObject.getFromPeerObject();
+            if (o instanceof TLRPC.User u) {
+                targetId = u.id;
+            } else if (o instanceof TLRPC.Chat c) {
+                targetId = c.id;
+            } else {
+                unsupported = true;
+            }
+        }
+        BulletinFactory bulletinFactory = BulletinFactory.of(ChatActivity.this);
+        if (unsupported) {
+            AndroidUtilities.runOnUIThread(() -> {
+                bulletinFactory.createSimpleBulletin(R.raw.error, "ERR_UNSUPPORTED_OP").show();
+            });
+            return;
+        }
+        if (targetId == 0) {
+            AndroidUtilities.runOnUIThread(() -> {
+                bulletinFactory.createSimpleBulletin(R.raw.error, "ERR_GET_ID").show();
+            });
+            return;
+        }
+        Log.d("030-fban", String.format("%s %d", o != null, targetId));
+        if (o == null && targetId == 0) {
+            AndroidUtilities.runOnUIThread(() -> {
+                bulletinFactory.createSimpleBulletin(R.raw.error, "ERR_USER_NOT_FOUND").show();
+            });
+            return;
+        }
+        final TLObject target = o;
+        getMessagesController().banUserFromAllModeratingChat(target, (response, error) -> {
+            if (error == null) {
+                int amount = ((TLRPC.TL_error) response).code;
+                if (amount == 0) {
+                    AndroidUtilities.runOnUIThread(() -> {
+                        bulletinFactory.createSimpleBulletin(R.raw.error, "ERR_NO_MODS_INFO").show(true);
+                    });
+                    return;
+                }
+                String _name = "unknown";
+                if (target instanceof TLRPC.User u) _name = u.first_name;
+                else if (target instanceof TLRPC.Chat c) _name = c.title;
+                final String name = _name;
+                AndroidUtilities.runOnUIThread(() ->
+                        bulletinFactory.createSimpleBulletin(R.raw.done,
+                                        LocaleController.formatString(R.string.BannedForChats, name, amount))
+                                .show(true));
+            } else {
+                AndroidUtilities.runOnUIThread(() -> {
+                    String err = String.format("ERR %d - %s", error.code, error.text);
+                    bulletinFactory.createSimpleBulletin(R.raw.error, err).show();
+                });
+            }
+        });
     }
 
     private void repeatMessage(boolean isLongClick) {
