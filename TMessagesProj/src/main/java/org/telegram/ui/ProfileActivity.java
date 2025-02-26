@@ -597,6 +597,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
     private final static int overrideName = 1005;
     private final static int all_media_spoiler = 1006;
     private final static int show_phone = 1007;
+    private final static int fban = 1008;
 
     private Rect rect = new Rect();
 
@@ -2377,6 +2378,8 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                     setChannelAlias();
                 } else if (id == overrideName) {
                     setNameOverride();
+                } else if (id == fban) {
+                    doFBan();
                 } else if (id == delete_topic) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                     builder.setTitle(LocaleController.getPluralString("DeleteTopics", 1));
@@ -7149,6 +7152,49 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
         editText.setSelection(0, editText.getText().length());
     }
 
+    private void doFBan() {
+        BulletinFactory bulletinFactory = BulletinFactory.of(this);
+        if (userInfo == null) {
+            AndroidUtilities.runOnUIThread(() -> {
+                bulletinFactory.createSimpleBulletin(R.raw.error, "ERR_NO_USER_INFO").show();
+            });
+            return;
+        }
+        TLObject target = userInfo.user;
+        long targetId = dialogId;
+        if (targetId == 0 || target == null) {
+            AndroidUtilities.runOnUIThread(() -> {
+                bulletinFactory.createSimpleBulletin(R.raw.error, "ERR_GET_TARGET").show();
+            });
+            return;
+        }
+        Log.d("030-fban", String.format("%s %d", target != null, targetId));
+        getMessagesController().banUserFromAllModeratingChat(target, (response, error) -> {
+            if (error == null) {
+                int amount = ((TLRPC.TL_error) response).code;
+                if (amount == 0) {
+                    AndroidUtilities.runOnUIThread(() -> {
+                        bulletinFactory.createSimpleBulletin(R.raw.error, "ERR_NO_MODS_INFO").show(true);
+                    });
+                    return;
+                }
+                String _name = "unknown";
+                if (target instanceof TLRPC.User u) _name = u.first_name;
+                else if (target instanceof TLRPC.Chat c) _name = c.title;
+                final String name = _name;
+                AndroidUtilities.runOnUIThread(() ->
+                        bulletinFactory.createSimpleBulletin(R.raw.done,
+                                        LocaleController.formatString(R.string.BannedForChats, name, amount))
+                                .show(true));
+            } else {
+                AndroidUtilities.runOnUIThread(() -> {
+                    String err = String.format("ERR %d - %s", error.code, error.text);
+                    bulletinFactory.createSimpleBulletin(R.raw.error, err).show();
+                });
+            }
+        });
+    }
+
     private void getChannelParticipants(boolean reload) {
         if (loadingUsers || participantsMap == null || chatInfo == null) {
             return;
@@ -10797,6 +10843,9 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                 if (!isBot && getContactsController().contactsDict.get(userId) != null) {
                     otherItem.addSubItem(add_shortcut, R.drawable.baseline_home_24, LocaleController.getString(R.string.AddShortcut));
                 }
+                if (NekoConfig.showFBan.Bool()) {
+                    otherItem.addSubItem(fban, R.drawable.group_ban_new, LocaleController.getString(R.string.FBan));
+                }
             }
         } else if (chatId != 0) {
             TLRPC.Chat chat = getMessagesController().getChat(chatId);
@@ -10818,6 +10867,10 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
 
             if (NekoConfig.chatNameOverride.Bool()) {
                 otherItem.addSubItem(overrideName, R.drawable.baseline_edit_24, LocaleController.getString(R.string.ChatNameOverrideMenu));
+            }
+
+            if (NekoConfig.showFBan.Bool() && (DialogObject.isUserDialog(dialogId) || ChatObject.isChannel(chat))) {
+                otherItem.addSubItem(fban, R.drawable.group_ban_new, LocaleController.getString(R.string.FBan));
             }
 
             if (ChatObject.isChannel(chat)) {
