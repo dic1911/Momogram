@@ -439,8 +439,7 @@ public class FilterTabsView extends FrameLayout {
                 boolean shouldRecreate = titleChanged;
                 int cacheType = noanimate ? AnimatedEmojiDrawable.CACHE_TYPE_NOANIMATE_FOLDER : AnimatedEmojiDrawable.CACHE_TYPE_MESSAGES;
                 currentText = currentTab.title;
-                if (textLayout != null) {
-                    Spanned spanned = (Spanned) textLayout.getText();
+                if (textLayout != null && (textLayout.getText() instanceof Spanned spanned)) {
                     AnimatedEmojiSpan[] spans = spanned.getSpans(0, spanned.length(), AnimatedEmojiSpan.class);
                     if (spans.length > 0) shouldRecreate |= spans[0].cacheType != cacheType;
                 }
