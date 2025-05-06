@@ -5170,16 +5170,29 @@ public class ChatActivityEnterView extends BlurredFrameLayout implements Notific
             Log.d("030-pgp", "using " + NekoConfig.openPGPApp.String());
             options.add(R.drawable.baseline_vpn_key_24, null, getString(R.string.Sign),
                     Theme.key_actionBarDefaultSubmenuItemIcon, Theme.key_actionBarDefaultSubmenuItem, () -> {
-                if (menuPopupWindow != null && menuPopupWindow.isShowing()) {
-                    menuPopupWindow.dismiss();
-                }
-                signComment(true);
-            }, () -> {
-                if (menuPopupWindow != null && menuPopupWindow.isShowing()) {
-                    menuPopupWindow.dismiss();
-                }
-                signComment(false);
-            });
+                    if (menuPopupWindow != null && menuPopupWindow.isShowing()) {
+                        menuPopupWindow.dismiss();
+                    }
+                    signComment(true);
+                }, () -> {
+                    if (menuPopupWindow != null && menuPopupWindow.isShowing()) {
+                        menuPopupWindow.dismiss();
+                    }
+                    signComment(false);
+                });
+
+            options.add(R.drawable.menu_secret, null, getString(R.string.PGPEncrypt),
+                    Theme.key_actionBarDefaultSubmenuItemIcon, Theme.key_actionBarDefaultSubmenuItem, () -> {
+                    if (menuPopupWindow != null && menuPopupWindow.isShowing()) {
+                        menuPopupWindow.dismiss();
+                    }
+                    encryptComment(true);
+                }, () -> {
+                    if (menuPopupWindow != null && menuPopupWindow.isShowing()) {
+                        menuPopupWindow.dismiss();
+                    }
+                        encryptComment(false);
+                });
         } else {
             Log.w("030-pgp", "openPGPApp is not set");
         }
@@ -6058,11 +6071,22 @@ public class ChatActivityEnterView extends BlurredFrameLayout implements Notific
         if (NekoConfig.openPGPKeyId.Long() != 0L && save)
             intent.putExtra(OpenPgpApi.EXTRA_SIGN_KEY_ID, NekoConfig.openPGPKeyId.Long());
 
-        signComment(intent, save);
+        invokePGPAction(intent, save, OpenPgpApi.ACTION_CLEARTEXT_SIGN);
 
     }
 
-    private void signComment(Intent intent, boolean save) {
+    private void encryptComment(boolean save) {
+
+        Intent intent = new Intent();
+
+        if (NekoConfig.openPGPKeyId.Long() != 0L && save)
+            intent.putExtra(OpenPgpApi.EXTRA_SIGN_KEY_ID, NekoConfig.openPGPKeyId.Long());
+
+        invokePGPAction(intent, save, OpenPgpApi.ACTION_SIGN_AND_ENCRYPT);
+
+    }
+
+    private void invokePGPAction(Intent intent, boolean save, String action) {
 
         if (parentActivity instanceof LaunchActivity) {
 
@@ -6074,7 +6098,7 @@ public class ChatActivityEnterView extends BlurredFrameLayout implements Notific
 
                     if (save) NekoConfig.openPGPKeyId.setConfigLong(keyId);
 
-                    signComment(result, save);
+                    invokePGPAction(result, save, action);
 
                 }
 
@@ -6082,7 +6106,7 @@ public class ChatActivityEnterView extends BlurredFrameLayout implements Notific
 
         }
 
-        intent.setAction(OpenPgpApi.ACTION_CLEARTEXT_SIGN);
+        intent.setAction(action);
 
         ByteArrayInputStream is = IoUtil.toUtf8Stream(messageEditText.getText().toString());
         ByteArrayOutputStream os = new ByteArrayOutputStream();
@@ -6115,7 +6139,7 @@ public class ChatActivityEnterView extends BlurredFrameLayout implements Notific
                     if (error == null) return;
                     if (error.getMessage() != null && error.getMessage().contains("not found") && save) {
                         NekoConfig.openPGPKeyId.setConfigLong(0L);
-                        signComment(new Intent(), true);
+                        invokePGPAction(new Intent(), true, action);
                     } else {
                         AlertUtil.showToast(error.toString());
                     }

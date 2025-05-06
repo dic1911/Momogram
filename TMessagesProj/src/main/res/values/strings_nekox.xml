@@ -107,6 +107,7 @@
     <string name="OpenPGPApp">OpenPGP Provider</string>
     <string name="OpenPGPKey">OpenPGP Key</string>
     <string name="Sign">Sign</string>
+    <string name="PGPEncrypt">Encrypt</string>
     <string name="PGPDecrypt">Decrypt Message</string>
     <string name="PGPVerify">Verify Message</string>
     <string name="PGPImport">Import Public Key</string>
