@@ -6072,7 +6072,7 @@ public class ChatActivityEnterView extends BlurredFrameLayout implements Notific
             intent.putExtra(OpenPgpApi.EXTRA_SIGN_KEY_ID, NekoConfig.openPGPKeyId.Long());
 
         invokePGPAction(intent, save, OpenPgpApi.ACTION_CLEARTEXT_SIGN);
-
+        if (messageSendPreview != null) messageSendPreview.dismiss(false);
     }
 
     private void encryptComment(boolean save) {
@@ -6083,7 +6083,7 @@ public class ChatActivityEnterView extends BlurredFrameLayout implements Notific
             intent.putExtra(OpenPgpApi.EXTRA_SIGN_KEY_ID, NekoConfig.openPGPKeyId.Long());
 
         invokePGPAction(intent, save, OpenPgpApi.ACTION_SIGN_AND_ENCRYPT);
-
+        if (messageSendPreview != null) messageSendPreview.dismiss(false);
     }
 
     private void invokePGPAction(Intent intent, boolean save, String action) {
