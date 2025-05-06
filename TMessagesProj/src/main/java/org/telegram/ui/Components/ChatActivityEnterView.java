@@ -4887,6 +4887,29 @@ public class ChatActivityEnterView extends BlurredFrameLayout implements Notific
                 });
                 sendPopupLayout.addView(transBeforeSendButton, LayoutHelper.createLinear(LayoutHelper.MATCH_PARENT, 48));
 
+                if (StrUtil.isNotBlank(NekoConfig.openPGPApp.String())) {
+                    Log.d("030-pgp", "using " + NekoConfig.openPGPApp.String());
+                    ActionBarMenuSubItem cell = new ActionBarMenuSubItem(getContext(), false, true, resourcesProvider);
+                    cell.setTextAndIcon(LocaleController.getString(R.string.Sign), R.drawable.baseline_vpn_key_24);
+                    cell.setOnClickListener(v -> {
+                        if (menuPopupWindow != null && menuPopupWindow.isShowing()) {
+                            menuPopupWindow.dismiss();
+                        }
+                        signComment(true);
+                    });
+                    cell.setOnLongClickListener(v -> {
+                        if (menuPopupWindow != null && menuPopupWindow.isShowing()) {
+                            menuPopupWindow.dismiss();
+                        }
+                        signComment(false);
+                        return true;
+                    });
+                    cell.setMinimumWidth(AndroidUtilities.dp(196));
+                    sendPopupLayout.addView(cell, LayoutHelper.createLinear(LayoutHelper.MATCH_PARENT, 48));
+                } else {
+                    Log.w("030-pgp", "openPGPApp is not set");
+                }
+
                 sendPopupLayout.setupRadialSelectors(getThemedColor(Theme.key_dialogButtonSelector));
 
                 sendPopupWindow = new ActionBarPopupWindow(sendPopupLayout, LayoutHelper.WRAP_CONTENT, LayoutHelper.WRAP_CONTENT) {
@@ -5142,6 +5165,24 @@ public class ChatActivityEnterView extends BlurredFrameLayout implements Notific
                 return Unit.INSTANCE;
             });
         });
+
+        if (StrUtil.isNotBlank(NekoConfig.openPGPApp.String())) {
+            Log.d("030-pgp", "using " + NekoConfig.openPGPApp.String());
+            options.add(R.drawable.baseline_vpn_key_24, null, getString(R.string.Sign),
+                    Theme.key_actionBarDefaultSubmenuItemIcon, Theme.key_actionBarDefaultSubmenuItem, () -> {
+                if (menuPopupWindow != null && menuPopupWindow.isShowing()) {
+                    menuPopupWindow.dismiss();
+                }
+                signComment(true);
+            }, () -> {
+                if (menuPopupWindow != null && menuPopupWindow.isShowing()) {
+                    menuPopupWindow.dismiss();
+                }
+                signComment(false);
+            });
+        } else {
+            Log.w("030-pgp", "openPGPApp is not set");
+        }
 
         options.setupSelectors();
         if (sendWhenOnlineButton != null) {
