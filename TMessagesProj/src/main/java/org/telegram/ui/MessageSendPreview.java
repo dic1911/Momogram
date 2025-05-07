@@ -51,6 +51,7 @@ import org.telegram.messenger.MessageObject;
 import org.telegram.messenger.MessagesController;
 import org.telegram.messenger.NotificationCenter;
 import org.telegram.messenger.R;
+import org.telegram.messenger.SharedConfig;
 import org.telegram.messenger.UserConfig;
 import org.telegram.messenger.Utilities;
 import org.telegram.tgnet.TLRPC;
@@ -1748,6 +1749,7 @@ public class MessageSendPreview extends Dialog implements NotificationCenter.Not
         if (anchorSendButton != null) {
             anchorSendButton.setAlpha(0.0f);
         }
+        if (SharedConfig.getDevicePerformanceClass() == SharedConfig.PERFORMANCE_CLASS_LOW) return;
         AndroidUtilities.makeGlobalBlurBitmap(bitmap -> {
             if (anchorSendButton != null) {
                 anchorSendButton.setAlpha(oldAlpha);
