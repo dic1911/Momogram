@@ -14818,7 +14818,14 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
                 replyingQuote = quote;
 
                 if (quoteCleared == null) quoteCleared = false;
-                if (quote == null && NekoConfig.replyAsQuoteByDefault.Bool() && !quoteCleared) {
+
+                boolean quoteByDefault = !quoteCleared && NekoConfig.replyAsQuoteByDefault.Bool();
+                if (quoteByDefault) {
+                    quoteByDefault = MessagesController.getInstance(currentAccount).blockedPeers
+                            .indexOfKey(replyingMessageObject.messageOwner.from_id.user_id) < 0;
+                }
+
+                if (quote == null && quoteByDefault) {
                     replyingQuote = ReplyQuote.from(replyingMessageObject);
                 }
 
@@ -14890,7 +14897,7 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
                     }
                 }
                 CharSequence nameText;
-                if (quote == null && !quoteCleared && NekoConfig.replyAsQuoteByDefault.Bool()) {
+                if (quote == null && quoteByDefault) {
                     quote = ReplyQuote.from(replyingMessageObject);
                 }
                 if (quote != null) {
