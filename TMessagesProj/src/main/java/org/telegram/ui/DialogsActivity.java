@@ -7484,7 +7484,7 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
             int usage = 0;
             if (ek != null && (usage = ek.checkRamUsage()) > EvilLeakerKiller.threshold) {
                 if (NekoConfig.autoRestartOnLeak.Bool()) {
-                    if (onlySelect || FileLoader.hasUploadOperation(currentAccount)) {
+                    if (onlySelect || isQuote || isReplyTo || FileLoader.hasUploadOperation(currentAccount)) {
                         FileLog.w("restart postponed by fwd/share or upload op");
                     } else {
                         Context ctx = LaunchActivity.instance.getApplicationContext();
