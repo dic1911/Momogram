@@ -8,6 +8,8 @@
 
 package org.telegram.ui.Adapters;
 
+import static org.telegram.messenger.LocaleController.getString;
+
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.PorterDuff;
@@ -54,6 +56,7 @@ import org.telegram.ui.Cells.DialogMeUrlCell;
 import org.telegram.ui.Cells.DialogsEmptyCell;
 import org.telegram.ui.Cells.DialogsHintCell;
 import org.telegram.ui.Cells.DialogsRequestedEmptyCell;
+import org.telegram.ui.Cells.GraySectionCell;
 import org.telegram.ui.Cells.HeaderCell;
 import org.telegram.ui.Cells.ProfileSearchCell;
 import org.telegram.ui.Cells.RequestPeerRequirementsCell;
@@ -99,7 +102,8 @@ public class DialogsAdapter extends RecyclerListView.SelectionAdapter implements
             VIEW_TYPE_REQUIRED_EMPTY = 16,
             VIEW_TYPE_FOLDER_UPDATE_HINT = 17,
             VIEW_TYPE_STORIES = 18,
-            VIEW_TYPE_ARCHIVE_FULLSCREEN = 19;
+            VIEW_TYPE_ARCHIVE_FULLSCREEN = 19,
+            VIEW_TYPE_GRAY_SECTION = 20;
 
     private Context mContext;
     private ArchiveHintCell archiveHintCell;
@@ -609,13 +613,13 @@ public class DialogsAdapter extends RecyclerListView.SelectionAdapter implements
                 break;
             case VIEW_TYPE_RECENTLY_VIEWED: {
                 HeaderCell headerCell = new HeaderCell(mContext);
-                headerCell.setText(LocaleController.getString(R.string.RecentlyViewed));
+                headerCell.setText(getString(R.string.RecentlyViewed));
 
                 TextView textView = new TextView(mContext);
                 textView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 15);
                 textView.setTypeface(AndroidUtilities.bold());
                 textView.setTextColor(Theme.getColor(Theme.key_windowBackgroundWhiteBlueHeader));
-                textView.setText(LocaleController.getString(R.string.RecentlyViewedHide));
+                textView.setText(getString(R.string.RecentlyViewedHide));
                 textView.setGravity((LocaleController.isRTL ? Gravity.LEFT : Gravity.RIGHT) | Gravity.CENTER_VERTICAL);
                 headerCell.addView(textView, LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, LayoutHelper.MATCH_PARENT, (LocaleController.isRTL ? Gravity.LEFT : Gravity.RIGHT) | Gravity.TOP, 17, 15, 17, 0));
                 textView.setOnClickListener(view1 -> {
@@ -826,9 +830,9 @@ public class DialogsAdapter extends RecyclerListView.SelectionAdapter implements
                                 subtitle = LocaleController.formatPluralStringComma("Subscribers", chat.participants_count);
                             } else {
                                 if (!ChatObject.isPublic(chat)) {
-                                    subtitle = LocaleController.getString(R.string.ChannelPrivate).toLowerCase();
+                                    subtitle = getString(R.string.ChannelPrivate).toLowerCase();
                                 } else {
-                                    subtitle = LocaleController.getString(R.string.ChannelPublic).toLowerCase();
+                                    subtitle = getString(R.string.ChannelPublic).toLowerCase();
                                 }
                             }
                         } else {
@@ -836,11 +840,11 @@ public class DialogsAdapter extends RecyclerListView.SelectionAdapter implements
                                 subtitle = LocaleController.formatPluralStringComma("Members", chat.participants_count);
                             } else {
                                 if (chat.has_geo) {
-                                    subtitle = LocaleController.getString(R.string.MegaLocation);
+                                    subtitle = getString(R.string.MegaLocation);
                                 } else if (!ChatObject.isPublic(chat)) {
-                                    subtitle = LocaleController.getString(R.string.MegaPrivate).toLowerCase();
+                                    subtitle = getString(R.string.MegaPrivate).toLowerCase();
                                 } else {
-                                    subtitle = LocaleController.getString(R.string.MegaPublic).toLowerCase();
+                                    subtitle = getString(R.string.MegaPublic).toLowerCase();
                                 }
                             }
                         }
@@ -852,7 +856,7 @@ public class DialogsAdapter extends RecyclerListView.SelectionAdapter implements
                             title = UserObject.getUserName(user);
                             if (!UserObject.isReplyUser(user)) {
                                 if (user.bot) {
-                                    subtitle = LocaleController.getString(R.string.Bot);
+                                    subtitle = getString(R.string.Bot);
                                 } else {
                                     subtitle = LocaleController.formatUserStatus(currentAccount, user);
                                 }
@@ -872,6 +876,23 @@ public class DialogsAdapter extends RecyclerListView.SelectionAdapter implements
                         }
                     }
                     cell.setChecked(selectedDialogs.contains(dialog.id), false);
+                    if (i == 1 && parentFragment != null && parentFragment.isReplyTo && parentFragment.replyMessageAuthor != 0 && dialog.top_message == 0) {
+                        MessagesController.DialogFilter filter = getCurrentFilter();
+                        if (filter == null || filter.isDefault()) {
+                            cell.setCustomMessage(DialogObject.getStatus(parentFragment.replyMessageAuthor));
+                        } else {
+                            cell.setCustomMessage(null);
+                        }
+                    } else if (i == 1 && parentFragment != null && dialogsType == DialogsActivity.DIALOGS_TYPE_FORWARD && parentFragment.forwardOriginalChannel != 0 && dialog.top_message == 0) {
+                        MessagesController.DialogFilter filter = getCurrentFilter();
+                        if (filter == null || filter.isDefault()) {
+                            cell.setCustomMessage(DialogObject.getStatus(parentFragment.forwardOriginalChannel));
+                        } else {
+                            cell.setCustomMessage(null);
+                        }
+                    } else {
+                        cell.setCustomMessage(null);
+                    }
                     cell.setDialog(dialog, dialogsType, folderId);
                     cell.checkHeight();
                     if (cell.collapsed != collapsedView) {
@@ -932,12 +953,12 @@ public class DialogsAdapter extends RecyclerListView.SelectionAdapter implements
                                 dialogsType == DialogsActivity.DIALOGS_TYPE_IMPORT_HISTORY
                 ) {
                     if (i == 0) {
-                        cell.setText(LocaleController.getString(R.string.ImportHeader));
+                        cell.setText(getString(R.string.ImportHeader));
                     } else {
-                        cell.setText(LocaleController.getString(R.string.ImportHeaderContacts));
+                        cell.setText(getString(R.string.ImportHeaderContacts));
                     }
                 } else {
-                    cell.setText(LocaleController.getString(dialogsCount == 0 && forceUpdatingContacts ? R.string.ConnectingYourContacts : R.string.YourContacts));
+                    cell.setText(getString(dialogsCount == 0 && forceUpdatingContacts ? R.string.ConnectingYourContacts : R.string.YourContacts));
                 }
                 break;
             }
@@ -948,20 +969,37 @@ public class DialogsAdapter extends RecyclerListView.SelectionAdapter implements
                 cell.setBackgroundColor(Theme.getColor(Theme.key_graySection));
                 switch (((DialogsActivity.DialogsHeader) getItem(i)).headerType) {
                     case DialogsActivity.DialogsHeader.HEADER_TYPE_MY_CHANNELS:
-                        cell.setText(LocaleController.getString(R.string.MyChannels));
+                        cell.setText(getString(R.string.MyChannels));
                         break;
                     case DialogsActivity.DialogsHeader.HEADER_TYPE_MY_GROUPS:
-                        cell.setText(LocaleController.getString(R.string.MyGroups));
+                        cell.setText(getString(R.string.MyGroups));
                         break;
                     case DialogsActivity.DialogsHeader.HEADER_TYPE_GROUPS:
-                        cell.setText(LocaleController.getString(R.string.FilterGroups));
+                        cell.setText(getString(R.string.FilterGroups));
                         break;
+                }
+                break;
+            }
+            case VIEW_TYPE_GRAY_SECTION: {
+                GraySectionCell cell = (GraySectionCell) holder.itemView;
+                if (parentFragment != null && parentFragment.isReplyTo) {
+                    if (i == 0) {
+                        cell.setText(getString(R.string.ReplyDialogMessageAuthor));
+                    } else {
+                        cell.setText(getString(R.string.ReplyDialogYourChats));
+                    }
+                } else if (dialogsType == DialogsActivity.DIALOGS_TYPE_FORWARD) {
+                    if (i == 0) {
+                        cell.setText(getString(R.string.ForwardDialogYourChannel));
+                    } else {
+                        cell.setText(getString(R.string.ReplyDialogYourChats));
+                    }
                 }
                 break;
             }
             case VIEW_TYPE_NEW_CHAT_HINT: {
                 TextInfoPrivacyCell cell = (TextInfoPrivacyCell) holder.itemView;
-                cell.setText(LocaleController.getString(R.string.TapOnThePencil));
+                cell.setText(getString(R.string.TapOnThePencil));
                 if (arrowDrawable == null) {
                     arrowDrawable = mContext.getResources().getDrawable(R.drawable.arrow_newchat);
                     arrowDrawable.setColorFilter(new PorterDuffColorFilter(Theme.getColor(Theme.key_windowBackgroundWhiteGrayText4), PorterDuff.Mode.MULTIPLY));
@@ -980,12 +1018,12 @@ public class DialogsAdapter extends RecyclerListView.SelectionAdapter implements
                 cell.setColors(Theme.key_windowBackgroundWhiteBlueText4, Theme.key_windowBackgroundWhiteBlueText4);
                 if (requestPeerType != null) {
                     if (requestPeerType instanceof TLRPC.TL_requestPeerTypeBroadcast) {
-                        cell.setTextAndIcon(LocaleController.getString(R.string.CreateChannelForThis), R.drawable.msg_channel_create, true);
+                        cell.setTextAndIcon(getString(R.string.CreateChannelForThis), R.drawable.msg_channel_create, true);
                     } else {
-                        cell.setTextAndIcon(LocaleController.getString(R.string.CreateGroupForThis), R.drawable.msg_groups_create, true);
+                        cell.setTextAndIcon(getString(R.string.CreateGroupForThis), R.drawable.msg_groups_create, true);
                     }
                 } else {
-                    cell.setTextAndIcon(LocaleController.getString(R.string.CreateGroupForImport), R.drawable.msg_groups_create, dialogsCount != 0);
+                    cell.setTextAndIcon(getString(R.string.CreateGroupForImport), R.drawable.msg_groups_create, dialogsCount != 0);
                 }
                 cell.setIsInDialogs();
                 cell.setOffsetFromImage(75);
@@ -1279,6 +1317,13 @@ public class DialogsAdapter extends RecyclerListView.SelectionAdapter implements
         this.forceShowEmptyCell = forceShowEmptyCell;
     }
 
+    private MessagesController.DialogFilter getCurrentFilter() {
+        if (dialogsType == 7 || dialogsType == 8) {
+            return MessagesController.getInstance(currentAccount).selectedDialogFilter[dialogsType - 7];
+        }
+        return null;
+    }
+
     public class LastEmptyView extends FrameLayout {
 
         public boolean moving;
@@ -1418,6 +1463,39 @@ public class DialogsAdapter extends RecyclerListView.SelectionAdapter implements
             } else {
                 onlineContacts = null;
             }
+        }
+
+        final MessagesController.DialogFilter filter = getCurrentFilter();
+        if ((filter == null || filter.isDefault()) && parentFragment != null && parentFragment.isReplyTo && parentFragment.replyMessageAuthor != 0) {
+            itemInternals.add(new ItemInternal(VIEW_TYPE_GRAY_SECTION));
+            TLRPC.Dialog foundDialog = null;
+            for (int i = 0; i < array.size(); ++i) {
+                if (array.get(i).id == parentFragment.replyMessageAuthor) {
+                    foundDialog = array.get(i);
+                    break;
+                }
+            }
+            if (foundDialog == null) {
+                foundDialog = new TLRPC.TL_dialog();
+                foundDialog.id = parentFragment.replyMessageAuthor;
+            }
+            itemInternals.add(new ItemInternal(VIEW_TYPE_DIALOG, foundDialog));
+            itemInternals.add(new ItemInternal(VIEW_TYPE_GRAY_SECTION));
+        } else if ((filter == null || filter.isDefault()) && parentFragment != null && dialogsType == DialogsActivity.DIALOGS_TYPE_FORWARD && parentFragment.forwardOriginalChannel != 0) {
+            itemInternals.add(new ItemInternal(VIEW_TYPE_GRAY_SECTION));
+            TLRPC.Dialog foundDialog = null;
+            for (int i = 0; i < array.size(); ++i) {
+                if (array.get(i).id == parentFragment.forwardOriginalChannel) {
+                    foundDialog = array.get(i);
+                    break;
+                }
+            }
+            if (foundDialog == null) {
+                foundDialog = new TLRPC.TL_dialog();
+                foundDialog.id = parentFragment.forwardOriginalChannel;
+            }
+            itemInternals.add(new ItemInternal(VIEW_TYPE_DIALOG, foundDialog));
+            itemInternals.add(new ItemInternal(VIEW_TYPE_GRAY_SECTION));
         }
 
         hasChatlistHint = false;

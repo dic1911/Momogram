@@ -159,6 +159,40 @@ public class DialogObject {
     }
 
     @NonNull
+    public static String getStatus(long dialogId) {
+        return getStatus(UserConfig.selectedAccount, dialogId);
+    }
+
+    @NonNull
+    public static String getStatus(int currentAccount, long dialogId) {
+        return getStatus(currentAccount, MessagesController.getInstance(currentAccount).getUserOrChat(dialogId));
+    }
+
+    @NonNull
+    public static String getStatus(int currentAccount, TLObject obj) {
+        if (obj instanceof TLRPC.User) {
+            return LocaleController.formatUserStatus(currentAccount, (TLRPC.User) obj, null, null);
+        } else if (obj instanceof TLRPC.Chat) {
+            final TLRPC.Chat chat = (TLRPC.Chat) obj;
+            if (chat.participants_count > 1) {
+                if (ChatObject.isChannelAndNotMegaGroup(chat)) {
+                    return LocaleController.formatPluralStringComma("Subscribers", chat.participants_count);
+                } else {
+                    return LocaleController.formatPluralStringComma("Members", chat.participants_count);
+                }
+            } else {
+                if (ChatObject.isChannelAndNotMegaGroup(chat)) {
+                    return LocaleController.getString(R.string.DiscussChannel);
+                } else {
+                    return LocaleController.getString(R.string.AccDescrGroup);
+                }
+            }
+        } else {
+            return "";
+        }
+    }
+
+    @NonNull
     public static String getName(long dialogId) {
         return getName(UserConfig.selectedAccount, dialogId);
     }

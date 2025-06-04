@@ -647,9 +647,9 @@ public class SimpleTextView extends View implements Drawable.Callback {
         return rightDrawable;
     }
 
-    public void setRightDrawable(Drawable drawable) {
+    public boolean setRightDrawable(Drawable drawable) {
         if (rightDrawable == drawable) {
-            return;
+            return false;
         }
         if (rightDrawable != null) {
             rightDrawable.setCallback(null);
@@ -661,11 +661,12 @@ public class SimpleTextView extends View implements Drawable.Callback {
         if (!recreateLayoutMaybe()) {
             invalidate();
         }
+        return true;
     }
 
-    public void setRightDrawable2(Drawable drawable) {
+    public boolean setRightDrawable2(Drawable drawable) {
         if (rightDrawable2 == drawable) {
-            return;
+            return false;
         }
         if (rightDrawable2 != null) {
             rightDrawable2.setCallback(null);
@@ -677,6 +678,7 @@ public class SimpleTextView extends View implements Drawable.Callback {
         if (!recreateLayoutMaybe()) {
             invalidate();
         }
+        return true;
     }
 
     public Drawable getRightDrawable2() {
