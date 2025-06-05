@@ -27764,9 +27764,10 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
         updateBottomOverlay(false);
     }
 
-    private void updateBottomOverlay(boolean animated) {
+    public void updateBottomOverlay(boolean animated) {
         updateBottomOverlay(animated, false);
     }
+
     private void updateBottomOverlay(boolean animated, boolean force) {
         if (!force && (bottomOverlayChatText == null || chatMode == MODE_SCHEDULED || getContext() == null)) {
             return;
@@ -32237,7 +32238,7 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
             List<TLRPC.TL_availableReaction> availableReacts = getMediaDataController().getEnabledReactionsList();
             boolean nekoXShowReactionsView = (NekoConfig.reactions.Int() != 1 || onDoubleTapped); // Show reactions and hide them from tap
             final boolean isReactionsViewAvailable = !isSecretChat() && !isInScheduleMode() && currentUser == null && primaryMessage.hasReactions() && (!ChatObject.isChannel(currentChat) || currentChat.megagroup) && !ChatObject.isMonoForum(currentChat) && !availableReacts.isEmpty() && primaryMessage.messageOwner.reactions.can_see_list && !primaryMessage.isSecretMedia();
-            final boolean isReactionsAvailable;
+            boolean isReactionsAvailable;
             if (message.isForwardedChannelPost()) {
                 TLRPC.ChatFull chatInfo = getMessagesController().getChatFull(-message.getFromChatId());
                 if (chatInfo == null) {
@@ -36917,7 +36918,7 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
                     } else if (which == openInApp) {
                         WebViewRequestProps props = WebViewRequestProps.of(currentAccount, dialog_id, dialog_id,
                                 avatarContainer != null ? avatarContainer.getTitleTextView().getText().toString() : "",
-                                str, BotWebViewAttachedSheet.TYPE_BOT_MENU_BUTTON, 0,
+                                str, BotWebViewAttachedSheet.TYPE_BOT_MENU_BUTTON, 0, getSendMonoForumPeerId(),
                                 false, null, false, null, null, 0, false, false);
                         BotWebViewSheet webViewSheet = new BotWebViewSheet(getContext(), parentThemeDelegate);
                         webViewSheet.setInApp(true);
@@ -43892,7 +43893,7 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
             }
         } else if (id == nkbtn_savemessage) {
             ArrayList<MessageObject> messages = getSelectedMessages();
-            forwardMessages(messages, false, true, 0, UserConfig.getInstance(currentAccount).getClientUserId());
+            forwardMessages(messages, false, true, 0, UserConfig.getInstance(currentAccount).getClientUserId(), 0);
             undoView.showWithAction(getUserConfig().getClientUserId(), UndoView.ACTION_FWD_MESSAGES, messages.size());
         } else if (id == nkbtn_hide) {
             ArrayList<MessageObject> messages = getSelectedMessages();
@@ -44175,7 +44176,7 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
                 } else {
                     messages.add(selectedObject);
                 }
-                forwardMessages(messages, false, true, 0, getUserConfig().getClientUserId());
+                forwardMessages(messages, false, true, 0, getUserConfig().getClientUserId(), 0);
                 undoView.showWithAction(getUserConfig().getClientUserId(), UndoView.ACTION_FWD_MESSAGES, messages.size());
                 break;
             }
@@ -44664,7 +44665,7 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
                 TLRPC.Peer p = messageObject.messageOwner.from_id;
                 if (p.user_id == 0) return;
                 TLRPC.User u = getMessagesController().getUser(p.user_id);
-                WebViewRequestProps props = WebViewRequestProps.of(currentAccount, p.user_id, p.user_id, "", str, BotWebViewAttachedSheet.TYPE_BOT_MENU_BUTTON, 0, false, null, false, null, u, 0, false, true);
+                WebViewRequestProps props = WebViewRequestProps.of(currentAccount, p.user_id, p.user_id, "", str, BotWebViewAttachedSheet.TYPE_BOT_MENU_BUTTON, 0, getSendMonoForumPeerId(), false, null, false, null, u, 0, false, true);
                 BotWebViewSheet webViewSheet = new BotWebViewSheet(getContext(), getResourceProvider());
                 webViewSheet.setDefaultFullsize(false);
                 webViewSheet.setNeedsContext(true);

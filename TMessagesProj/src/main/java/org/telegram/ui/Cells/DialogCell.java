@@ -645,14 +645,6 @@ public class DialogCell extends BaseCell implements StoriesListPlaceProvider.Ava
         avatarImage.setAllowLoadingOnAttachedOnly(true);
     }
 
-    public void setCustomMessage(String message) {
-        if (!TextUtils.equals(customMessage, message)) {
-            customMessage = message;
-            buildLayout();
-            requestLayout();
-        }
-    }
-
     public void setDialog(TLRPC.Dialog dialog, int type, int folder) {
         if (currentDialogId != dialog.id) {
             if (statusDrawableAnimator != null) {

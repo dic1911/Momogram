@@ -876,23 +876,6 @@ public class DialogsAdapter extends RecyclerListView.SelectionAdapter implements
                         }
                     }
                     cell.setChecked(selectedDialogs.contains(dialog.id), false);
-                    if (i == 1 && parentFragment != null && parentFragment.isReplyTo && parentFragment.replyMessageAuthor != 0 && dialog.top_message == 0) {
-                        MessagesController.DialogFilter filter = getCurrentFilter();
-                        if (filter == null || filter.isDefault()) {
-                            cell.setCustomMessage(DialogObject.getStatus(parentFragment.replyMessageAuthor));
-                        } else {
-                            cell.setCustomMessage(null);
-                        }
-                    } else if (i == 1 && parentFragment != null && dialogsType == DialogsActivity.DIALOGS_TYPE_FORWARD && parentFragment.forwardOriginalChannel != 0 && dialog.top_message == 0) {
-                        MessagesController.DialogFilter filter = getCurrentFilter();
-                        if (filter == null || filter.isDefault()) {
-                            cell.setCustomMessage(DialogObject.getStatus(parentFragment.forwardOriginalChannel));
-                        } else {
-                            cell.setCustomMessage(null);
-                        }
-                    } else {
-                        cell.setCustomMessage(null);
-                    }
                     cell.setDialog(dialog, dialogsType, folderId);
                     cell.checkHeight();
                     if (cell.collapsed != collapsedView) {
@@ -1465,7 +1448,7 @@ public class DialogsAdapter extends RecyclerListView.SelectionAdapter implements
             }
         }
 
-        final MessagesController.DialogFilter filter = getCurrentFilter();
+        MessagesController.DialogFilter filter = getCurrentFilter();
         if ((filter == null || filter.isDefault()) && parentFragment != null && parentFragment.isReplyTo && parentFragment.replyMessageAuthor != 0) {
             itemInternals.add(new ItemInternal(VIEW_TYPE_GRAY_SECTION));
             TLRPC.Dialog foundDialog = null;
@@ -1500,7 +1483,7 @@ public class DialogsAdapter extends RecyclerListView.SelectionAdapter implements
 
         hasChatlistHint = false;
         if (dialogsType == 7 || dialogsType == 8) {
-            MessagesController.DialogFilter filter = messagesController.selectedDialogFilter[dialogsType - 7];
+            filter = messagesController.selectedDialogFilter[dialogsType - 7];
             if (filter != null && filter.isChatlist()) {
                 messagesController.checkChatlistFolderUpdate(filter.id, false);
                 TL_chatlists.TL_chatlists_chatlistUpdates updates = messagesController.getChatlistFolderUpdates(filter.id);

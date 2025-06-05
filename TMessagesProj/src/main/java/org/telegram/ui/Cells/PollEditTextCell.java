@@ -50,6 +50,7 @@ import org.telegram.ui.Components.EditTextBoldCursor;
 import org.telegram.ui.Components.EditTextCaption;
 import org.telegram.ui.Components.LayoutHelper;
 import org.telegram.ui.Components.SuggestEmojiView;
+import org.telegram.ui.LaunchActivity;
 
 import java.util.ArrayList;
 
@@ -77,12 +78,16 @@ public class PollEditTextCell extends FrameLayout implements SuggestEmojiView.An
     }
 
     public PollEditTextCell(Context context, boolean caption, int type, OnClickListener onDelete) {
-        this(context, caption, type, onDelete, null);
+        this(context, caption, type, onDelete, null, null);
     }
 
-    public PollEditTextCell(Context context, boolean caption, int type, OnClickListener onDelete, Theme.ResourcesProvider resourcesProvider, OnClickListener onChangeIcon) {
+    public PollEditTextCell(Context context, boolean caption, int type, OnClickListener onDelete, OnClickListener onChangeIcon, Theme.ResourcesProvider resourcesProvider) {
         super(context);
 
+        if (resourcesProvider == null) {
+            var fragment = LaunchActivity.getLastFragment();
+            if (fragment != null) resourcesProvider = fragment.getResourceProvider();
+        }
         this.resourcesProvider = resourcesProvider;
         textView = new EditTextCaption(context, resourcesProvider) {
             @Override

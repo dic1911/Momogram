@@ -1408,7 +1408,7 @@ public class FilterTabsView extends FrameLayout {
             currentPosition = position;
         }
 
-        Tab tab = new Tab(id, text, noanimate);
+        Tab tab = new Tab(id, text, null, new ArrayList<>(), noanimate);
         tab.isDefault = isDefault;
         tab.isLocked = isLocked;
         allTabsWidth += tab.getWidth(true) + FolderIconHelper.getPaddingTab();
