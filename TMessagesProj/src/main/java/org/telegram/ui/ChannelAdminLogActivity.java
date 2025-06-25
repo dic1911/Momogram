@@ -1980,7 +1980,10 @@ public class ChannelAdminLogActivity extends BaseFragment implements Notificatio
                 }
             }
         }
-        if (TextUtils.isEmpty(messageObject.messageText)) {
+
+        if (!TextUtils.isEmpty(messageObject.caption)) {
+            str.append(messageObject.caption);
+        } else if (TextUtils.isEmpty(messageObject.messageText)) {
             str.append(messageObject.messageOwner.message);
         } else {
             str.append(messageObject.messageText);
