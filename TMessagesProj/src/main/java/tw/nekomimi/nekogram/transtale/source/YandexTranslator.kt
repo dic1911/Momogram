@@ -7,8 +7,10 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody
 import org.json.JSONObject
+import org.telegram.messenger.FileLog
 import tw.nekomimi.nekogram.transtale.Translator
 import tw.nekomimi.nekogram.transtale.Translator.Companion.httpClient
+import tw.nekomimi.nekogram.utils.TelegramUtil
 import tw.nekomimi.nekogram.utils.applyIf
 import tw.nekomimi.nekogram.utils.applyIfNot
 import tw.nekomimi.nekogram.utils.applyUserAgent
@@ -38,9 +40,9 @@ object YandexTranslator : Translator {
         val response = httpClient.newCall(req.build()).execute()
 
         if (!response.isSuccessful) {
-
-            error("HTTP ${response.code} : ${response.body.string()}")
-
+            val err = "HTTP ${response.code} : ${response.body.string()}"
+            FileLog.e("Yandex translator error: $err, query: $query, stack: ${TelegramUtil.getStackTraceAsString(null)}")
+            error(err)
         }
 
         val respObj = JSONObject(response.body.string())
