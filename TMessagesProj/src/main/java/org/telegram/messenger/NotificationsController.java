@@ -4023,6 +4023,7 @@ public class NotificationsController extends BaseController {
 
     private void filterNotifications(ArrayList<MessageObject> list, boolean blocked, boolean bot) {
         list.removeIf(MessageObject::shouldBeHidden);
+        list.removeIf(msg -> NekoXConfig.isAccountMuted(msg.currentAccount));
         if (!blocked && !bot) return;
         MessagesController messagesController = getMessagesController();
         for (int i = 0; i < list.size(); ++i) {

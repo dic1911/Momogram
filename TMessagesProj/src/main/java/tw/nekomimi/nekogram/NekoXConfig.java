@@ -35,6 +35,7 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import moe.hx030.momogram.util.ArrayUtil;
 import tw.nekomimi.nekogram.database.NitritesKt;
@@ -436,5 +437,35 @@ public class NekoXConfig {
         preferences.edit()
                 .remove(LAST_PLAYING_MSG_DIALOG_ID)
                 .commit();
+    }
+
+    private static final String MUTED_ACCOUNTS = "muted_accounts";
+    private static Set<Integer> mutedAccountSet;
+    public static boolean toggleMuteCurrentAccount() {
+        boolean ret;
+        int acc = UserConfig.selectedAccount;
+
+        Set<Integer> current = preferences.getStringSet(MUTED_ACCOUNTS, Set.of())
+                .stream().map(Integer::parseInt)
+                .collect(Collectors.toSet());
+
+        Set<Integer> updated = new HashSet<>(current);
+        if (!(ret = updated.add(acc))) updated.remove(acc);
+        mutedAccountSet = updated;
+
+        preferences.edit().putStringSet(MUTED_ACCOUNTS,
+                updated.stream().map(String::valueOf).collect(Collectors.toSet()))
+            .apply();
+
+        return ret;
+    }
+
+    public static boolean isAccountMuted(int account) {
+        if (mutedAccountSet == null) {
+            mutedAccountSet = preferences.getStringSet(MUTED_ACCOUNTS, Set.of())
+                    .stream().map(Integer::parseInt)
+                    .collect(Collectors.toSet());
+        }
+        return mutedAccountSet.contains(account);
     }
 }

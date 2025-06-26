@@ -267,4 +267,6 @@
     <string name="ShareGroupMediaMessage">Would you like to share...</string>
     <string name="OnlyShowStoriesFromUsers">Only show stories from users</string>
     <string name="ResumeAudioPlaybackOnLaunch">Resume audio playback on launch</string>
+    <string name="MuteAccountNoti">Mute all notifications</string>
+    <string name="UnMuteAccountNoti">Un-mute notifications</string>
 </resources>

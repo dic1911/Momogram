@@ -449,6 +449,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
     private ActionBarMenuSubItem setUsernameItem;
     private ActionBarMenuSubItem blockFromSearchItem;
     private ActionBarMenuSubItem allMediaSpoilerItem;
+    private ActionBarMenuSubItem muteToggleItem;
     private ImageView ttlIconView;
 //    private ActionBarMenuItem qrItem;
     private ActionBarMenuSubItem autoDeleteItem;
@@ -602,6 +603,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
     private final static int all_media_spoiler = 1006;
     private final static int show_phone = 1007;
     private final static int fban = 1008;
+    private final static int mute_acc = 1009;
 
     private Rect rect = new Rect();
 
@@ -2908,6 +2910,10 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                 } else if (id == show_phone) {
                     showPhoneTemp = !showPhoneTemp;
                     updateListAnimated(false);
+                } else if (id == mute_acc) {
+                    boolean mutedAcc = NekoXConfig.toggleMuteCurrentAccount();
+                    muteToggleItem.setIcon(mutedAcc ? R.drawable.msg_unmute : R.drawable.msg_mute);
+                    muteToggleItem.setText(LocaleController.getString(mutedAcc ? R.string.UnMuteAccountNoti : R.string.MuteAccountNoti));
                 }
             }
         });
@@ -11039,6 +11045,11 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
             if (UserObject.isUserSelf(user)) {
                 editItemVisible = myProfile;
                 otherItem.addSubItem(edit_info, R.drawable.msg_edit, LocaleController.getString(R.string.EditInfo));
+
+                boolean mutedAcc = NekoXConfig.isAccountMuted(currentAccount);
+                muteToggleItem = otherItem.addSubItem(mute_acc, mutedAcc ? R.drawable.msg_unmute : R.drawable.msg_mute,
+                        LocaleController.getString(mutedAcc ? R.string.UnMuteAccountNoti : R.string.MuteAccountNoti));
+
                 if (imageUpdater != null) {
                     otherItem.addSubItem(add_photo, R.drawable.msg_addphoto, LocaleController.getString(R.string.AddPhoto));
                 }
