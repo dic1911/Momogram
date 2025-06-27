@@ -351,6 +351,7 @@ public class ChatMessageCell extends BaseCell implements SeekBar.SeekBarDelegate
     }
 
     public void setSpoilersSuppressed(boolean s) {
+        s |= NekoConfig.showSpoilersDirectly.Bool();
         for (int i = 0; i < replySpoilers.size(); i++) {
             SpoilerEffect eff = replySpoilers.get(i);
             eff.setSuppressUpdates(s);
@@ -17472,6 +17473,7 @@ public class ChatMessageCell extends BaseCell implements SeekBar.SeekBarDelegate
                         stringFinalText = Emoji.replaceEmoji(stringFinalText, textPaint.getFontMetricsInt(), false);
                         if (messageObject.messageOwner.reply_to.quote_entities != null) {
                             stringFinalText = MessageObject.replaceAnimatedEmoji(stringFinalText, messageObject.messageOwner.reply_to.quote_entities, textPaint.getFontMetricsInt(), true);
+                            if (NekoConfig.showSpoilersDirectly.Bool()) messageObject.messageOwner.reply_to.quote_entities.removeIf(x -> x instanceof TLRPC.TL_messageEntitySpoiler);
                             MessageObject.addEntitiesToText(stringFinalText, messageObject.messageOwner.reply_to.quote_entities, currentMessageObject.isOutOwner(), false, false, false);
                         }
                     } else if (messageObject.messageOwner.reply_to != null && messageObject.messageOwner.reply_to.reply_from != null && messageObject.messageOwner.reply_to.reply_media != null) {
