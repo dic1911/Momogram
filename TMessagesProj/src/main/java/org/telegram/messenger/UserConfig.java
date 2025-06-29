@@ -268,6 +268,15 @@ public class UserConfig extends BaseController {
         }
     }
 
+    public boolean isBot() {
+        TLRPC.User user = getCurrentUser();
+        return user != null && user.bot;
+    }
+
+    public static boolean isBot(int account) {
+        return getInstance(account).isBot();
+    }
+
     private void checkPremiumSelf(TLRPC.User oldUser, TLRPC.User newUser) {
         if (oldUser != null && newUser != null && oldUser.premium != newUser.premium) {
             AndroidUtilities.runOnUIThread(() -> {

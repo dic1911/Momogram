@@ -243,6 +243,7 @@ private:
     bool currentUserPremium = false;
     bool registeredForInternalPush = false;
     bool pushConnectionEnabled = true;
+    bool isBot = false;
     int32_t currentPerformanceClass = -1;
 
     std::map<uint32_t, std::vector<std::unique_ptr<NetworkMessage>>> genericMessagesToDatacenters;

@@ -1300,10 +1300,16 @@ void ConnectionsManager::processServerResponse(TLObject *message, int64_t messag
                         static std::string workerBusy = "WORKER_BUSY_TOO_LONG_RETRY";
                         static std::string integrityCheckClassic = "INTEGRITY_CHECK_CLASSIC_";
                         static std::string captchaCheck = "RECAPTCHA_CHECK_";
+                        static std::string botMethodInvalid = "BOT_METHOD_INVALID";
+                        static std::string floodWait = "FLOOD_WAIT_";
                         bool processEvenFailed = error->error_code == 500 && error->error_message.find(authRestart) != std::string::npos;
                         bool isWorkerBusy = error->error_code == 500 && error->error_message.find(workerBusy) != std::string::npos;
                         if (LOGS_ENABLED) DEBUG_E("request %p seqno %d retry %d rpc error %d: %s", request, request->messageSeqNo, request->retryCount, error->error_code, error->error_message.c_str());
 
+                        // 030: block TL_account_registerDevice for bots
+                        if (!isBot && error->error_code == 400 && error->error_message.find(botMethodInvalid) != std::string::npos) {
+                            isBot = true;
+                        }
                         if (error->error_code == 401 && error->error_message.find(authKeyPermEmpty) != std::string::npos) {
                             discardResponse = true;
                             request->minStartTime = (int32_t) (getCurrentTimeMonotonicMillis() / 1000 + 1);
@@ -1371,7 +1377,7 @@ void ConnectionsManager::processServerResponse(TLObject *message, int64_t messag
                                 error->error_message.find("STORY_SEND_FLOOD") == std::string::npos
                             ) {
                                 int32_t waitTime = 2;
-                                static std::string floodWait = "FLOOD_WAIT_";
+                                // static std::string floodWait = "FLOOD_WAIT_";
                                 static std::string premiumFloodWait = "FLOOD_PREMIUM_WAIT_";
                                 static std::string slowmodeWait = "SLOWMODE_WAIT_";
                                 bool isPremiumFloodWait = false;
@@ -1384,10 +1390,19 @@ void ConnectionsManager::processServerResponse(TLObject *message, int64_t messag
                                         waitTime = 2;
                                     }
                                 } else if (error->error_message.find(floodWait) != std::string::npos) {
-                                    std::string num = error->error_message.substr(floodWait.size(), error->error_message.size() - floodWait.size());
+                                    // std::string num = error->error_message.substr(floodWait.size(), error->error_message.size() - floodWait.size()); // 030: prob bad index?
+                                    std::string num;
+                                    if (error->error_message.size() > floodWait.size() + 1) {
+                                        num = error->error_message.substr(floodWait.size());
+                                    } else {
+                                        DEBUG_E("unexpected err %s", error->error_message.c_str());
+                                    }
                                     waitTime = atoi(num.c_str());
                                     if (waitTime <= 0) {
-                                        waitTime = 2;
+                                        DEBUG_D("waitTime(%d) <= 0, parse failed?", waitTime);
+                                        waitTime = 20;
+                                    } else if (LOGS_ENABLED) {
+                                        DEBUG_D("waitTime = %d", waitTime);
                                     }
                                 } else if (error->error_message.find(slowmodeWait) != std::string::npos) {
                                     std::string num = error->error_message.substr(slowmodeWait.size(), error->error_message.size() - slowmodeWait.size());
@@ -1402,6 +1417,7 @@ void ConnectionsManager::processServerResponse(TLObject *message, int64_t messag
                                 request->startTime = 0;
                                 request->startTimeMillis = 0;
                                 request->minStartTime = (int32_t) (getCurrentTimeMonotonicMillis() / 1000 + waitTime);
+                                DEBUG_D("minStartTime set to %d", request->minStartTime);
                                 if (isPremiumFloodWait && delegate != nullptr) {
                                     delegate->onPremiumFloodWait(instanceNum, request->requestToken, (request->connectionType & ConnectionTypeUpload) != 0);
                                 }
@@ -2397,7 +2413,8 @@ void ConnectionsManager::clearRequestsForDatacenter(Datacenter *datacenter, Hand
 }
 
 void ConnectionsManager::registerForInternalPushUpdates() {
-    if (registeringForPush || !currentUserId) {
+    // 030: block TL_account_registerDevice for bots
+    if (isBot || registeringForPush || !currentUserId) {
         return;
     }
     registeredForInternalPush = false;

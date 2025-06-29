@@ -9323,6 +9323,7 @@ public class MediaDataController extends BaseController {
     }
 
     public void loadRecentAndTopReactions(boolean force) {
+        if (getUserConfig().isBot()) return;
         if (loadingRecentReactions || loadedRecentReactions && !force) {
             return;
         }
@@ -9491,7 +9492,7 @@ public class MediaDataController extends BaseController {
             }
         }
 
-        if (emojiList == null || (System.currentTimeMillis() - lastCheckTime) > 24 * 60 * 60 * 1000 || BuildVars.DEBUG_PRIVATE_VERSION) {
+        if (!getUserConfig().isBot() && (emojiList == null || (System.currentTimeMillis() - lastCheckTime) > 24 * 60 * 60 * 1000 || BuildVars.DEBUG_PRIVATE_VERSION)) {
             TL_account.getDefaultProfilePhotoEmojis req = new TL_account.getDefaultProfilePhotoEmojis();
             if (emojiList != null) {
                 req.hash = emojiList.hash;

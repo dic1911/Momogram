@@ -419,6 +419,7 @@ public class MessagesController extends BaseController implements NotificationCe
     private final CacheFetcher<Integer, TLRPC.TL_help_appConfig> appConfigFetcher = new CacheFetcher<Integer, TLRPC.TL_help_appConfig>() {
         @Override
         protected void getRemote(int currentAccount, Integer arguments, long hash, Utilities.Callback4<Boolean, TLRPC.TL_help_appConfig, Long, Boolean> onResult) {
+            if (getUserConfig().isBot()) return; // TODO: maybe confirm if need to pretend not modified
             TLRPC.TL_help_getAppConfig req = new TLRPC.TL_help_getAppConfig();
             req.hash = (int) hash;
             getConnectionsManager().sendRequest(req, (res, err) -> {
@@ -2394,7 +2395,7 @@ public class MessagesController extends BaseController implements NotificationCe
         if (whenDone != null) {
             onLoadedRemoteFilters = whenDone;
         }
-        if (loadingRemoteFilters || !getUserConfig().isClientActivated() || !force && getUserConfig().filtersLoaded) {
+        if (loadingRemoteFilters || !getUserConfig().isClientActivated() || getUserConfig().isBot() || !force && getUserConfig().filtersLoaded) {
             return;
         }
         if (force) {
@@ -9962,7 +9963,7 @@ public class MessagesController extends BaseController implements NotificationCe
         checkDeletingTask(false);
         checkReadTasks();
 
-        if (getUserConfig().isClientActivated() && !getUserConfig().getCurrentUser().bot) {
+        if (getUserConfig().isClientActivated() && !getUserConfig().isBot()) {
 
             if (!ignoreSetOnline && getConnectionsManager().getPauseTime() == 0 && ApplicationLoader.isScreenOn && !ApplicationLoader.mainInterfacePausedStageQueue) {
                 if (ApplicationLoader.mainInterfacePausedStageQueueTime != 0 && Math.abs(ApplicationLoader.mainInterfacePausedStageQueueTime - System.currentTimeMillis()) > 1000) {
@@ -10280,7 +10281,7 @@ public class MessagesController extends BaseController implements NotificationCe
     }
 
     private void checkTosUpdate() {
-        if (nextTosCheckTime > getConnectionsManager().getCurrentTime() || checkingTosUpdate || !getUserConfig().isClientActivated()) {
+        if (nextTosCheckTime > getConnectionsManager().getCurrentTime() || checkingTosUpdate || !getUserConfig().isClientActivated() || getUserConfig().isBot()) {
             return;
         }
         checkingTosUpdate = true;
@@ -10309,7 +10310,7 @@ public class MessagesController extends BaseController implements NotificationCe
         if (reset && checkingPromoInfo) {
             checkingPromoInfo = false;
         }
-        if (!reset && nextPromoInfoCheckTime > getConnectionsManager().getCurrentTime() || checkingPromoInfo) {
+        if (!reset && nextPromoInfoCheckTime > getConnectionsManager().getCurrentTime() || checkingPromoInfo || getUserConfig().isBot()) {
             return;
         }
         if (checkingPromoInfoRequestId != 0) {
@@ -15211,7 +15212,7 @@ public class MessagesController extends BaseController implements NotificationCe
     }
 
     public void registerForPush(@PushListenerController.PushType int pushType, String regid) {
-        if (TextUtils.isEmpty(regid) || registeringForPush || getUserConfig().getClientUserId() == 0) {
+        if (TextUtils.isEmpty(regid) || registeringForPush || getUserConfig().getClientUserId() == 0 || getUserConfig().isBot()) {
             return;
         }
         if (getUserConfig().registeredForPush && regid.equals(SharedConfig.pushString)) {
@@ -22525,7 +22526,7 @@ public class MessagesController extends BaseController implements NotificationCe
 
     private boolean loadingPeerColors, loadingProfilePeerColors;
     public void checkPeerColors(boolean force) {
-        if (getUserConfig().getCurrentUser() == null) {
+        if (getUserConfig().getCurrentUser() == null || getUserConfig().isBot()) {
             return;
         }
         if (!loadingPeerColors && (peerColors == null || peerColors.needUpdate() || force)) {

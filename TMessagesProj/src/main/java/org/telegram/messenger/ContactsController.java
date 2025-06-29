@@ -1536,7 +1536,7 @@ public class ContactsController extends BaseController {
                 FileLog.d("load contacts from cache");
             }
             getMessagesStorage().getContacts();
-        } else {
+        } else if (!getUserConfig().isBot()) {
             if (BuildVars.LOGS_ENABLED) {
                 FileLog.d("load contacts from server");
             }

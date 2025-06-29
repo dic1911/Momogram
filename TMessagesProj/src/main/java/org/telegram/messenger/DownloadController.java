@@ -356,6 +356,7 @@ public class DownloadController extends BaseController implements NotificationCe
     }
 
     public void loadAutoDownloadConfig(boolean force) {
+        if (getUserConfig().isBot()) return;
         if (loadingAutoDownloadConfig || !force && Math.abs(System.currentTimeMillis() - getUserConfig().autoDownloadConfigLoadTime) < 24 * 60 * 60 * 1000) {
             return;
         }

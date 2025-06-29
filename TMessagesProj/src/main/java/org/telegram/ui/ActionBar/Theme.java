@@ -7611,7 +7611,7 @@ public class Theme {
     }
 
     public static void loadRemoteThemes(final int currentAccount, boolean force) {
-        if (loadingRemoteThemes.get(currentAccount) || !force && Math.abs(System.currentTimeMillis() / 1000 - lastLoadingThemesTime.get(currentAccount)) < 60 * 60 || !UserConfig.getInstance(currentAccount).isClientActivated()) {
+        if (UserConfig.isBot(currentAccount) || loadingRemoteThemes.get(currentAccount) || !force && Math.abs(System.currentTimeMillis() / 1000 - lastLoadingThemesTime.get(currentAccount)) < 60 * 60 || !UserConfig.getInstance(currentAccount).isClientActivated()) {
             return;
         }
         loadingRemoteThemes.put(currentAccount, true);
