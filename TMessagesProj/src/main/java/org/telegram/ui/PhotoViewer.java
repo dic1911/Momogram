@@ -4596,10 +4596,6 @@ public class PhotoViewer implements NotificationCenter.NotificationCenterDelegat
                         intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, sharingUris);
                     }
 
-                    for (Uri u : sharingUris) {
-                        Log.d("030-share", u.toString());
-                    }
-
                     parentActivity.startActivityForResult(Intent.createChooser(intent, getString("ShareFile", R.string.ShareFile)), 500);
                 })
                 .setNeutralButton(getString("Cancel", R.string.Cancel), (di, a) -> {

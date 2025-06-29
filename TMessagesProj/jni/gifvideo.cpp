@@ -13,7 +13,6 @@
 #include "voip/webrtc/common_video/h264/sps_parser.h"
 #include "voip/webrtc/common_video/h264/h264_common.h"
 #include "c_utils.h"
-
 extern "C" {
 #include <libavformat/avformat.h>
 #include <libavcodec/avcodec.h>
@@ -21,6 +20,7 @@ extern "C" {
 #include <libavcodec/bytestream.h>
 #include <libavcodec/get_bits.h>
 #include <libavcodec/golomb.h>
+#include "libavutil/display.h"
 #include <libavutil/eval.h>
 #include <libavutil/intmath.h>
 #include <libswscale/swscale.h>
@@ -422,15 +422,26 @@ extern "C" JNIEXPORT void JNICALL Java_org_telegram_ui_Components_AnimatedFileDr
         dataArr[PARAM_NUM_BITRATE] = (jint) info->video_stream->codecpar->bit_rate;
         dataArr[PARAM_NUM_WIDTH] = info->video_stream->codecpar->width;
         dataArr[PARAM_NUM_HEIGHT] = info->video_stream->codecpar->height;
+        uint8_t *matrix = av_stream_get_side_data(info->video_stream,
+                                                  AV_PKT_DATA_DISPLAYMATRIX,
+                                                  NULL);
+        dataArr[PARAM_NUM_ROTATION] = 0;
+        if (matrix) {
+            int angle = av_display_rotation_get((int32_t*)matrix);
+            if (angle < 0) angle = (0 - angle);
+            dataArr[PARAM_NUM_ROTATION] = angle;
+        }
         AVDictionaryEntry *rotate_tag = av_dict_get(info->video_stream->metadata, "rotate", NULL, 0);
-        if (rotate_tag && *rotate_tag->value && strcmp(rotate_tag->value, "0") != 0) {
-            char *tail;
-            dataArr[PARAM_NUM_ROTATION] = (jint) av_strtod(rotate_tag->value, &tail);
-            if (*tail) {
+        if (dataArr[PARAM_NUM_ROTATION] == 0) {
+            if (rotate_tag && *rotate_tag->value && strcmp(rotate_tag->value, "0") != 0) {
+                char *tail;
+                dataArr[PARAM_NUM_ROTATION] = (jint) av_strtod(rotate_tag->value, &tail);
+                if (*tail) {
+                    dataArr[PARAM_NUM_ROTATION] = 0;
+                }
+            } else {
                 dataArr[PARAM_NUM_ROTATION] = 0;
             }
-        } else {
-            dataArr[PARAM_NUM_ROTATION] = 0;
         }
         if (info->video_stream->codecpar->codec_id == AV_CODEC_ID_H264 || info->video_stream->codecpar->codec_id == AV_CODEC_ID_HEVC) {
             dataArr[PARAM_NUM_FRAMERATE] = (jint) av_q2d(info->video_stream->avg_frame_rate);
