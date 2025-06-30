@@ -60,6 +60,7 @@ import java.io.File;
 import java.util.LinkedList;
 
 import tw.nekomimi.nekogram.NekoConfig;
+import tw.nekomimi.nekogram.config.ConfigItem;
 import tw.nekomimi.nekogram.parts.SignturesKt;
 import tw.nekomimi.nekogram.utils.FileUtil;
 import tw.nekomimi.nekogram.utils.TelegramUtil;
@@ -112,8 +113,9 @@ public class ApplicationLoader extends Application {
                     AndroidUtilities.getSystemProperty("ro.build.fingerprint"),
                     error.getClass().getName(), error.getMessage(), error.getCause(),
                     TelegramUtil.getStackTraceAsString(error.getStackTrace()));
-            NekoConfig.lastCrashError.setConfigString(errStr);
-            TelegramUtil.restartApp(true);
+            NekoConfig.preferences.edit().putString(NekoConfig.lastCrashError.key, errStr).commit();
+            ProcessPhoenix.triggerRebirth(applicationContext,
+                    new Intent(applicationContext, LaunchActivity.class));
         });
     }
 

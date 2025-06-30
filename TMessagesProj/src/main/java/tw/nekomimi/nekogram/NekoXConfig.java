@@ -1,6 +1,7 @@
 package tw.nekomimi.nekogram;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
@@ -76,7 +77,8 @@ public class NekoXConfig {
     private static Typeface systemEmojiTypeface;
 
 
-    public static SharedPreferences preferences = NitritesKt.openMainSharedPreference("nekox_config");
+    public static SharedPreferences preferences = ApplicationLoader.applicationContext
+            .getSharedPreferences("nekox_cfg", Context.MODE_PRIVATE);
 
     public static boolean developerMode = preferences.getBoolean("developer_mode", false);
 
@@ -444,27 +446,28 @@ public class NekoXConfig {
     public static boolean toggleMuteCurrentAccount() {
         boolean ret;
         int acc = UserConfig.selectedAccount;
+        StringBuilder sb = new StringBuilder();
 
-        Set<Integer> current = preferences.getStringSet(MUTED_ACCOUNTS, Set.of())
-                .stream().map(Integer::parseInt)
-                .collect(Collectors.toSet());
+        if (mutedAccountSet == null) {
+            isAccountMuted(0); // dum
+        }
 
-        Set<Integer> updated = new HashSet<>(current);
-        if (!(ret = updated.add(acc))) updated.remove(acc);
-        mutedAccountSet = updated;
+        if (!(ret = mutedAccountSet.add(acc))) mutedAccountSet.remove(acc);
+        mutedAccountSet.forEach(i -> {
+            sb.append(i).append(" ");
+        });
 
-        preferences.edit().putStringSet(MUTED_ACCOUNTS,
-                updated.stream().map(String::valueOf).collect(Collectors.toSet()))
-            .apply();
+        preferences.edit().putString(MUTED_ACCOUNTS, sb.toString().trim()).commit();
 
         return ret;
     }
 
     public static boolean isAccountMuted(int account) {
         if (mutedAccountSet == null) {
-            mutedAccountSet = preferences.getStringSet(MUTED_ACCOUNTS, Set.of())
-                    .stream().map(Integer::parseInt)
-                    .collect(Collectors.toSet());
+            String str = preferences.getString(MUTED_ACCOUNTS, "");
+            String[] idStr = str.split(" ");
+            mutedAccountSet = new HashSet<>();
+            for (String id : idStr) mutedAccountSet.add(Integer.parseInt(id));
         }
         return mutedAccountSet.contains(account);
     }

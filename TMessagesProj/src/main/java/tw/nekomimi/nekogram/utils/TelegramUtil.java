@@ -5,6 +5,7 @@ import android.content.Intent;
 
 import com.jakewharton.processphoenix.ProcessPhoenix;
 
+import org.telegram.messenger.ApplicationLoader;
 import org.telegram.messenger.FileLog;
 import org.telegram.messenger.MessageObject;
 import org.telegram.messenger.SharedConfig;
@@ -124,7 +125,7 @@ public class TelegramUtil {
 
     public static void restartApp(boolean crash) {
         if (!crash) NekoXConfig.saveMusicPlaybackState(null);
-        ProcessPhoenix.triggerRebirth(LaunchActivity.instance,
-                new Intent(LaunchActivity.instance, LaunchActivity.class));
+        ProcessPhoenix.triggerRebirth(ApplicationLoader.applicationContext,
+                new Intent(ApplicationLoader.applicationContext, LaunchActivity.class));
     }
 }

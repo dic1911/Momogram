@@ -919,6 +919,30 @@ public class NekoConfig {
         }
     }
 
+    public static void promptReportCrash(String errStr) {
+        BaseFragment fragment = LaunchActivity.getLastFragment();
+        if (fragment == null || SharedConfig.activeAccounts.isEmpty()) {
+            AndroidUtilities.runOnUIThread(() -> NekoConfig.promptReportCrash(errStr), 100);
+            return;
+        }
+        Context context = fragment.getContext();
+        new AlertDialog.Builder(context)
+                .setTitle(LocaleController.getString(useOldName.Bool() ? R.string.CrashDialogTitle : R.string.CrashDialogMomoTitle))
+                .setMessage(LocaleController.getString(R.string.CrashDialogMessage))
+                .setNeutralButton(LocaleController.getString(R.string.Copy), (__, ___) -> {
+                    AndroidUtilities.addToClipboard(errStr);
+                    lastCrashError.setConfigString(null);
+                })
+                .setPositiveButton(LocaleController.getString(R.string.Send), (__, ___) -> {
+                    String timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd_HHmmss"));
+                    File cacheFile = new File(ApplicationLoader.applicationContext.getCacheDir(), timestamp + ".m0m0-crash.txt");
+                    FileUtil.writeUtf8String(errStr + getNekoConfigValuesAsString(), cacheFile);
+                    ShareUtil.shareFile(context, cacheFile);
+                })
+                .setNegativeButton(LocaleController.getString(R.string.Cancel), (__, ___) -> lastCrashError.setConfigString(null))
+                .create().show();
+    }
+
     public static void init() {
         initStrings();
         try {
@@ -927,25 +951,16 @@ public class NekoConfig {
                 final String errStr = lastCrashError.String();
                 AndroidUtilities.runOnUIThread(() -> {
                     BaseFragment fragment = LaunchActivity.getLastFragment();
-                    if (fragment == null || SharedConfig.activeAccounts.isEmpty()) return;
-                    Context context = fragment.getContext();
-                    new AlertDialog.Builder(context)
-                            .setTitle(LocaleController.getString(useOldName.Bool() ? R.string.CrashDialogTitle : R.string.CrashDialogMomoTitle))
-                            .setMessage(LocaleController.getString(R.string.CrashDialogMessage))
-                            .setNeutralButton(LocaleController.getString(R.string.Copy), (__, ___) -> {
-                                AndroidUtilities.addToClipboard(errStr);
-                                lastCrashError.setConfigString(null);
-                            })
-                            .setPositiveButton(LocaleController.getString(R.string.Send), (__, ___) -> {
-                                String timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd_HHmmss"));
-                                File cacheFile = new File(ApplicationLoader.applicationContext.getCacheDir(), timestamp + ".m0m0-crash.txt");
-                                FileUtil.writeUtf8String(errStr + getNekoConfigValuesAsString(), cacheFile);
-                                ShareUtil.shareFile(context, cacheFile);
-                            })
-                            .setNegativeButton(LocaleController.getString(R.string.Cancel), (__, ___) -> lastCrashError.setConfigString(null))
-                            .create().show();
+                    // delay if not ready
+                    if (fragment == null || SharedConfig.activeAccounts.isEmpty()) {
+                        AndroidUtilities.runOnUIThread(() -> NekoConfig.promptReportCrash(errStr), 100);
+                    } else {
+                        NekoConfig.promptReportCrash(errStr);
+                    }
                 });
                 lastCrashError.setConfigString(null);
+            } else {
+                Log.d("030-cfg", "lastCrashError is empty");
             }
             updateUseSpoilerMediaChatList();
             updatePreferredTranslateTargetLangList();
