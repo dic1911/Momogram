@@ -78,6 +78,7 @@ import android.text.style.DynamicDrawableSpan;
 import android.text.style.URLSpan;
 import android.text.util.Linkify;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.util.Pair;
 import android.util.StateSet;
 import android.util.TypedValue;
@@ -128,6 +129,7 @@ import androidx.dynamicanimation.animation.DynamicAnimation;
 import androidx.dynamicanimation.animation.SpringAnimation;
 import androidx.dynamicanimation.animation.SpringForce;
 import androidx.exifinterface.media.ExifInterface;
+import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
@@ -1381,8 +1383,40 @@ public class AndroidUtilities {
         if (context == null || (AndroidUtilities.statusBarHeight > 0 && !force)) {
             return;
         }
-        AndroidUtilities.statusBarHeight = getStatusBarHeight(context);
+        int newStatusBarHeight = getStatusBarHeight(context);
+        if (!statusBarHeightOverridden || (newStatusBarHeight > AndroidUtilities.statusBarHeight)) {
+            AndroidUtilities.statusBarHeight = newStatusBarHeight;
+        }
         AndroidUtilities.navigationBarHeight = getNavigationBarHeight(context);
+    }
+
+    private static boolean statusBarHeightOverridden = false;
+    public static void overrideStatusBarHeight(int height, int type) {
+        if (statusBarHeightOverridden) {
+            if (height > AndroidUtilities.statusBarHeight)
+                AndroidUtilities.statusBarHeight = height;
+        } else {
+            AndroidUtilities.statusBarHeight = height;
+        }
+        statusBarHeightOverridden = true;
+        Log.d("030-sb", String.format("statusBarHeight set to %d (overrideStatusBarHeight %d)", height, type));
+    }
+
+    public static void fillStatusBarHeight(View view) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT_WATCH) {
+            view.setOnApplyWindowInsetsListener((__, insets) -> {
+                try {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                        overrideStatusBarHeight(insets.getSystemWindowInsetTop(), 2);
+                    } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                        overrideStatusBarHeight(insets.getInsets(WindowInsets.Type.systemBars()).top, 1);
+                    }
+                } catch (Exception e) {
+                    Log.e("030-sb", "getSystemWindowInsetTop", e);
+                }
+                return insets;
+            });
+        }
     }
 
     public static int getStatusBarHeight(Context context) {

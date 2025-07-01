@@ -66,6 +66,7 @@ import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.Window;
+import android.view.WindowInsets;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -433,7 +434,7 @@ public class LaunchActivity extends BasePermissionsActivity implements INavigati
         if (SharedConfig.passcodeHash.length() != 0 && SharedConfig.appLocked) {
             SharedConfig.lastPauseTime = (int) (SystemClock.elapsedRealtime() / 1000);
         }
-        AndroidUtilities.fillStatusBarHeight(this, false);
+        AndroidUtilities.fillStatusBarHeight(this, true);
         actionBarLayout = new ActionBarLayout(this, true);
 
         frameLayout = new FrameLayout(this) {
@@ -1042,6 +1043,20 @@ public class LaunchActivity extends BasePermissionsActivity implements INavigati
         RestrictedLanguagesSelectActivity.checkRestrictedLanguages(false);
         EvilLeakerKiller.getInstance(getApplicationContext());
         NekoXConfig.restoreMusicPlaybackState(currentAccount);
+    }
+
+    @Override
+    public void setContentView(View view) {
+        super.setContentView(view);
+        Log.d("030-sb", "setContentView 1");
+        AndroidUtilities.fillStatusBarHeight(view);
+    }
+
+    @Override
+    public void setContentView(View view, ViewGroup.LayoutParams params) {
+        super.setContentView(view, params);
+        Log.d("030-sb", "setContentView 2");
+        AndroidUtilities.fillStatusBarHeight(view);
     }
 
     private void showAttachMenuBot(TLRPC.TL_attachMenuBot attachMenuBot, String startApp, boolean sidemenu) {
