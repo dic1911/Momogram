@@ -14598,6 +14598,7 @@ public class PhotoViewer implements NotificationCenter.NotificationCenterDelegat
         }
     }
 
+    private boolean increasedMaxPhotoResolution = NekoConfig.increasedMaxPhotoResolution.Bool();
     private void setIsAboutToSwitchToIndex(int index, boolean init, boolean animated) {
         setIsAboutToSwitchToIndex(index, init, animated, false);
     }
@@ -14966,7 +14967,7 @@ public class PhotoViewer implements NotificationCenter.NotificationCenterDelegat
                     isVideo = photoEntry.isVideo;
                     duration = photoEntry.duration;
                     cropState = photoEntry.cropState;
-                    highQuality = photoEntry.highQuality;
+                    highQuality = (photoEntry.highQuality |= increasedMaxPhotoResolution);
                 } else if (object instanceof MediaController.SearchImage) {
                     MediaController.SearchImage searchImage = (MediaController.SearchImage) object;
                     currentPathObject = searchImage.getPathToAttach();
@@ -15067,7 +15068,8 @@ public class PhotoViewer implements NotificationCenter.NotificationCenterDelegat
                     if (object instanceof MediaController.PhotoEntry && !((MediaController.PhotoEntry) object).isVideo) {
                         final MediaController.PhotoEntry entry = (MediaController.PhotoEntry) object;
                         if (!entry.isVideo && (currentIndex == index ? getCurrentVideoEditedInfo() : entry.editedInfo) == null) {
-                            compressItem.setVisibility(View.VISIBLE);
+                            if (!increasedMaxPhotoResolution)
+                                compressItem.setVisibility(View.VISIBLE);
                             compressItem.setPhotoState(highQuality);
                         } else {
                             compressItem.setVisibility(View.GONE);
