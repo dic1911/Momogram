@@ -36,6 +36,7 @@ import android.text.Spanned;
 import android.text.TextPaint;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.ActionMode;
 import android.view.Gravity;
@@ -82,7 +83,6 @@ import org.telegram.messenger.MessagesController;
 import org.telegram.messenger.MessagesStorage;
 import org.telegram.messenger.NotificationCenter;
 import org.telegram.messenger.R;
-import org.telegram.messenger.SavedMessagesController;
 import org.telegram.messenger.SendMessagesHelper;
 import org.telegram.messenger.SharedConfig;
 import org.telegram.messenger.UserConfig;
@@ -127,6 +127,7 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 
 import tw.nekomimi.nekogram.NekoConfig;
+import tw.nekomimi.nekogram.NekoXConfig;
 
 public class ShareAlert extends BottomSheet implements NotificationCenter.NotificationCenterDelegate {
 
@@ -215,8 +216,12 @@ public class ShareAlert extends BottomSheet implements NotificationCenter.Notifi
 
     private SizeNotifierFrameLayout sizeNotifierFrameLayout;
     private ArrayList<DialogsSearchAdapter.RecentSearchObject> recentSearchObjects = new ArrayList<>();
+    private ArrayList<DialogsSearchAdapter.RecentSearchObject> recentSearchObjectsReal = new ArrayList<>();
     private LongSparseArray<DialogsSearchAdapter.RecentSearchObject> recentSearchObjectsById = new LongSparseArray<>();
     TL_stories.StoryItem storyItem;
+    GraySectionCell recentCell;
+    FilterTabsView filterTabsView;
+    boolean selectedTab = false;
 
     public void setStoryToShare(TL_stories.StoryItem storyItem) {
         this.storyItem = storyItem;
@@ -1777,39 +1782,140 @@ public class ShareAlert extends BottomSheet implements NotificationCenter.Notifi
             NotificationCenter.getInstance(currentAccount).addObserver(this, NotificationCenter.dialogsNeedReload);
         }
 
-        DialogsSearchAdapter.loadRecentSearch(currentAccount, 0, new DialogsSearchAdapter.OnRecentSearchLoaded() {
-            @Override
-            public void setRecentSearch(ArrayList<DialogsSearchAdapter.RecentSearchObject> arrayList, LongSparseArray<DialogsSearchAdapter.RecentSearchObject> hashMap) {
-                if (arrayList != null) {
-                    for (int i = 0; i < arrayList.size(); ++i) {
-                        DialogsSearchAdapter.RecentSearchObject recentSearchObject = arrayList.get(i);
-                        if (recentSearchObject.object instanceof TLRPC.Chat && !ChatObject.canWriteToChat((TLRPC.Chat) recentSearchObject.object)) {
-                            arrayList.remove(i);
-                            i--;
-                        }
-                    }
-                }
-                recentSearchObjects = arrayList;
-                recentSearchObjectsById = hashMap;
-                for (int a = 0; a < recentSearchObjects.size(); a++) {
-                    DialogsSearchAdapter.RecentSearchObject recentSearchObject = recentSearchObjects.get(a);
-                    if (recentSearchObject.object instanceof TLRPC.User) {
-                        MessagesController.getInstance(currentAccount).putUser((TLRPC.User) recentSearchObject.object, true);
-                    } else if (recentSearchObject.object instanceof TLRPC.Chat) {
-                        MessagesController.getInstance(currentAccount).putChat((TLRPC.Chat) recentSearchObject.object, true);
-                    } else if (recentSearchObject.object instanceof TLRPC.EncryptedChat) {
-                        MessagesController.getInstance(currentAccount).putEncryptedChat((TLRPC.EncryptedChat) recentSearchObject.object, true);
-                    }
-                }
-                searchAdapter.notifyDataSetChanged();
-            }
-        });
+        DialogsSearchAdapter.loadRecentSearch(currentAccount, 0, recentSearchLoaded);
         MediaDataController.getInstance(currentAccount).loadHints(true);
 
         AndroidUtilities.updateViewVisibilityAnimated(gridView, true, 1f, false);
         AndroidUtilities.updateViewVisibilityAnimated(searchGridView, false, 1f, false);
     }
 
+    DialogsSearchAdapter.OnRecentSearchLoaded recentSearchLoaded = new DialogsSearchAdapter.OnRecentSearchLoaded() {
+        @Override
+        public void setRecentSearch(ArrayList<DialogsSearchAdapter.RecentSearchObject> arrayList, LongSparseArray<DialogsSearchAdapter.RecentSearchObject> hashMap) {
+            if (arrayList != null) {
+                arrayList.removeIf(x ->
+                        (x.object instanceof TLRPC.Chat) && !ChatObject.canWriteToChat((TLRPC.Chat) x.object));
+            }
+            recentSearchObjects = arrayList;
+            if (hashMap != null) recentSearchObjectsById = hashMap;
+            for (int a = 0; a < recentSearchObjects.size(); a++) {
+                DialogsSearchAdapter.RecentSearchObject recentSearchObject = recentSearchObjects.get(a);
+                if (recentSearchObject.object instanceof TLRPC.User) {
+                    MessagesController.getInstance(currentAccount).putUser((TLRPC.User) recentSearchObject.object, true);
+                } else if (recentSearchObject.object instanceof TLRPC.Chat) {
+                    MessagesController.getInstance(currentAccount).putChat((TLRPC.Chat) recentSearchObject.object, true);
+                } else if (recentSearchObject.object instanceof TLRPC.EncryptedChat) {
+                    MessagesController.getInstance(currentAccount).putEncryptedChat((TLRPC.EncryptedChat) recentSearchObject.object, true);
+                }
+            }
+            searchAdapter.notifyDataSetChanged();
+        }
+    };
+
+    MessagesController messagesController = MessagesController.getInstance(currentAccount);
+    List<MessagesController.DialogFilter> filters = messagesController.getDialogFilters();
+    private View createFilterDropdownView(final ViewGroup parent) {
+        FrameLayout container = new FrameLayout(parent.getContext());
+
+        filterTabsView = new FilterTabsView(container.getContext(), resourcesProvider) {
+            @Override
+            public boolean onInterceptTouchEvent(MotionEvent ev) {
+                parent.requestDisallowInterceptTouchEvent(true);
+                return super.onInterceptTouchEvent(ev);
+            }
+
+            @Override
+            public void setTranslationY(float translationY) {
+                if (getTranslationY() != translationY) {
+                    super.setTranslationY(translationY);
+                }
+            }
+
+            @Override
+            protected void onDefaultTabMoved() {}
+        };
+
+
+        filterTabsView.setDelegate(new FilterTabsView.FilterTabsViewDelegate() {
+
+            @Override
+            public void onSamePageSelected() {}
+
+            @Override
+            public void onPageReorder(int fromId, int toId) {}
+
+            @Override
+            public void onPageSelected(FilterTabsView.Tab tab, boolean forward) {
+                Log.d("030-share", String.format("tab %s selected", tab.title));
+                if (!tab.isDefault && (tab.id < 0 || tab.id >= filters.size())) {
+                    return;
+                }
+                MessagesController.DialogFilter selected = filters.get(tab.id);
+                searchAdapter.filterDialogs(selected);
+                selectedTab = !tab.isDefault;
+                recentCell.setVisibility(selectedTab ? View.GONE : View.VISIBLE);
+            }
+
+            @Override
+            public boolean canPerformActions() {
+                return TextUtils.isEmpty(searchView.searchEditText.getText());
+            }
+
+            @Override
+            public void onPageScrolled(float progress) {}
+
+            @Override
+            public int getTabCounter(int tabId) {
+                return 0;
+            }
+
+            @Override
+            public boolean didSelectTab(FilterTabsView.TabView tabView, boolean selected) {
+                return true;
+            }
+
+            @Override
+            public boolean isTabMenuVisible() {
+                return false;
+            }
+
+            @Override
+            public void onDeletePressed(int id) {}
+        });
+
+        for (int a = 0, N = filters.size(); a < N; a++) {
+            MessagesController.DialogFilter filter = filters.get(a);
+            if (filter.isDefault()) {
+                filterTabsView.addTab(a, 0, LocaleController.getString(R.string.Recent), null, null, filter.title_noanimate, false, false);
+            } else {
+                switch (NekoConfig.tabsTitleType.Int()) {
+                    case NekoXConfig.TITLE_TYPE_TEXT:
+                        filterTabsView.addTab(a, filter.localId, filter.name, filter.name, filter.entities, filter.title_noanimate, false, false);
+                        break;
+                    case NekoXConfig.TITLE_TYPE_ICON:
+                        filterTabsView.addTab(a, filter.localId, filter.name, filter.emoticon != null ? filter.emoticon : "📂", filter.entities, filter.title_noanimate, false, false);
+                        break;
+                    case NekoXConfig.TITLE_TYPE_MIX:
+                        filterTabsView.addTab(a, filter.localId, filter.name, filter.emoticon != null ? filter.emoticon : "\uD83D\uDCC1 " + filter.name, filter.entities, filter.title_noanimate, false, false);
+                        break;
+                }
+            }
+            checkListLoad(filter.id);
+        }
+        filterTabsView.finishAddingTabs(false);
+        return filterTabsView;
+    }
+
+    private void checkListLoad(int folderId) {
+        boolean shouldLoadFolder = !messagesController.isDialogsEndReached(folderId) ||
+                !messagesController.isServerDialogsEndReached(folderId);
+
+        if (shouldLoadFolder) {
+            AndroidUtilities.runOnUIThread(() -> {
+                messagesController.loadDialogs(folderId, 0, 100, !messagesController.isDialogsEndReached(folderId));
+            });
+        }
+    }
     protected void onShareStory(View cell) {
 
     }
@@ -3024,6 +3130,7 @@ public class ShareAlert extends BottomSheet implements NotificationCenter.Notifi
         private int lastLocalSearchId;
 
         int hintsCell = -1;
+        int dialogFilterRow = -1;
         int resentTitleCell = -1;
         int firstEmptyViewCell = -1;
         int recentDialogsStartRow = -1;
@@ -3323,10 +3430,12 @@ public class ShareAlert extends BottomSheet implements NotificationCenter.Notifi
             checkCurrentList(true);
 
             if (TextUtils.isEmpty(query)) {
+                if (filterTabsView != null) filterTabsView.setVisibility(View.VISIBLE);
                 topBeforeSwitch = getCurrentTop();
                 lastSearchId = -1;
                 internalDialogsIsSearching = false;
             } else {
+                if (filterTabsView != null) filterTabsView.setVisibility(View.GONE);
                 internalDialogsIsSearching = true;
                 final int searchId = ++lastSearchId;
                 searchEmptyView.showProgress(true, true);
@@ -3345,22 +3454,53 @@ public class ShareAlert extends BottomSheet implements NotificationCenter.Notifi
             checkCurrentList(false);
         }
 
+        public void filterDialogs(final MessagesController.DialogFilter filter) {
+            if (filter.isDefault()) {
+                recentSearchObjects.clear();
+                recentSearchObjects.addAll(recentSearchObjectsReal);
+                recentSearchLoaded.setRecentSearch(recentSearchObjects, null);
+                return;
+            }
+            searchResult.clear();
+            ArrayList<DialogsSearchAdapter.RecentSearchObject> dialogs = new ArrayList<>();
+            Log.d("030-?", String.format("%s contains %d dlgs", filter.name, filter.dialogs.size()));
+            for (TLRPC.Dialog dialog : filter.dialogs) {
+                DialogsSearchAdapter.RecentSearchObject r = new DialogsSearchAdapter.RecentSearchObject();
+                r.did = dialog.id;
+                r.date = dialog.last_message_date;
+                if (DialogObject.isChatDialog(dialog.id)) {
+                    TLRPC.Chat chat = messagesController.getChat(-dialog.id);
+                    if (chat == null) continue;
+                    r.object = chat;
+                } else if (DialogObject.isUserDialog(dialog.id)) {
+                    TLRPC.User user = messagesController.getUser(dialog.id);
+                    if (user == null) continue;
+                    r.object = user;
+                }
+                dialogs.add(r);
+            }
+            if (recentSearchObjectsReal.isEmpty()) recentSearchObjectsReal.addAll(recentSearchObjects);
+            recentSearchLoaded.setRecentSearch(dialogs, null);
+        }
+
         int lastItemCont;
 
         @Override
         public int getItemCount() {
             itemsCount = 0;
             hintsCell = -1;
+            dialogFilterRow = -1;
             resentTitleCell = -1;
             recentDialogsStartRow = -1;
             searchResultsStartRow = -1;
             lastFilledItem = -1;
 
+            firstEmptyViewCell = itemsCount++;
             if (TextUtils.isEmpty(lastSearchText)) {
-                firstEmptyViewCell = itemsCount++;
+                if (filters.size() > 1) dialogFilterRow = itemsCount++;
                 hintsCell = itemsCount++;
 
-                if (recentSearchObjects.size() > 0) {
+                if (!recentSearchObjects.isEmpty()) {
                     resentTitleCell = itemsCount++;
                     recentDialogsStartRow = itemsCount;
                     itemsCount += recentSearchObjects.size();
@@ -3368,7 +3508,6 @@ public class ShareAlert extends BottomSheet implements NotificationCenter.Notifi
                 lastFilledItem = itemsCount++;
                 return lastItemCont = itemsCount;
             } else {
-                firstEmptyViewCell = itemsCount++;
                 searchResultsStartRow = itemsCount;
                 itemsCount += (searchResult.size() + searchAdapterHelper.getLocalServerSearch().size());
                 if (itemsCount == 1) {
@@ -3532,11 +3671,12 @@ public class ShareAlert extends BottomSheet implements NotificationCenter.Notifi
                     break;
                 }
                 case 3: {
-                    GraySectionCell graySectionCell = new GraySectionCell(context, resourcesProvider);
-                    graySectionCell.setTextColor(Theme.key_graySectionText);
-                    graySectionCell.setBackgroundColor(getThemedColor(Theme.key_graySection));
-                    graySectionCell.setText(LocaleController.getString(R.string.Recent));
-                    view = graySectionCell;
+                    recentCell = new GraySectionCell(context, resourcesProvider);
+                    recentCell.setTextColor(Theme.key_graySectionText);
+                    recentCell.setBackgroundColor(getThemedColor(Theme.key_graySection));
+                    recentCell.setText(LocaleController.getString(R.string.Recent));
+                    if (selectedTab) recentCell.setVisibility(View.GONE);
+                    view = recentCell;
                     break;
                 }
                 case 4: {
@@ -3546,6 +3686,16 @@ public class ShareAlert extends BottomSheet implements NotificationCenter.Notifi
                             super.onMeasure(widthMeasureSpec, MeasureSpec.makeMeasureSpec(searchLayoutManager.lastItemHeight, MeasureSpec.EXACTLY));
                         }
                     };
+                    break;
+                }
+                case 169: {
+                    view = createFilterDropdownView(parent);
+                    view.setLayoutParams(new RecyclerView.LayoutParams(RecyclerView.LayoutParams.MATCH_PARENT, dp(44)));
+                    view.post(() -> {
+                        RecyclerView.LayoutParams lp = (RecyclerView.LayoutParams)view.getLayoutParams();
+                        lp.width = parent.getWidth();
+                        view.setLayoutParams(lp);
+                    });
                     break;
                 }
             }
@@ -3599,6 +3749,17 @@ public class ShareAlert extends BottomSheet implements NotificationCenter.Notifi
                         ((ProfileSearchCell) holder.itemView).useSeparator = position < getItemCount() - 2;
                     } else if (holder.itemView instanceof ShareDialogCell) {
                         ((ShareDialogCell) holder.itemView).setDialog(id, selectedDialogs.indexOfKey(id) >= 0, name);
+                    } else if (holder.itemView instanceof FrameLayout frame) {
+                        if (frame.getChildCount() > 0 && frame.getChildAt(0) instanceof FilterTabsView) {
+                            frame.setLayoutParams(new RecyclerView.LayoutParams(
+                                    RecyclerView.LayoutParams.MATCH_PARENT,
+                                    RecyclerView.LayoutParams.WRAP_CONTENT
+                            ));
+                            frame.getChildAt(0).setLayoutParams(new RecyclerView.LayoutParams(
+                                    RecyclerView.LayoutParams.MATCH_PARENT,
+                                    RecyclerView.LayoutParams.WRAP_CONTENT
+                            ));
+                        }
                     }
                     return;
                 }
@@ -3652,6 +3813,8 @@ public class ShareAlert extends BottomSheet implements NotificationCenter.Notifi
                 return 2;
             } else if (position == resentTitleCell) {
                 return 3;
+            } else if (position == dialogFilterRow) {
+                return 169;
             }
             return TextUtils.isEmpty(lastSearchText) ? 0 : 5;
         }
