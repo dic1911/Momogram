@@ -84,34 +84,29 @@ public class VoIPHelper {
     }
 
     public static void startCall(TLRPC.User user, boolean videoCall, boolean canVideoCall, final Activity activity, TLRPC.UserFull userFull, AccountInstance accountInstance, boolean confirmed) {
-        if (userFull != null && userFull.phone_calls_private) {
-            new AlertDialog.Builder(activity)
-                    .setTitle(LocaleController.getString(R.string.VoipFailed))
-                    .setMessage(AndroidUtilities.replaceTags(LocaleController.formatString("CallNotAvailable", R.string.CallNotAvailable,
-                            ContactsController.formatName(user.first_name, user.last_name))))
-                    .setPositiveButton(LocaleController.getString(R.string.OK), null)
-                    .show();
-            return;
-        }
-        if (ConnectionsManager.getInstance(UserConfig.selectedAccount).getConnectionState() != ConnectionsManager.ConnectionStateConnected) {
-            boolean isAirplaneMode = Settings.System.getInt(activity.getContentResolver(), Settings.System.AIRPLANE_MODE_ON, 0) != 0;
-            AlertDialog.Builder bldr = new AlertDialog.Builder(activity)
-                    .setTitle(isAirplaneMode ? LocaleController.getString(R.string.VoipOfflineAirplaneTitle) : LocaleController.getString(R.string.VoipOfflineTitle))
-                    .setMessage(isAirplaneMode ? LocaleController.getString(R.string.VoipOfflineAirplane) : LocaleController.getString(R.string.VoipOffline))
-                    .setPositiveButton(LocaleController.getString(R.string.OK), null);
-            if (isAirplaneMode) {
-                final Intent settingsIntent = new Intent(Settings.ACTION_AIRPLANE_MODE_SETTINGS);
-                if (settingsIntent.resolveActivity(activity.getPackageManager()) != null) {
-                    bldr.setNeutralButton(LocaleController.getString(R.string.VoipOfflineOpenSettings), (dialog, which) -> activity.startActivity(settingsIntent));
-                }
-            }
-            try {
-                bldr.show();
-            } catch (Exception e) {
-                FileLog.e(e);
-            }
-            return;
-        }
+		if (userFull != null && userFull.phone_calls_private) {
+			AlertsCreator.showCallsForbidden(activity, accountInstance.getCurrentAccount(), user.id, null);
+			return;
+		}
+		if (ConnectionsManager.getInstance(UserConfig.selectedAccount).getConnectionState() != ConnectionsManager.ConnectionStateConnected) {
+			boolean isAirplaneMode = Settings.System.getInt(activity.getContentResolver(), Settings.System.AIRPLANE_MODE_ON, 0) != 0;
+			AlertDialog.Builder bldr = new AlertDialog.Builder(activity)
+					.setTitle(isAirplaneMode ? LocaleController.getString(R.string.VoipOfflineAirplaneTitle) : LocaleController.getString(R.string.VoipOfflineTitle))
+					.setMessage(isAirplaneMode ? LocaleController.getString(R.string.VoipOfflineAirplane) : LocaleController.getString(R.string.VoipOffline))
+					.setPositiveButton(LocaleController.getString(R.string.OK), null);
+			if (isAirplaneMode) {
+				final Intent settingsIntent = new Intent(Settings.ACTION_AIRPLANE_MODE_SETTINGS);
+				if (settingsIntent.resolveActivity(activity.getPackageManager()) != null) {
+					bldr.setNeutralButton(LocaleController.getString(R.string.VoipOfflineOpenSettings), (dialog, which) -> activity.startActivity(settingsIntent));
+				}
+			}
+			try {
+				bldr.show();
+			} catch (Exception e) {
+				FileLog.e(e);
+			}
+			return;
+		}
 
         if (!confirmed && NekoConfig.askBeforeCall.Bool()) {
             new AlertDialog.Builder(activity)

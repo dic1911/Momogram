@@ -604,6 +604,11 @@ public class ChatAttachAlertPhotoLayout extends ChatAttachAlert.AttachAlertLayou
         public boolean isEditingMessage() {
             return parentAlert != null && parentAlert.editingMessageObject != null;
         }
+
+        @Override
+        public boolean isEditingMessageResend() {
+            return parentAlert != null && parentAlert.editingMessageObject != null && parentAlert.editingMessageObject.needResendWhenEdit();
+        }
     };
 
     protected void updateCheckedPhotoIndices() {

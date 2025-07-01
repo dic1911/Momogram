@@ -55,9 +55,15 @@ public class BillingUtilities {
     }
 
     public static Pair<String, String> createDeveloperPayload(TLRPC.InputStorePaymentPurpose paymentPurpose, AccountInstance accountInstance) {
-        long currentAccountId = accountInstance.getUserConfig().getClientUserId();
-        byte[] currentAccountIdBytes = String.valueOf(currentAccountId).getBytes(Charsets.UTF_8);
-        String obfuscatedAccountId = Base64.encodeToString(currentAccountIdBytes, Base64.DEFAULT);
+        String obfuscatedAccountId;
+        if (accountInstance.getUserConfig().isClientActivated()) {
+            long currentAccountId = accountInstance.getUserConfig().getClientUserId();
+            byte[] currentAccountIdBytes = String.valueOf(currentAccountId).getBytes(Charsets.UTF_8);
+            obfuscatedAccountId = Base64.encodeToString(currentAccountIdBytes, Base64.DEFAULT);
+        } else {
+            byte[] currentAccountIdBytes = ("account-" + accountInstance.getCurrentAccount()).getBytes(Charsets.UTF_8);
+            obfuscatedAccountId = Base64.encodeToString(currentAccountIdBytes, Base64.DEFAULT);
+        }
         return Pair.create(obfuscatedAccountId, savePurpose(paymentPurpose));
     }
 
