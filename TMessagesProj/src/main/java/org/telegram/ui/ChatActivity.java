@@ -23842,7 +23842,7 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
                     TLRPC.TL_messageMediaPoll media = (TLRPC.TL_messageMediaPoll) object.messageOwner.media;
                     if (poll != null) {
                         if (object.messageOwner.translated) {
-                            PollTransUpdatesKt.postPollTrans(media, poll);
+                            PollTransUpdatesKt.postPollTrans(object, media, poll);
                         }
                         media.poll = poll;
                         isQuiz = poll.quiz;
@@ -44498,7 +44498,9 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
                             selectedObject.messageOwner.entities, false, onLinkPress, null);
                     alert.setDimBehind(true);
                 } else {
-                    MessageTransKt.translateMessages(this);
+                    MessageTransKt.translateMessages(this, () -> {
+                        updatePollContent(selectedObject);
+                    });
                 }
                 break;
             }
@@ -46013,6 +46015,13 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
         if (addedOpenAppMenuButton) return;
         headerItem.addSubItem(nkheaderbtn_bot_app, R.drawable.msg_bot, LocaleController.getString(R.string.OpenLinkInApp));
         addedOpenAppMenuButton = true;
+    }
+
+    private void updatePollContent(MessageObject object) {
+        Log.d("030-tx", "updatePollContent");
+        if (chatAdapter != null) {
+            chatAdapter.updateRowWithMessageObject(object, true, true);
+        }
     }
 
     public void fillMessageMenu(

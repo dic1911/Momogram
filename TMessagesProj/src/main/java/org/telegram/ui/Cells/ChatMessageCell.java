@@ -229,6 +229,8 @@ import java.util.concurrent.atomic.AtomicReference;
 import tw.nekomimi.nekogram.NekoConfig;
 import tw.nekomimi.nekogram.NekoXConfig;
 import tw.nekomimi.nekogram.helpers.WhisperHelper;
+import tw.nekomimi.nekogram.parts.PollTransUpdates;
+import tw.nekomimi.nekogram.utils.TelegramUtil;
 
 public class ChatMessageCell extends BaseCell implements SeekBar.SeekBarDelegate, ImageReceiver.ImageReceiverDelegate, DownloadController.FileDownloadProgressListener, TextSelectionHelper.SelectableView, NotificationCenter.NotificationCenterDelegate {
     private final static int TIME_APPEAR_MS = 200;
@@ -8262,14 +8264,17 @@ public class ChatMessageCell extends BaseCell implements SeekBar.SeekBarDelegate
                 int total_voters;
                 if (m instanceof TLRPC.TL_messageMediaPoll media) {
                     // TLRPC.TL_messageMediaPoll media = (TLRPC.TL_messageMediaPoll) m;
+                    if (messageObject.messageOwner.translated && (messageObject.messageOwner == null || messageObject.messageOwner.translatedPoll == null || messageObject.messageOwner.translatedPoll.question == null))
+                        messageObject.translated = PollTransUpdates.generateTranslatedPoll(messageObject);
                     if (messageObject.translated && messageObject.messageOwner != null && messageObject.messageOwner.translatedPoll != null && messageObject.messageOwner.translatedPoll.question != null) {
                         title = messageObject.messageOwner.translatedPoll.question;
                     } else if (messageObject.messageOwner.translated) {
                         isCustomTranslated = true;
-                        if (media.poll.translatedQuestion != null)
+                        if (media.poll.translatedQuestion != null) {
                             qStr = media.poll.translatedQuestion;
-                        else
-                            isCustomTranslated = messageObject.messageOwner.translated = false;
+                        } else {
+                            isCustomTranslated = false;
+                        }
                     }
 
                     todo = false;
@@ -8300,7 +8305,8 @@ public class ChatMessageCell extends BaseCell implements SeekBar.SeekBarDelegate
                     multiple_choice = true;
                     timerTransitionProgress = 1.0f;
                     pollClosed = false;
-                    title = media.todo.title;
+                    title = (messageObject.translated || (messageObject.messageOwner != null && messageObject.messageOwner.translated)) ?
+                            messageObject.messageOwner.translatedPoll.question : media.todo.title;
                     total_voters = 0;
                     subtitle = getString(messageObject.getDialogId() < 0 ? R.string.MessageGroupTodoList : R.string.MessageTodoList);
                 }
@@ -8455,6 +8461,7 @@ public class ChatMessageCell extends BaseCell implements SeekBar.SeekBarDelegate
                 boolean hasDifferent = false;
                 int previousPercent = 0;
                 if (m instanceof TLRPC.TL_messageMediaPoll) {
+                    currentMessageObject.translated |= currentMessageObject.messageOwner.translated;
                     TLRPC.TL_messageMediaPoll media = (TLRPC.TL_messageMediaPoll) m;
                     for (int a = 0, N = media.poll.answers.size(); a < N; a++) {
                         TLRPC.PollAnswer pollAnswer = media.poll.answers.get(a);
@@ -8560,20 +8567,22 @@ public class ChatMessageCell extends BaseCell implements SeekBar.SeekBarDelegate
                         }
                     }
                 } else if (m instanceof TLRPC.TL_messageMediaToDo) {
+                    currentMessageObject.translated |= currentMessageObject.messageOwner.translated;
                     TLRPC.TL_messageMediaToDo media = (TLRPC.TL_messageMediaToDo) m;
                     for (int a = 0, N = media.todo.list.size(); a < N; a++) {
                         TLRPC.TodoItem task = media.todo.list.get(a);
                         boolean translated = false;
-//                        if (currentMessageObject.translated && currentMessageObject.messageOwner != null && currentMessageObject.messageOwner.translatedPoll != null) {
-//                            for (TLRPC.PollAnswer translatedPollAnswer : currentMessageObject.messageOwner.translatedPoll.answers) {
-//                                if (Arrays.equals(translatedPollAnswer.option, pollAnswer.option)) {
-//                                    translated = true;
-//                                    pollAnswer = translatedPollAnswer;
-//                                    break;
-//                                }
-//                            }
-//                        }
-                        CharSequence answerText = new SpannableStringBuilder(task.title.text);
+                        TLRPC.TL_textWithEntities text = task.title;
+                        if (currentMessageObject.translated && currentMessageObject.messageOwner != null && currentMessageObject.messageOwner.translatedPoll != null) {
+                            for (TLRPC.PollAnswer translatedPollAnswer : currentMessageObject.messageOwner.translatedPoll.answers) {
+                                if (translatedPollAnswer.option[0] == task.id) {
+                                    translated = true;
+                                    text = translatedPollAnswer.text;
+                                    break;
+                                }
+                            }
+                        }
+                        CharSequence answerText = new SpannableStringBuilder(text.text);
                         answerText = Emoji.replaceEmoji(answerText, Theme.chat_audioTitlePaint.getFontMetricsInt(), false);
                         if (task.title.entities != null) {
                             answerText = MessageObject.replaceAnimatedEmoji(answerText, task.title.entities, Theme.chat_audioPerformerPaint.getFontMetricsInt(), true);

@@ -126,11 +126,10 @@ class TranslateDb(val code: String) {
     }
 
     fun query(text: String): String? = synchronized(this) {
-
+        if (NekoConfig.ignoreTranslatorCache.Bool()) return null
         val cursor = conn.find(FluentFilter.where("text").eq(text))
         cursor.forEach { return it.trans }
         return null // conn.find(FluentFilter.where("text").eq(text)).firstOrDefault()?.trans
-
     }
 
 }

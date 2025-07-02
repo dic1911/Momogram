@@ -50,9 +50,11 @@ import java.util.ArrayList;
 import kotlin.Unit;
 
 import moe.hx030.momogram.util.ReflectUtil;
+import tw.nekomimi.nekogram.database.NitritesKt;
 import tw.nekomimi.nekogram.ui.PopupBuilder;
 import tw.nekomimi.nekogram.utils.FileUtil;
 import tw.nekomimi.nekogram.utils.StrUtil;
+import tw.nekomimi.nekogram.utils.TelegramUtil;
 import tw.nekomimi.nekogram.utils.ZipUtil;
 import tw.nekomimi.nekogram.NekoConfig;
 import tw.nekomimi.nekogram.config.CellGroup;
@@ -107,6 +109,12 @@ public class NekoExperimentalSettingsActivity extends BaseFragment {
 
     private final AbstractConfigCell header3 = cellGroup.appendCell(new ConfigCellHeader(LocaleController.getString(R.string.DebugMenu)));
     private final AbstractConfigCell allowDupLoginRow = cellGroup.appendCell(new ConfigCellTextCheck(NekoConfig.allowDupLogin));
+    private final AbstractConfigCell ignoreTranslatorCacheRow = cellGroup.appendCell(new ConfigCellTextCheck(NekoConfig.ignoreTranslatorCache));
+    private final AbstractConfigCell clearTranslatorCacheRow = cellGroup.appendCell(new ConfigCellSelectBox(LocaleController.getString(R.string.ClearTranslatorCache), null, null,
+            () -> AndroidUtilities.runOnUIThread(() -> {
+                NitritesKt.mkDatabase("translate_caches", true).close();
+                TelegramUtil.restartApp(false);
+            })));
     private final AbstractConfigCell triggerCrashRow = cellGroup.appendCell(new ConfigCellSelectBox(LocaleController.getString(R.string.TriggerCrash), null, null,
             () -> AndroidUtilities.runOnUIThread(() -> { int[] arr = new int[0]; arr[1] = 0;})));
     private final AbstractConfigCell divider2 = cellGroup.appendCell(new ConfigCellDivider());

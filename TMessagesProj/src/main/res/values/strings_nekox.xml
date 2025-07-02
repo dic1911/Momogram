@@ -269,4 +269,6 @@
     <string name="ResumeAudioPlaybackOnLaunch">Resume audio playback on launch</string>
     <string name="MuteAccountNoti">Mute all notifications</string>
     <string name="UnMuteAccountNoti">Un-mute notifications</string>
+    <string name="ClearTranslatorCache">Clear translator cache</string>
+    <string name="IgnoreTranslatorCache">Ignore translator cache</string>
 </resources>

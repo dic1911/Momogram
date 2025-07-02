@@ -73309,6 +73309,7 @@ public class TLRPC {
         
         public int id;
         public TL_textWithEntities title;
+        public TL_textWithEntities translatedTitle;
 
         public static TodoItem TLdeserialize(InputSerializedData stream, int constructor, boolean exception) {
             if (constructor != TodoItem.constructor) {
@@ -73343,6 +73344,7 @@ public class TLRPC {
         public boolean others_can_append;
         public boolean others_can_complete;
         public TL_textWithEntities title;
+        public TL_textWithEntities translatedTitle;
         public ArrayList<TodoItem> list = new ArrayList<>();
 
         public static TodoList TLdeserialize(InputSerializedData stream, int constructor, boolean exception) {

@@ -6643,10 +6643,11 @@ public class AndroidUtilities {
         return false;
     }
 
-    private static void printStackTrace(String tag) {
+    public static void printStackTrace(String tag, boolean force) {
         StackTraceElement[] elements = Thread.currentThread().getStackTrace();
         for (int a = 0; a < elements.length; a++) {
-            FileLog.d("[" + tag + "] " + elements[a]);
+            if (force) Log.d(tag, elements[a].toString());
+            else FileLog.d("[" + tag + "] " + elements[a]);
         }
     }
 
@@ -6656,6 +6657,6 @@ public class AndroidUtilities {
         }
 
         FileLog.d("[FLAG_SECURE]");
-        printStackTrace("FLAG_SECURE");
+        printStackTrace("FLAG_SECURE", false);
     }
 }
