@@ -53,6 +53,7 @@ import org.telegram.messenger.R;
 import org.telegram.messenger.SharedConfig;
 import org.telegram.messenger.Utilities;
 import org.telegram.ui.ActionBar.ActionBarPopupWindow;
+import org.telegram.ui.ActionBar.AlertDialog;
 import org.telegram.ui.ActionBar.FloatingActionMode;
 import org.telegram.ui.ActionBar.FloatingToolbar;
 import org.telegram.ui.ActionBar.Theme;
@@ -68,6 +69,7 @@ import java.util.ArrayList;
 import tw.nekomimi.nekogram.NekoConfig;
 import tw.nekomimi.nekogram.transtale.TranslateDb;
 import tw.nekomimi.nekogram.transtale.Translator;
+import tw.nekomimi.nekogram.transtale.TranslatorKt;
 import tw.nekomimi.nekogram.utils.AlertUtil;
 import tw.nekomimi.nekogram.utils.ProxyUtil;
 
@@ -1488,11 +1490,30 @@ public abstract class TextSelectionHelper<Cell extends TextSelectionHelper.Selec
                     return true;
                 } else if (itemId == TRANSLATE) {
                     // NekoX / 030: Translate ~~removed~~ revived
-                    if (onTranslateListener != null) {
+                    if (!(NekoConfig.useTelegramTranslateInChat.Bool() || NekoConfig.translationProvider.Int() != Translator.providerTelegram) && onTranslateListener != null) {
                         String configTargetLanguage = NekoConfig.translateToLang.String();
                         String translateToLanguage = configTargetLanguage.isEmpty() ? LocaleController.getInstance().getCurrentLocale().getLanguage() : configTargetLanguage;
-//                        onTranslateListener.run(getSelectedText(), translateFromLanguage, translateToLanguage, () -> showActions());
                         onTranslateListener.run(getSelectedText(), "auto", translateToLanguage, () -> showActions());
+                    } else {
+                        Translator.translate(getSelectedText().toString(), new Translator.Companion.TranslateCallBack() {
+                            @Override
+                            public void onSuccess(@NonNull String translation) {
+                                new AlertDialog.Builder(textSelectionOverlay.getContext())
+                                        .setTitle(LocaleController.getString(R.string.Translate))
+                                        .setMessage(translation)
+                                        .setPositiveButton(LocaleController.getString(R.string.Close), null)
+                                        .show();
+                            }
+
+                            @Override
+                            public void onFailed(boolean unsupported, @NonNull String message) {
+                                new AlertDialog.Builder(textSelectionOverlay.getContext())
+                                        .setTitle(LocaleController.getString(R.string.TranslateFailed))
+                                        .setMessage(message)
+                                        .setPositiveButton(LocaleController.getString(R.string.Close), null)
+                                        .show();
+                            }
+                        });
                     }
                     hideActions();
                     return true;
