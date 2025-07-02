@@ -1960,7 +1960,7 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
                 return;
             }
             if (NekoConfig.reactions.Int() == 1) {
-                createMenu(view, true, false, x, y, true, false, true);
+                createMenu(view, true, false, x, y, true, false, false, true);
                 return;
             }
 
@@ -31479,7 +31479,7 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
     }
 
     private boolean createMenu(View v, boolean single, boolean listView, float x, float y, boolean longpress) {
-        return createMenu(v, single, listView, x, y, true, longpress, false);
+        return createMenu(v, single, listView, x, y, true, longpress, false, false);
     }
 
     public CharSequence getMessageCaption(MessageObject messageObject, MessageObject.GroupedMessages group) {
@@ -31524,11 +31524,11 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
 
 
     private boolean createMenu(View v, boolean single, boolean listView, float x, float y, boolean searchGroup, boolean longpress) {
-        return createMenu(v, single, listView, x, y, searchGroup, longpress, false);
+        return createMenu(v, single, listView, x, y, searchGroup, longpress, false, false);
     }
 
     @SuppressLint("ClickableViewAccessibility")
-    private boolean createMenu(View v, boolean single, boolean listView, float x, float y, boolean searchGroup, boolean longpress, boolean suggestEdit) {
+    private boolean createMenu(View v, boolean single, boolean listView, float x, float y, boolean searchGroup, boolean longpress, boolean suggestEdit, boolean onDoubleTapped) {
         if (actionBar.isActionModeShowed() || isReport()) {
             return false;
         }
@@ -31827,7 +31827,7 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
             Rect rect = new Rect();
 
             List<TLRPC.TL_availableReaction> availableReacts = getMediaDataController().getEnabledReactionsList();
-            boolean nekoXShowReactionsView = (NekoConfig.reactions.Int() != 1 /*|| onDoubleTapped*/); // Show reactions and hide them from tap
+            boolean nekoXShowReactionsView = (NekoConfig.reactions.Int() != 1 || onDoubleTapped); // Show reactions and hide them from tap
             final boolean isReactionsViewAvailable = !isSecretChat() && !isInScheduleMode() && currentUser == null && primaryMessage.hasReactions() && (!ChatObject.isChannel(currentChat) || currentChat.megagroup) && !ChatObject.isMonoForum(currentChat) && !availableReacts.isEmpty() && primaryMessage.messageOwner.reactions.can_see_list && !primaryMessage.isSecretMedia();
             boolean isReactionsAvailable;
             if (suggestEdit) {
@@ -39731,7 +39731,7 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
                     VoIPHelper.startCall(currentUser, messageObject.isVideoCall(), userInfo != null && userInfo.video_calls_available, getParentActivity(), getMessagesController().getUserFull(currentUser.id), getAccountInstance());
                 }
             } else {
-                createMenu(cell, true, false, otherX, otherY, messageObject.isMusic(), false, false);
+                createMenu(cell, true, false, otherX, otherY, messageObject.isMusic(), false, false, false);
             }
         }
 
@@ -39743,7 +39743,7 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
 
         @Override
         public void didPressSponsoredInfo(ChatMessageCell cell, float x, float y) {
-            createMenu(cell, true, false, x, y, false, false, false);
+            createMenu(cell, true, false, x, y, false, false, false, false);
         }
 
         @Override
@@ -40235,7 +40235,7 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
                     checkStarsNeedSheet(onLoad, AmountUtils.Amount.of(message.suggested_post != null ? message.suggested_post.price : null), !isDirectAdmin);
                 }
             } else if (button.id == BotInlineKeyboard.ButtonCustom.SUGGESTION_EDIT) {
-                createMenu(cell, true, false, cell.getLastTouchX(), cell.getLastTouchY(), true, false, true);
+                createMenu(cell, true, false, cell.getLastTouchX(), cell.getLastTouchY(), true, false, true, false);
             }
         }
 
