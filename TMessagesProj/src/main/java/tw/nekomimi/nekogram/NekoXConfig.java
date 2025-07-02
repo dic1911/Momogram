@@ -467,7 +467,11 @@ public class NekoXConfig {
             String str = preferences.getString(MUTED_ACCOUNTS, "");
             String[] idStr = str.split(" ");
             mutedAccountSet = new HashSet<>();
-            for (String id : idStr) mutedAccountSet.add(Integer.parseInt(id));
+            for (String id : idStr) {
+                try {
+                    mutedAccountSet.add(Integer.parseInt(id));
+                } catch (Exception ignored) {}
+            }
         }
         return mutedAccountSet.contains(account);
     }
