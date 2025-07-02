@@ -1388,6 +1388,7 @@ public class AndroidUtilities {
             AndroidUtilities.statusBarHeight = newStatusBarHeight;
         }
         AndroidUtilities.navigationBarHeight = getNavigationBarHeight(context);
+        Log.d("030-sb", "final status bar height = " + statusBarHeight);
     }
 
     private static boolean statusBarHeightOverridden = false;

@@ -84,6 +84,7 @@ import android.text.style.ForegroundColorSpan;
 import android.text.style.ImageSpan;
 import android.text.style.URLSpan;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.util.Pair;
 import android.util.Property;
 import android.util.SparseArray;
@@ -30356,6 +30357,11 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
 
             @Override
             public int getTopOffset(int tag) {
+                Log.d("030-sb", String.format("action bar height = %d | action bar exists = %s, mheight = %d, top = %d | contentPaddingTop = %d",
+                        ActionBar.getCurrentActionBarHeight(), actionBar != null,
+                        (actionBar != null ? actionBar.getMeasuredHeight() : -1),
+                        (actionBar != null ? actionBar.getTop() : -1),
+                        contentPaddingTop));
                 return Math.max(AndroidUtilities.statusBarHeight + ActionBar.getCurrentActionBarHeight(), actionBar != null ? actionBar.getMeasuredHeight() + actionBar.getTop() : 0) + Math.max(0, contentPaddingTop);
             }
 

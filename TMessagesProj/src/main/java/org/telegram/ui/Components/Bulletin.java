@@ -29,6 +29,7 @@ import android.text.StaticLayout;
 import android.text.TextPaint;
 import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
+import android.util.Log;
 import android.util.Property;
 import android.util.TypedValue;
 import android.view.GestureDetector;
@@ -679,6 +680,7 @@ public class Bulletin {
         }
 
         default int getTopOffset(int tag) {
+            Log.d("030-sb", "default getTopOffset, returning 0");
             return 0;
         }
 
@@ -914,7 +916,7 @@ public class Bulletin {
             float translation = 0;
             if (delegate != null) {
                 if (top) {
-                    translation -= delegate.getTopOffset(bulletin != null ? bulletin.tag : 0);
+                    translation -= getTopOffset();
                 } else {
                     translation += getBottomOffset();
                 }
@@ -924,9 +926,10 @@ public class Bulletin {
 
         public float getTopOffset() {
             if (delegate != null) {
-                return delegate.getTopOffset(bulletin != null ? bulletin.tag : 0);
+                return Math.max(AndroidUtilities.statusBarHeight + dp(4),
+                        delegate.getTopOffset(bulletin != null ? bulletin.tag : 0));
             }
-            return 0;
+            return AndroidUtilities.statusBarHeight;
         }
 
         public float getBottomOffset() {
@@ -1146,7 +1149,7 @@ public class Bulletin {
 
             background.setBounds(getPaddingLeft(), getPaddingTop(), getMeasuredWidth() - getPaddingRight(), getMeasuredBackgroundHeight() - getPaddingBottom());
             if (isTransitionRunning() && delegate != null) {
-                final float top = delegate.getTopOffset(bulletin.tag) - getY();
+                final float top = getTopOffset() - getY();
                 final float bottom = ((View) getParent()).getMeasuredHeight() - getBottomOffset() - getY();
                 final boolean clip = !fromBlurRender && delegate.clipWithGradient(bulletin.tag);
                 canvas.save();
@@ -2294,7 +2297,9 @@ public class Bulletin {
 
                 @Override
                 public int getTopOffset(int tag) {
-                    return delegate == null ? AndroidUtilities.statusBarHeight : delegate.getTopOffset(tag);
+                    int ret = delegate == null ? AndroidUtilities.statusBarHeight : getTopOffset(tag);
+                    Log.d("030-sb", String.format("BulletinWindow.getTopOffset, delegate exists: %s, ret: %d", delegate != null , ret));
+                    return ret;
                 }
 
                 @Override
