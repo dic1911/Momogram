@@ -8253,13 +8253,25 @@ public class ChatMessageCell extends BaseCell implements SeekBar.SeekBarDelegate
                 int maxWidth = Math.min(dp(500), messageObject.getMaxMessageTextWidth());
                 backgroundWidth = maxWidth + dp(31);
 
+                boolean isCustomTranslated = false;
+                String qStr = null;
                 TLRPC.MessageMedia m = MessageObject.getMedia(messageObject.messageOwner);
-                TLRPC.TL_textWithEntities title;
+                TLRPC.TL_textWithEntities title = null;
                 String subtitle;
                 boolean todo, quiz, public_voters, multiple_choice;
                 int total_voters;
-                if (m instanceof TLRPC.TL_messageMediaPoll) {
-                    TLRPC.TL_messageMediaPoll media = (TLRPC.TL_messageMediaPoll) m;
+                if (m instanceof TLRPC.TL_messageMediaPoll media) {
+                    // TLRPC.TL_messageMediaPoll media = (TLRPC.TL_messageMediaPoll) m;
+                    if (messageObject.translated && messageObject.messageOwner != null && messageObject.messageOwner.translatedPoll != null && messageObject.messageOwner.translatedPoll.question != null) {
+                        title = messageObject.messageOwner.translatedPoll.question;
+                    } else if (messageObject.messageOwner.translated) {
+                        isCustomTranslated = true;
+                        if (media.poll.translatedQuestion != null)
+                            qStr = media.poll.translatedQuestion;
+                        else
+                            isCustomTranslated = messageObject.messageOwner.translated = false;
+                    }
+
                     todo = false;
                     quiz = media.poll.quiz;
                     public_voters = media.poll.public_voters;
@@ -8267,7 +8279,7 @@ public class ChatMessageCell extends BaseCell implements SeekBar.SeekBarDelegate
                     total_voters = media.results.total_voters;
                     timerTransitionProgress = media.poll.close_date - ConnectionsManager.getInstance(currentAccount).getCurrentTime() < 60 ? 0.0f : 1.0f;
                     pollClosed = media.poll.closed;
-                    title = media.poll.question;
+                    if (!isCustomTranslated || title == null) title = media.poll.question;
                     if (pollClosed) {
                         subtitle = getString(R.string.FinalResults);
                     } else if (media.poll.quiz) {
@@ -8301,19 +8313,7 @@ public class ChatMessageCell extends BaseCell implements SeekBar.SeekBarDelegate
                     messageObject.checkedVotes.clear();
                 }
 
-                TLRPC.TL_textWithEntities question = media.poll.question;
-                String qStr = null;
-                boolean isCustomTranslated = false;
-                if (messageObject.translated && messageObject.messageOwner != null && messageObject.messageOwner.translatedPoll != null && messageObject.messageOwner.translatedPoll.question != null) {
-                    question = messageObject.messageOwner.translatedPoll.question;
-                } else if (messageObject.messageOwner.translated) {
-                    isCustomTranslated = true;
-                    if (media.poll.translatedQuestion != null)
-                        qStr = media.poll.translatedQuestion;
-                    else
-                        isCustomTranslated = messageObject.messageOwner.translated = false;
-                }
-                CharSequence questionText = new SpannableStringBuilder(isCustomTranslated ? qStr : question.text);
+                CharSequence questionText = new SpannableStringBuilder(isCustomTranslated ? qStr : title.text);
                 questionText = Emoji.replaceEmoji(questionText, Theme.chat_audioTitlePaint.getFontMetricsInt(), false);
                 if (title.entities != null) {
                     questionText = MessageObject.replaceAnimatedEmoji(questionText, title.entities, Theme.chat_audioTitlePaint.getFontMetricsInt(), true);

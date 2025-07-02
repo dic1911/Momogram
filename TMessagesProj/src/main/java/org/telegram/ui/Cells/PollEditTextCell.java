@@ -63,9 +63,9 @@ public class PollEditTextCell extends FrameLayout implements SuggestEmojiView.An
     public static final int TYPE_EMOJI = 1;
     private final Theme.ResourcesProvider resourcesProvider;
 
-    private EditTextBoldCursor textView;
-    private ImageView deleteImageView;
-    private ImageView moveImageView;
+    public EditTextBoldCursor textView;
+    public ImageView deleteImageView;
+    public ImageView moveImageView;
     private ImageView iconImageView;
     private SimpleTextView textView2;
     private CheckBox2 checkBox;

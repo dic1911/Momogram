@@ -1831,7 +1831,7 @@ public class ChatAttachAlertPollLayout extends ChatAttachAlert.AttachAlertLayout
                                 listAdapter.notifyItemChanged(emptyRow);
                             }
                         }
-                    }, resourcesProvider) {
+                    }, null, resourcesProvider) {
 
                         @Override
                         protected void onActionModeStart(EditTextBoldCursor editText, ActionMode actionMode) {
