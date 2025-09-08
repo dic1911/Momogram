@@ -7548,8 +7548,8 @@ public class PhotoViewer implements NotificationCenter.NotificationCenterDelegat
 
             final boolean canEdit = placeProvider != null && placeProvider.canEdit(currentIndex);
             final boolean canReplace = placeProvider != null && placeProvider.canReplace(currentIndex);
-            final int[] order = {4, 3, 2, 0, 1, 5};
-            for (int i = 0; i < 6; i++) {
+            final int[] order = {4, 3, 2, 0, 1, 5, 6};
+            for (int i = 0; i < 7; i++) {
                 final int a = order[i];
                 if (a != 2 && a != 3 && canEdit && canReplace) {
                     continue;
@@ -7610,6 +7610,10 @@ public class PhotoViewer implements NotificationCenter.NotificationCenterDelegat
                     }
                 } else if (a == 5) {
                     cell.setTextAndIcon(getString(NekoConfig.dontSendRightAfterTranslated.Bool() ? R.string.Translate : R.string.TranslateBeforeSend), R.drawable.ic_translate);
+                } else if (a == 6) {
+                    boolean spoiler = currentPhotosHasSpoiler();
+                    cell.setTextAndIcon(getString(spoiler ? R.string.DisablePhotoSpoiler : R.string.EnablePhotoSpoiler),
+                            spoiler ? R.drawable.msg_spoiler_off : R.drawable.msg_spoiler);
                 }
                 cell.setMinimumWidth(dp(196));
                 cell.setColors(0xffffffff, 0xffffffff);
@@ -7641,6 +7645,10 @@ public class PhotoViewer implements NotificationCenter.NotificationCenterDelegat
                         Locale toDefault = TranslatorKt.getCode2Locale("en");
                         Translator.translateMessageBeforeSent(currentAccount, applyCaption(),
                             TranslatorKt.getLocale2code(TranslateDb.getChatLanguage(parentChatActivity.getDialogId(), toDefault)));
+                    } else if (a == 6) {
+                        if (placeProvider != null && !placeProvider.isPhotoChecked(currentIndex))
+                            setPhotoChecked();
+                        toggleSpoiler();
                     }
                 });
                 // 030: nuked to fix build
@@ -11983,6 +11991,27 @@ public class PhotoViewer implements NotificationCenter.NotificationCenterDelegat
         }
         ignoreDidSetImage = false;
         centerImage.setParentView(containerView);
+    }
+
+    private boolean currentPhotosHasSpoiler() {
+        if (placeProvider == null) return false;
+        final HashMap<Object, Object> selectedPhotos = placeProvider.getSelectedPhotos();
+        for (Object e : selectedPhotos.values()) {
+            if (e instanceof MediaController.PhotoEntry photoEntry) {
+                if (photoEntry.hasSpoiler) return true;
+            }
+        }
+        return false;
+    }
+
+    private void toggleSpoiler() {
+        boolean hasSpoiler = currentPhotosHasSpoiler();
+        final HashMap<Object, Object> selectedPhotos = placeProvider.getSelectedPhotos();
+        for (Object e : selectedPhotos.values()) {
+            if (e instanceof MediaController.PhotoEntry photoEntry) {
+                photoEntry.hasSpoiler = !hasSpoiler;
+            }
+        }
     }
 
     private void setPhotoChecked() {
