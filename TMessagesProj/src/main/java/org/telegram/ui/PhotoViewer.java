@@ -309,6 +309,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -370,6 +371,7 @@ public class PhotoViewer implements NotificationCenter.NotificationCenterDelegat
     private Paint surfaceBlackoutPaint;
     private boolean bestVideoQualityChosenByNekoConfig = !NekoConfig.chooseBestVideoQualityByDefault.Bool();
     public static boolean tempDisableGifAsVideo = false;
+    public static Boolean updatedSpoilerValue = null;
 
     public static long muteVideoForChatId = -1L;
 
@@ -11995,8 +11997,15 @@ public class PhotoViewer implements NotificationCenter.NotificationCenterDelegat
 
     private boolean currentPhotosHasSpoiler() {
         if (placeProvider == null) return false;
-        final HashMap<Object, Object> selectedPhotos = placeProvider.getSelectedPhotos();
-        for (Object e : selectedPhotos.values()) {
+        final HashMap<Object, Object> selectedPhotosMap = placeProvider.getSelectedPhotos();
+        Collection<Object> selectedPhotos;
+        if (selectedPhotosMap == null) {
+            selectedPhotos = imagesArrLocals;
+            if (selectedPhotos == null) return false;
+        } else {
+            selectedPhotos = selectedPhotosMap.values();
+        }
+        for (Object e : selectedPhotos) {
             if (e instanceof MediaController.PhotoEntry photoEntry) {
                 if (photoEntry.hasSpoiler) return true;
             }
@@ -12006,12 +12015,20 @@ public class PhotoViewer implements NotificationCenter.NotificationCenterDelegat
 
     private void toggleSpoiler() {
         boolean hasSpoiler = currentPhotosHasSpoiler();
-        final HashMap<Object, Object> selectedPhotos = placeProvider.getSelectedPhotos();
-        for (Object e : selectedPhotos.values()) {
+        final HashMap<Object, Object> selectedPhotosMap = placeProvider.getSelectedPhotos();
+        Collection<Object> selectedPhotos;
+        if (selectedPhotosMap == null) {
+            selectedPhotos = imagesArrLocals;
+            if (selectedPhotos == null) return;
+        } else {
+            selectedPhotos = selectedPhotosMap.values();
+        }
+        for (Object e : selectedPhotos) {
             if (e instanceof MediaController.PhotoEntry photoEntry) {
                 photoEntry.hasSpoiler = !hasSpoiler;
             }
         }
+        updatedSpoilerValue = !hasSpoiler;
     }
 
     private void setPhotoChecked() {
@@ -17128,6 +17145,7 @@ public class PhotoViewer implements NotificationCenter.NotificationCenterDelegat
     }
 
     public boolean openPhotoForSelect(final TLRPC.FileLocation fileLocation, final ImageLocation imageLocation, final ArrayList<Object> photos, final int index, int type, boolean documentsPicker, final PhotoViewerProvider provider, ChatActivity chatActivity) {
+        updatedSpoilerValue = null;
         isDocumentsPicker = documentsPicker;
         if (pickerViewSendButton != null) {
             FrameLayout.LayoutParams layoutParams2 = (FrameLayout.LayoutParams) pickerViewSendButton.getLayoutParams();

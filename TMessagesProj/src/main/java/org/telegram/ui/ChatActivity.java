@@ -20915,6 +20915,8 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
                             entries.remove(i);
                         }
                     }
+                    if (PhotoViewer.updatedSpoilerValue != null)
+                        entries.forEach(x -> x.hasSpoiler = PhotoViewer.updatedSpoilerValue);
                     sendPhotosGroup(entries, notify, scheduleDate, forceDocument);
                 }
 
