@@ -501,7 +501,7 @@ public class MediaController implements AudioManager.OnAudioFocusChangeListener,
         public boolean isCropped;
         public int ttl;
         public long effectId;
-        public boolean highQuality;
+        public boolean highQuality = NekoConfig.increasedMaxPhotoResolution.Bool();
 
         public CropState cropState;
 
@@ -530,7 +530,7 @@ public class MediaController implements AudioManager.OnAudioFocusChangeListener,
             savedFilterState = null;
             stickers = null;
             cropState = null;
-            highQuality = false;
+            highQuality = NekoConfig.increasedMaxPhotoResolution.Bool();
         }
 
         public void copyFrom(MediaEditState state) {
