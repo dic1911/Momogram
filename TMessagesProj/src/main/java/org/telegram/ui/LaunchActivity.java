@@ -6515,7 +6515,7 @@ public class LaunchActivity extends BasePermissionsActivity implements INavigati
                             fragment.openVideoEditor(videoPath, sendingText);
                             videoEditorOpened = true;
                             sendingText = null;
-                        } else if (photoPathsArray != null && photoPathsArray.size() > 0 && topicId == 0) {
+                        } else if (photoPathsArray != null && !photoPathsArray.isEmpty() && topicId == 0) {
                             photosEditorOpened = fragment.openPhotosEditor(photoPathsArray, message == null || message.length() == 0 ? sendingText : message);
                             if (photosEditorOpened) {
                                 sendingText = null;

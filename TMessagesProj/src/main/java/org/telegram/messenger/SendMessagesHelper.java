@@ -69,6 +69,7 @@ import org.telegram.ui.Components.AlertsCreator;
 import org.telegram.ui.Components.AnimatedEmojiSpan;
 import org.telegram.ui.Components.AnimatedFileDrawable;
 import org.telegram.ui.LaunchActivity;
+import org.telegram.ui.PhotoViewer;
 import org.telegram.ui.Stars.StarsController;
 import org.telegram.ui.Stars.StarsIntroActivity;
 import org.telegram.ui.bots.BotWebViewSheet;
@@ -8599,6 +8600,10 @@ public class SendMessagesHelper extends BaseController implements NotificationCe
             info.masks = new ArrayList<>(stickers);
         }
         info.videoEditedInfo = videoEditedInfo;
+        if (PhotoViewer.updatedSpoilerValue != null) {
+            info.hasMediaSpoilers = PhotoViewer.updatedSpoilerValue;
+            PhotoViewer.updatedSpoilerValue = null;
+        }
         ArrayList<SendingMediaInfo> infos = new ArrayList<>();
         infos.add(info);
         prepareSendingMedia(accountInstance, infos, dialogId, replyToMsg, replyToTopMsg, null, quote, forceDocument, false, editingMessageObject, notify, scheduleDate, mode, false, inputContent, quickReplyShortcut, quickReplyShortcutId, effectId, false, payStars, monoForumPeerId, suggestionParams);
@@ -10253,6 +10258,8 @@ public class SendMessagesHelper extends BaseController implements NotificationCe
             return;
         }
         new Thread(() -> {
+            final boolean localHasMediaSpoilers = hasMediaSpoilers || (PhotoViewer.updatedSpoilerValue != null && PhotoViewer.updatedSpoilerValue);
+            PhotoViewer.updatedSpoilerValue = null;
             final VideoEditedInfo videoEditedInfo = info != null ? info : createCompressionSettings(videoPath);
 
             boolean isEncrypted = DialogObject.isEncryptedDialog(dialogId);
@@ -10443,9 +10450,9 @@ public class SendMessagesHelper extends BaseController implements NotificationCe
                         ImageLoader.getInstance().putImageToCache(new BitmapDrawable(thumbFinal), thumbKeyFinal, false);
                     }
                     if (editingMessageObject != null) {
-                        accountInstance.getSendMessagesHelper().editMessage(editingMessageObject, null, videoEditedInfo, videoFinal, finalPath, coverFinal, params, false, hasMediaSpoilers, parentFinal);
+                        accountInstance.getSendMessagesHelper().editMessage(editingMessageObject, null, videoEditedInfo, videoFinal, finalPath, coverFinal, params, false, localHasMediaSpoilers, parentFinal);
                     } else {
-                        SendMessageParams sendMessageParams = SendMessageParams.of(videoFinal, videoEditedInfo, finalPath, dialogId, replyToMsg, replyToTopMsg, captionFinal, entities, null, params, notify, scheduleDate, ttl, parentFinal, null, false, hasMediaSpoilers);
+                        SendMessageParams sendMessageParams = SendMessageParams.of(videoFinal, videoEditedInfo, finalPath, dialogId, replyToMsg, replyToTopMsg, captionFinal, entities, null, params, notify, scheduleDate, ttl, parentFinal, null, false, localHasMediaSpoilers);
                         sendMessageParams.replyToStoryItem = storyItem;
                         sendMessageParams.replyQuote = quote;
                         sendMessageParams.quick_reply_shortcut_id = quickReplyShortcutId;

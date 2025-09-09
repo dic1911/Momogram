@@ -13332,6 +13332,7 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
                         }
                         final HashMap<Object, Object> selectedPhotos = chatAttachAlert.getPhotoLayout().getSelectedPhotos();
                         final ArrayList<Object> selectedPhotosOrder = chatAttachAlert.getPhotoLayout().getSelectedPhotosOrder();
+                        final boolean patchSpoiler = Boolean.TRUE.equals(PhotoViewer.updatedSpoilerValue);
                         if (!selectedPhotos.isEmpty()) {
                             final int albumsCount = (int) Math.ceil(selectedPhotos.size() / 10f);
                             for (int i = 0; i < albumsCount; ++i) {
@@ -13363,7 +13364,7 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
                                     info.videoEditedInfo = photoEntry.editedInfo;
                                     info.canDeleteAfter = photoEntry.canDeleteAfter;
                                     info.updateStickersOrder = SendMessagesHelper.checkUpdateStickersOrder(photoEntry.caption);
-                                    info.hasMediaSpoilers = photoEntry.hasSpoiler;
+                                    info.hasMediaSpoilers = photoEntry.hasSpoiler || patchSpoiler;
                                     info.stars = photoEntry.starsAmount;
                                     info.highQuality = photoEntry.highQuality;
                                     photos.add(info);
@@ -20830,6 +20831,8 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
 
                 @Override
                 public void sendButtonPressed(int index, VideoEditedInfo videoEditedInfo, boolean notify, int scheduleDate, boolean forceDocument) {
+                    if (PhotoViewer.updatedSpoilerValue != null)
+                        ((MediaController.PhotoEntry) cameraPhoto.get(0)).hasSpoiler = PhotoViewer.updatedSpoilerValue;
                     sendMedia((MediaController.PhotoEntry) cameraPhoto.get(0), videoEditedInfo, notify, scheduleDate, forceDocument, 0);
                 }
 
@@ -20956,6 +20959,7 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
                 info.coverPath = entry.coverPath;
                 info.isVideo = entry.isVideo;
                 info.caption = entry.caption != null ? entry.caption.toString() : null;
+                info.hasMediaSpoilers = entry.hasSpoiler;
                 info.entities = entry.entities;
                 info.masks = entry.stickers;
                 info.ttl = entry.ttl;
