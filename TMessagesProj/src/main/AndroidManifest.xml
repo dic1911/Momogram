@@ -12,6 +12,16 @@
         </intent>
     </queries>
 
+    <queries>
+        <intent>
+            <action android:name="dev.davidv.translator.BackgroundTranslationService" />
+        </intent>
+        <intent>
+            <action android:name="dev.davidv.translator.action.*" />
+        </intent>
+        <package android:name="dev.davidv.translator" />
+    </queries>
+
     <supports-screens android:anyDensity="true"
                       android:largeScreens="true"
                       android:normalScreens="true"

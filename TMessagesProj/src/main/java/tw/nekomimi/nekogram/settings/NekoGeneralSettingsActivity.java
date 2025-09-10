@@ -403,7 +403,8 @@ public class NekoGeneralSettingsActivity extends BaseFragment {
                             LocaleController.getString(R.string.ProviderYouDao),
                             LocaleController.getString(R.string.ProviderDeepLXTranslate),
                             LocaleController.getString(R.string.ProviderTelegramAPI),
-                            LocaleController.getString(R.string.ProviderLingva)
+                            LocaleController.getString(R.string.ProviderLingva),
+                            LocaleController.getString(R.string.ProviderFirefox)
                     }, (i, __) -> {
                         boolean needReset = NekoConfig.translationProvider.Int() - 1 != i && (NekoConfig.translationProvider.Int() == 1 || i == 0);
                         NekoConfig.translationProvider.setConfigInt(i + 1);
@@ -867,6 +868,9 @@ public class NekoGeneralSettingsActivity extends BaseFragment {
                                     break;
                                 case Translator.providerLingva:
                                     value = LocaleController.getString(R.string.ProviderLingva);
+                                    break;
+                                case Translator.providerFirefox:
+                                    value = LocaleController.getString(R.string.ProviderFirefox);
                                     break;
                                 default:
                                     value = "Unknown";
