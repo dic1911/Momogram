@@ -93,6 +93,7 @@ android {
     buildToolsVersion "35.0.0"
     ndkVersion rootProject.ext.ndkVersion
 
+    buildFeatures.aidl = true
     buildFeatures.buildConfig = true
 
     defaultConfig.applicationId = APP_PACKAGE
@@ -242,6 +243,7 @@ android {
 
         main {
             jni.srcDirs = []
+            aidl.srcDirs = ["src/main/aidl"]
             assets.srcDirs = ["src/main/assets"]
         }
 
