@@ -120,6 +120,7 @@ import org.telegram.ui.Components.Premium.PremiumButtonView;
 import org.telegram.ui.Components.Premium.PremiumFeatureBottomSheet;
 import org.telegram.ui.Components.Premium.PremiumLockIconView;
 import org.telegram.ui.Components.RLottieImageView;
+import org.telegram.ui.Components.Reactions.CustomEmojiReactionsWindow;
 import org.telegram.ui.Components.Reactions.HwEmojis;
 import org.telegram.ui.Components.Reactions.ReactionsEffectOverlay;
 import org.telegram.ui.Components.Reactions.ReactionsLayoutInBubble;
@@ -707,7 +708,7 @@ public class SelectAnimatedEmojiDialog extends FrameLayout implements Notificati
                     }
                 }
             };
-            emojiTabs.setPackIndexOffset(-1);
+            emojiTabs.setPackIndexOffset((!(baseFragment instanceof ChatActivity) || emojiTabs.isGiftsVisible()) ? 0 : 1);
             if (emojiTabs.recentTab != null) {
                 emojiTabs.recentTab.setOnLongClickListener(e -> {
                     onRecentLongClick();
@@ -1284,7 +1285,7 @@ public class SelectAnimatedEmojiDialog extends FrameLayout implements Notificati
                     }
                     final int count = pack.expanded ? pack.documents.size() : Math.min(maxlen, pack.documents.size());
                     if (position > startPosition && position <= startPosition + 1 + count) {
-                        emojiTabs.select((emojiTabs.recentTab != null ? 2 : 1) + (emojiTabs.isGiftsVisible() ? 1 : 0) + index);
+                        emojiTabs.select((emojiTabs.recentTab != null ? 1 : 0) + (emojiTabs.isGiftsVisible() ? 1 : 0) + index);
                         return;
                     }
                 }
@@ -4001,8 +4002,8 @@ public class SelectAnimatedEmojiDialog extends FrameLayout implements Notificati
                     continue;
                 }
                 if ((set.set.emojis || showStickers) && !installedEmojiSets.contains(set.set.id)) {
-                    positionToSection.put(totalCount, packs.size() - (emojiTabs.isGiftsVisible() ? 1 : 0));
-                    sectionToPosition.put(packs.size() - (emojiTabs.isGiftsVisible() ? 1 : 0), totalCount);
+                    positionToSection.put(totalCount, packs.size());
+                    sectionToPosition.put(packs.size(), totalCount);
                     totalCount++;
                     rowHashCodes.add(9211 + 13L * set.set.id);
 
@@ -4072,8 +4073,8 @@ public class SelectAnimatedEmojiDialog extends FrameLayout implements Notificati
                     continue;
                 }
 
-                positionToSection.put(totalCount, packs.size() - (emojiTabs.isGiftsVisible() ? 1 : 0));
-                sectionToPosition.put(packs.size() - (emojiTabs.isGiftsVisible() ? 1 : 0), totalCount);
+                positionToSection.put(totalCount, packs.size());
+                sectionToPosition.put(packs.size(), totalCount);
                 totalCount++;
                 rowHashCodes.add(9211 + 13L * set.id);
 
