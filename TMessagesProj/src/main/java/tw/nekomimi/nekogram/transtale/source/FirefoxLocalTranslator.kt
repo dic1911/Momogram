@@ -12,7 +12,6 @@ import android.os.Message
 import android.os.Messenger
 import android.util.Log
 import kotlinx.coroutines.InternalCoroutinesApi
-import org.telegram.messenger.AndroidUtilities
 import org.telegram.ui.LaunchActivity
 import tw.nekomimi.nekogram.transtale.Translator
 import kotlin.coroutines.resume
@@ -29,22 +28,19 @@ object FirefoxLocalTranslator : Translator {
         if (!isBound) {
             bind()
         }
-        try {
-            if (isBound) {
-                return suspendCoroutine {
-                    translationService?.translate(query, from, to, object : ITranslationCallback.Stub() {
-                        override fun onTranslationResult(translatedText: String?) {
-                            it.resume(translatedText ?: "")
-                        }
+        if (isBound) {
+            return suspendCoroutine {
+                translationService?.translate(query, from, to, object : ITranslationCallback.Stub() {
+                    override fun onTranslationResult(translatedText: String?) {
+                        it.resume(translatedText ?: "")
+                    }
 
-                        override fun onTranslationError(errorMessage: String?) {
-                            it.resumeWithException(RuntimeException(errorMessage))
-                        }
-                    })
-                }
+                    override fun onTranslationError(errorMessage: String?) {
+                        Log.e("030-tx", "ff err: $errorMessage")
+                        it.resumeWithException(RuntimeException(errorMessage))
+                    }
+                })
             }
-        } catch (e: Exception) {
-            Log.e(TAG, "Error calling translate", e)
         }
 
         return suspendCoroutine {
@@ -54,6 +50,11 @@ object FirefoxLocalTranslator : Translator {
                     val translated = msg.data.getString("translated_text")
                     translated?.let { txt ->
                         it.resume(txt)
+                        return
+                    }
+                    val err = msg.data.getString("error")
+                    err?.let { e ->
+                        it.resumeWithException(RuntimeException(e))
                         return
                     }
                     it.resumeWithException(RuntimeException("Failed to translate by FirefoxLocalTranslator"))

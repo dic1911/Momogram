@@ -74,6 +74,8 @@ public class TranslateController extends BaseController {
     private final HashMap<Long, HashMap<Integer, MessageObject>> keptReplyMessageObjects = new HashMap<>();
     private final Set<Long> hideTranslateDialogs = new HashSet<>();
     private boolean shownFallbackHint = false;
+    private String lastError = null;
+    private long lastErrorTime = 0;
 
     static class TranslatableDecision {
         Set<Integer> certainlyTranslatable = new HashSet<>();
@@ -639,9 +641,16 @@ public class TranslateController extends BaseController {
                         public void onFailed(boolean unsupported, @NonNull String message) {
                             Log.e("030-tx", String.format("unsupported: %s, msg: %s", unsupported, message));
                             try {
-                                NotificationCenter.getGlobalInstance().postNotificationName(
-                                        NotificationCenter.showBulletin, Bulletin.TYPE_ERROR_SUBTITLE,
-                                        LocaleController.getString(R.string.TranslationFailedAlert2), message);
+                                long t = System.currentTimeMillis();
+                                boolean sameError = message.equals(lastError);
+                                if (!sameError || (t - lastErrorTime) > 5000) {
+                                    lastErrorTime = t;
+                                    lastError = message;
+                                    AndroidUtilities.runOnUIThread(() ->
+                                            NotificationCenter.getGlobalInstance().postNotificationName(
+                                                NotificationCenter.showBulletin, Bulletin.TYPE_ERROR_SUBTITLE,
+                                                LocaleController.getString(R.string.TranslationFailedAlert2), message));
+                                }
                             } catch (Exception ex) {
                                 Log.e("030-tx", "failed to show error", ex);
                             }
