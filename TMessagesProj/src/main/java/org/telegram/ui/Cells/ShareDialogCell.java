@@ -446,13 +446,14 @@ public class ShareDialogCell extends FrameLayout implements NotificationCenter.N
 
     @Override
     protected void onDraw(Canvas canvas) {
+        boolean square = NekoConfig.squareAvatar.Bool();
         int cx = imageView.getLeft() + imageView.getMeasuredWidth() / 2;
         int cy = imageView.getTop() + imageView.getMeasuredHeight() / 2;
         Theme.checkboxSquare_checkPaint.setColor(getThemedColor(Theme.key_dialogRoundCheckBox));
         Theme.checkboxSquare_checkPaint.setAlpha((int) (checkBox.getProgress() * 255));
         int radius = dp(currentType == TYPE_CREATE ? 24 : 28);
         AndroidUtilities.rectTmp.set(cx - radius, cy - radius, cx + radius, cy + radius);
-        canvas.drawRoundRect(AndroidUtilities.rectTmp, imageView.getRoundRadius()[0], imageView.getRoundRadius()[0], Theme.checkboxSquare_checkPaint);
+        canvas.drawRoundRect(AndroidUtilities.rectTmp, square ? 0 : imageView.getRoundRadius()[0], square ? 0 : imageView.getRoundRadius()[0], Theme.checkboxSquare_checkPaint);
         super.onDraw(canvas);
     }
 

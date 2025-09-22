@@ -197,6 +197,7 @@ public class NekoGeneralSettingsActivity extends BaseFragment {
     private final AbstractConfigCell transparentStatusBarRow = cellGroup.appendCell(new ConfigCellTextCheck(NekoConfig.transparentStatusBar));
     private final AbstractConfigCell appBarShadowRow = cellGroup.appendCell(new ConfigCellTextCheck(NekoConfig.disableAppBarShadow));
     private final AbstractConfigCell newYearRow = cellGroup.appendCell(new ConfigCellTextCheck(NekoConfig.newYear));
+    private final AbstractConfigCell squareAvatarRow = cellGroup.appendCell(new ConfigCellTextCheck(NekoConfig.squareAvatar));
     private final AbstractConfigCell actionBarDecorationRow = cellGroup.appendCell(new ConfigCellSelectBox(null, NekoConfig.actionBarDecoration, new String[]{
             LocaleController.getString(R.string.DependsOnDate),
             LocaleController.getString(R.string.Snowflakes),

@@ -24,6 +24,8 @@ import org.telegram.tgnet.TLObject;
 import org.telegram.tgnet.TLRPC;
 import org.telegram.ui.ActionBar.Theme;
 
+import tw.nekomimi.nekogram.NekoConfig;
+
 public class SenderSelectView extends View {
     private final static float SPRING_MULTIPLIER = 100f;
     private final static FloatPropertyCompat<SenderSelectView> MENU_PROGRESS = new SimpleFloatPropertyCompat<SenderSelectView>("menuProgress", obj -> obj.menuProgress, (obj, value) -> {
@@ -42,9 +44,11 @@ public class SenderSelectView extends View {
     private float menuProgress;
     private boolean scaleOut;
     private boolean scaleIn;
+    private int radius;
 
     public SenderSelectView(Context context) {
         super(context);
+        radius = NekoConfig.squareAvatar.Bool() ? 0 : 16;
         avatarImage.setRoundRadius(AndroidUtilities.dp(28));
         menuPaint.setStrokeWidth(AndroidUtilities.dp(2));
         menuPaint.setStrokeCap(Paint.Cap.ROUND);
@@ -56,7 +60,7 @@ public class SenderSelectView extends View {
     private void updateColors() {
         backgroundPaint.setColor(Theme.getColor(Theme.key_chat_messagePanelVoiceBackground));
         menuPaint.setColor(Theme.getColor(Theme.key_chat_messagePanelVoicePressed));
-        selectorDrawable = Theme.createSimpleSelectorRoundRectDrawable(AndroidUtilities.dp(16), Color.TRANSPARENT, Theme.getColor(Theme.key_windowBackgroundWhite));
+        selectorDrawable = Theme.createSimpleSelectorRoundRectDrawable(AndroidUtilities.dp(radius), Color.TRANSPARENT, Theme.getColor(Theme.key_windowBackgroundWhite));
         selectorDrawable.setCallback(this);
     }
 
@@ -99,7 +103,12 @@ public class SenderSelectView extends View {
 
         int alpha = (int) (menuProgress * 0xFF);
         backgroundPaint.setAlpha(alpha);
+        if (radius != 0) {
         canvas.drawCircle(getWidth() / 2f, getHeight() / 2f, Math.min(getWidth(), getHeight()) / 2f, backgroundPaint);
+        } else {
+            AndroidUtilities.rectTmp.set(0, 0, getWidth(), getHeight());
+            canvas.drawRoundRect(AndroidUtilities.rectTmp, AndroidUtilities.dp(radius), AndroidUtilities.dp(radius), backgroundPaint);
+        }
 
         canvas.save();
         menuPaint.setAlpha(alpha);

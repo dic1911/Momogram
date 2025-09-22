@@ -53,6 +53,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import tw.nekomimi.nekogram.NekoConfig;
+
 public class ImageReceiver implements NotificationCenter.NotificationCenterDelegate {
 
     List<ImageReceiver> preloadReceivers;
@@ -2515,6 +2517,9 @@ public class ImageReceiver implements NotificationCenter.NotificationCenterDeleg
     }
 
     public void setRoundRadius(int[] value) {
+        if (NekoConfig.squareAvatar.Bool()) {
+            Arrays.fill(value, 0);
+        }
         boolean changed = false;
         int firstValue = value[0];
         isRoundRect = true;

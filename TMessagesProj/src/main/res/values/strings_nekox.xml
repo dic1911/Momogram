@@ -283,4 +283,5 @@
     <string name="TranslatorInstanceNote">Search online for public instance or host one yourself, note that this won\'t work with auto translate.</string>
     <string name="DebugAntiSpam">Debug anti spam</string>
     <string name="ProviderFirefox">Firefox Local Translate</string>
+    <string name="SquareAvatar">Use square avatars</string>
 </resources>
