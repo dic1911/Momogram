@@ -251,7 +251,8 @@ object AlertUtil {
                     LocaleController.getString(R.string.ProviderYouDao),
                     LocaleController.getString(R.string.ProviderDeepLXTranslate),
                     LocaleController.getString(R.string.ProviderTelegramAPI),
-                    LocaleController.getString(R.string.ProviderLingva)
+                    LocaleController.getString(R.string.ProviderLingva),
+                    LocaleController.getString(R.string.ProviderFirefox)
             ))
 
             popup.setItems(items.toTypedArray()) { item, _ ->
