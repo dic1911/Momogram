@@ -284,4 +284,5 @@
     <string name="DebugAntiSpam">Debug anti spam</string>
     <string name="ProviderFirefox">Firefox Local Translate</string>
     <string name="SquareAvatar">Use square avatars</string>
+    <string name="FirefoxAidlSvcFailed">Failed to bind service for translation, is the translator installed?</string>
 </resources>
