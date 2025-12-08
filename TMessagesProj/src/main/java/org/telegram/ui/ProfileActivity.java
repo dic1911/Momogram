@@ -4876,7 +4876,8 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                                 Build.VERSION.SDK_INT >= Build.VERSION_CODES.P ? getString(SharedConfig.useSystemBoldFont ? R.string.DebugMenuDontUseSystemBoldFont : R.string.DebugMenuUseSystemBoldFont) : null, // 40
                                 "Reload app config",
                                 !SharedConfig.forceForumTabs ? "Force Forum Tabs" : "Do Not Force Forum Tabs",
-                            "Make Memory Dump"
+                            "Make Memory Dump",
+                                BuildVars.DEBUG_PRIVATE_VERSION ? (SharedConfig.fastWallpaperDisabled ? "enable wallpaper shader" : "disable wallpaper shader") : null
                         };
 
                         builder.setItems(items, (dialog, which) -> {
@@ -5224,6 +5225,8 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                                 SharedConfig.toggleForceForumTabs();
                             } else if (which == 37) {
                                 FileLog.getInstance().dumpMemory(true);
+                            } else if (which == 38) {
+                                SharedConfig.toggleFastWallpaperDisabled();
                             }
                         });
                         builder.setNegativeButton(getString(R.string.Cancel), null);

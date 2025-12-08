@@ -3555,6 +3555,7 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
                     }
                 }
             };
+//            filterTabsView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
 
             filterTabsViewIsVisible = false;
             filterTabsView.setVisibility(View.GONE);
