@@ -75,7 +75,11 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
+import android.window.BackEvent;
+import android.window.OnBackAnimationCallback;
+import android.window.OnBackInvokedDispatcher;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.arch.core.util.Function;
@@ -84,6 +88,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.pm.ShortcutInfoCompat;
 import androidx.core.content.pm.ShortcutManagerCompat;
 import androidx.core.graphics.ColorUtils;
+import androidx.core.os.BuildCompat;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -193,6 +198,7 @@ import org.telegram.ui.Components.PhonebookShareAlert;
 import org.telegram.ui.Components.PipRoundVideoView;
 import org.telegram.ui.Components.PipVideoOverlay;
 import org.telegram.ui.Components.Premium.LimitReachedBottomSheet;
+import org.telegram.ui.Components.Premium.PremiumFeatureBottomSheet;
 import org.telegram.ui.Components.Premium.boosts.BoostPagerBottomSheet;
 import org.telegram.ui.Components.Premium.boosts.GiftInfoBottomSheet;
 import org.telegram.ui.Components.Premium.boosts.UserSelectorBottomSheet;
@@ -1070,6 +1076,42 @@ public class LaunchActivity extends BasePermissionsActivity implements INavigati
         RestrictedLanguagesSelectActivity.checkRestrictedLanguages(false);
         EvilLeakerKiller.getInstance(getApplicationContext());
         NekoXConfig.restoreMusicPlaybackState(currentAccount);
+//        if (Build.VERSION.SDK_INT >= 34) {
+//            getOnBackInvokedDispatcher().registerOnBackInvokedCallback(
+//                OnBackInvokedDispatcher.PRIORITY_DEFAULT,
+//                new OnBackAnimationCallback() {
+//                    @Override
+//                    public void onBackInvoked() {
+//                        if (actionBarLayout != null) {
+//                            actionBarLayout.onBackInvoked();
+//                        } else {
+//                            onBackPressed();
+//                        }
+//                    }
+//
+//                    @Override
+//                    public void onBackStarted(@NonNull BackEvent backEvent) {
+//                        if (actionBarLayout != null) {
+//                            actionBarLayout.onBackStarted(backEvent.getTouchY());
+//                        }
+//                    }
+//
+//                    @Override
+//                    public void onBackProgressed(@NonNull BackEvent backEvent) {
+//                        if (actionBarLayout != null) {
+//                            actionBarLayout.onBackProgress(backEvent.getProgress());
+//                        }
+//                    }
+//
+//                    @Override
+//                    public void onBackCancelled() {
+//                        if (actionBarLayout != null) {
+//                            actionBarLayout.onBackCancelled();
+//                        }
+//                    }
+//                }
+//            );
+//        }
     }
 
     @Override
@@ -9407,11 +9449,11 @@ public class LaunchActivity extends BasePermissionsActivity implements INavigati
             if (currentRipple == null || currentRipple.view != parent) {
                 currentRipple = new SuperRipple(parent);
             }
-        } else if (Build.VERSION.SDK_INT >= 26) {
+        }/* else if (Build.VERSION.SDK_INT >= 26) {
             if (currentRipple == null || currentRipple.view != parent) {
                 currentRipple = new SuperRippleFallback(parent);
             }
-        }
+        }*/
         if (currentRipple != null) {
             currentRipple.animate(x, y, intensity);
         }

@@ -1651,7 +1651,7 @@ public class StarsIntroActivity extends GradientHeaderActivity implements Notifi
                 } else if (transaction.phonegroup_message) {
                     titleTextView.setText(username);
                     subtitleTextView.setVisibility(deleted ? GONE : VISIBLE);
-                    subtitleTextView.setText(LocaleController.getString(R.string.StarsTransactionLiveStoryMessageFee));
+                    subtitleTextView.setText(LocaleController.getString(transaction.reaction ? R.string.StarsTransactionLiveStoryReactionFee : R.string.StarsTransactionLiveStoryMessageFee));
                 } else if (transaction.paid_message) {
                     titleTextView.setText(username);
                     subtitleTextView.setVisibility(deleted ? GONE : VISIBLE);
@@ -3376,7 +3376,7 @@ public class StarsIntroActivity extends GradientHeaderActivity implements Notifi
             return LocaleController.getString(R.string.StarsTransactionPremiumGift);
         }
         if (t.phonegroup_message) {
-            return getString(R.string.StarsTransactionLiveStoryMessageFee);
+            return getString(t.reaction ? R.string.StarsTransactionLiveStoryReactionFee : R.string.StarsTransactionLiveStoryMessageFee);
         }
         if (t.paid_message) {
             return LocaleController.formatPluralStringComma("StarsTransactionMessageFee", t.paid_messages);

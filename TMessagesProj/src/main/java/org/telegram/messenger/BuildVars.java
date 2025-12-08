@@ -26,6 +26,9 @@ public class BuildVars {
     public static int BUILD_VERSION;
     public static String BUILD_VERSION_STRING = "10.13.0";
 
+    // works only on official app ids, disable on your forks
+    public static boolean SUPPORTS_PASSKEYS = true;
+
     public static int APP_ID = 4;
     public static String APP_HASH = "014b35b6184100b085b0d0572f9b5103";
 

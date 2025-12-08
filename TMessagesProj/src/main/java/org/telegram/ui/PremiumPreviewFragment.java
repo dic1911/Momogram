@@ -1,6 +1,7 @@
 package org.telegram.ui;
 
 import static org.telegram.messenger.AndroidUtilities.dp;
+import static org.telegram.messenger.LocaleController.getCurrencyExpDivider;
 import static org.telegram.messenger.LocaleController.getString;
 
 import android.animation.Animator;
@@ -208,6 +209,8 @@ public class PremiumPreviewFragment extends BaseFragment implements Notification
     public final static int PREMIUM_FEATURE_MESSAGE_EFFECTS = 38;
     public final static int PREMIUM_FEATURE_TODO = 39;
 
+    public final static int FEATURE_GIFTS = 40;
+
     private int statusBarHeight;
     private int firstViewHeight;
     private boolean isDialogVisible;
@@ -266,6 +269,8 @@ public class PremiumPreviewFragment extends BaseFragment implements Notification
                 return PREMIUM_FEATURE_MESSAGE_EFFECTS;
             case "todo":
                 return PREMIUM_FEATURE_TODO;
+            case "gifts":
+                return FEATURE_GIFTS;
 
             case "stories":
                 return PREMIUM_FEATURE_STORIES;
@@ -355,6 +360,8 @@ public class PremiumPreviewFragment extends BaseFragment implements Notification
                 return "effects";
             case PREMIUM_FEATURE_TODO:
                 return "todo";
+            case FEATURE_GIFTS:
+                return "gifts";
             case PREMIUM_FEATURE_STORIES:
                 return "stories";
             case PREMIUM_FEATURE_STORIES_STEALTH_MODE:
@@ -1010,7 +1017,11 @@ public class PremiumPreviewFragment extends BaseFragment implements Notification
 //  public static void buyPremium(BaseFragment fragment, SubscriptionTier tier, String source, boolean forcePremium, BillingFlowParams.SubscriptionUpdateParams updateParams) {
     public static void buyPremium(BaseFragment fragment, SubscriptionTier tier, String source, boolean forcePremium, Object updateParams) {
         if (BuildVars.IS_BILLING_UNAVAILABLE) {
-            fragment.showDialog(new PremiumNotAvailableBottomSheet(fragment));
+            if (fragment == null) {
+                new PremiumNotAvailableBottomSheet(fragment).show();
+            } else {
+                fragment.showDialog(new PremiumNotAvailableBottomSheet(fragment));
+            }
             return;
         }
         // NekoX: remove Google billing

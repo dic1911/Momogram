@@ -133,6 +133,14 @@ public class HeaderCell extends LinearLayout {
         super.setLayoutParams(params);
     }
 
+    public void setOnWidthUpdateListener(Runnable listener) {
+        animatedTextView.setOnWidthUpdatedListener(listener);
+    }
+
+    public float getAnimatedWidth() {
+        return animatedTextView.getDrawable().getCurrentWidth();
+    }
+
     public void setHeight(int value) {
         int newMinHeight = AndroidUtilities.dp(height = value) - ((LayoutParams) textView.getLayoutParams()).topMargin;
         if (textView.getMinHeight() != newMinHeight) {
