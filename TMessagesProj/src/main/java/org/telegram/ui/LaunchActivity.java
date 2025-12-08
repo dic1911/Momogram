@@ -3227,6 +3227,7 @@ public class LaunchActivity extends BasePermissionsActivity implements INavigati
                                                         ((ChatActivity) lastFragment).shakeContent();
                                                     }
                                                 }
+                                                return;
                                             }
 
                                             new GiftSheet(this, intentAccount[0], peerId, null)
