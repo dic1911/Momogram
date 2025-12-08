@@ -4904,7 +4904,7 @@ public class PeerStoriesView extends SizeNotifierFrameLayout implements Notifica
             stealthModeIsActive = false;
             chatActivityEnterView.setEnabled(true);
             chatActivityEnterView.setOverrideHint(StarsIntroActivity.replaceStars(LocaleController.formatString(R.string.TypeMessageForStars, LocaleController.formatNumber(starsPriceBlocked, ','))), animated);
-        } else if (stealthMode != null && ConnectionsManager.getInstance(currentAccount).getCurrentTime() < stealthMode.active_until_date) {
+        } else if (!currentStory.isLive && stealthMode != null && ConnectionsManager.getInstance(currentAccount).getCurrentTime() < stealthMode.active_until_date) {
             stealthModeIsActive = true;
             int time = stealthMode.active_until_date - ConnectionsManager.getInstance(currentAccount).getCurrentTime();
             int minutes = time / 60;
