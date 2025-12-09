@@ -5,6 +5,7 @@ import androidx.annotation.Nullable;
 import androidx.core.math.MathUtils;
 
 import org.telegram.messenger.BuildConfig;
+import org.telegram.messenger.BuildVars;
 import org.telegram.messenger.LocaleController;
 import org.telegram.messenger.MessagesController;
 import org.telegram.messenger.R;
@@ -282,7 +283,7 @@ public class AmountUtils {
 
         public void set(Amount min, Amount max) {
             if (min.currency != max.currency) {
-                if (BuildConfig.DEBUG_PRIVATE_VERSION) {
+                if (BuildVars.DEBUG_PRIVATE_VERSION) {
                     throw new IllegalArgumentException();
                 }
                 return;
