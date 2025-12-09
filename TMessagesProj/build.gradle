@@ -398,7 +398,7 @@ dependencies {
     testImplementation "org.robolectric:robolectric:4.5.1"
 
     implementation 'co.nstant.in:cbor:0.8'
-    implementation "androidx.credentials:credentials:1.6.0-alpha04"
+//    implementation "androidx.credentials:credentials:1.6.0-alpha04"
 //    implementation "androidx.credentials:credentials-play-services-auth:1.6.0-alpha04" // required for older devices but anyway
 
 //    implementation 'com.google.mlkit:translate:17.0.3'
