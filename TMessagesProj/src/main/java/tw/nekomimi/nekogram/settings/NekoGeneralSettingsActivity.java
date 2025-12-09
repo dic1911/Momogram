@@ -1,7 +1,5 @@
 package tw.nekomimi.nekogram.settings;
 
-import android.animation.ArgbEvaluator;
-import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -12,7 +10,6 @@ import android.content.IntentSender;
 import android.content.SharedPreferences;
 import android.content.pm.ResolveInfo;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Build;
 import android.text.TextPaint;
@@ -21,7 +18,6 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.DecelerateInterpolator;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
@@ -48,7 +44,6 @@ import org.telegram.tgnet.ConnectionsManager;
 import org.telegram.ui.ActionBar.ActionBar;
 import org.telegram.ui.ActionBar.ActionBarLayout;
 import org.telegram.ui.ActionBar.AlertDialog;
-import org.telegram.ui.ActionBar.BaseFragment;
 import org.telegram.ui.ActionBar.INavigationLayout;
 import org.telegram.ui.ActionBar.Theme;
 import org.telegram.ui.ActionBar.ThemeDescription;
@@ -69,7 +64,6 @@ import org.telegram.ui.Components.UndoView;
 import org.telegram.ui.LauncherIconController;
 import org.telegram.ui.web.SearchEngine;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -78,7 +72,6 @@ import java.util.Locale;
 import java.util.stream.Collectors;
 
 import kotlin.Unit;
-import moe.hx030.momogram.util.ReflectUtil;
 import tw.nekomimi.nekogram.helpers.EvilLeakerKiller;
 import tw.nekomimi.nekogram.ui.BottomBuilder;
 import tw.nekomimi.nekogram.NekoXConfig;
@@ -1027,7 +1020,7 @@ public class NekoGeneralSettingsActivity extends MomoSettingsBaseActivity {
             sizeBar.setDelegate(new SeekBarView.SeekBarViewDelegate() {
                 @Override
                 public void onSeekBarDrag(boolean stop, float progress) {
-                    NekoConfig.chatBlueAlphaValue.setConfigInt(Math.min(255, (int) (255 * progress)));
+                    NekoConfig.chatBlurAlphaValue.setConfigInt(Math.min(255, (int) (255 * progress)));
                     invalidate();
                 }
 
@@ -1037,20 +1030,20 @@ public class NekoGeneralSettingsActivity extends MomoSettingsBaseActivity {
                 }
             });
             sizeBar.setOnTouchListener((v, event) -> !enabled);
-            sizeBar.setProgress(NekoConfig.chatBlueAlphaValue.Int());
+            sizeBar.setProgress(NekoConfig.chatBlurAlphaValue.Int());
             addView(sizeBar, LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, 38, Gravity.LEFT | Gravity.TOP, 9, 5, 43, 11));
         }
 
         @Override
         protected void onDraw(Canvas canvas) {
             textPaint.setColor(Theme.getColor(Theme.key_windowBackgroundWhiteValueText));
-            canvas.drawText(String.valueOf(NekoConfig.chatBlueAlphaValue.Int()), getMeasuredWidth() - AndroidUtilities.dp(39), AndroidUtilities.dp(28), textPaint);
+            canvas.drawText(String.valueOf(NekoConfig.chatBlurAlphaValue.Int()), getMeasuredWidth() - AndroidUtilities.dp(39), AndroidUtilities.dp(28), textPaint);
         }
 
         @Override
         protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
             super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-            sizeBar.setProgress((NekoConfig.chatBlueAlphaValue.Int() / 255.0f));
+            sizeBar.setProgress((NekoConfig.chatBlurAlphaValue.Int() / 255.0f));
         }
 
         @Override

@@ -21,6 +21,8 @@ import org.telegram.ui.ActionBar.Theme;
 import java.util.ArrayList;
 import java.util.List;
 
+import tw.nekomimi.nekogram.NekoConfig;
+
 @RequiresApi(api = Build.VERSION_CODES.S)
 public class DownscaleScrollableNoiseSuppressor {
     public final boolean isLiquidGlassEnabled;
@@ -222,6 +224,7 @@ public class DownscaleScrollableNoiseSuppressor {
                 canvas.save();
                 canvas.translate(sourcePart.position.left, sourcePart.position.top);
 
+                canvas.saveLayerAlpha(null, NekoConfig.chatBlurAlphaValue.Int()); // custom alpha
                 if (isLiquidGlassEnabled && sourcePart.renderNodesForGlass != null) {
                     if (a == 0) {
                         canvas.drawRenderNode(sourcePart.renderNodesForGlass.renderNodeRestored[0]);
@@ -232,6 +235,7 @@ public class DownscaleScrollableNoiseSuppressor {
                     canvas.drawRenderNode(sourcePart.renderNodesForBlur.renderNodeRestored[Math.min(a, sourcePart.renderNodesForBlur.renderNodeRestored.length)]);
                 }
 
+                canvas.restore(); // restore saveLayerAlpha
                 canvas.restore();
             }
 

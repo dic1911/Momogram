@@ -2,9 +2,6 @@ package tw.nekomimi.nekogram;
 
 import static org.telegram.messenger.LocaleController.getString;
 
-import android.animation.ArgbEvaluator;
-import android.animation.ObjectAnimator;
-import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
@@ -38,14 +35,10 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
-import android.graphics.Color;
 import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Log;
 import android.util.Pair;
-import android.view.View;
-import android.view.animation.DecelerateInterpolator;
-import android.widget.TextView;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -57,7 +50,6 @@ import java.util.regex.Pattern;
 import kotlin.coroutines.Continuation;
 import kotlin.coroutines.CoroutineContext;
 import kotlin.coroutines.EmptyCoroutineContext;
-import moe.hx030.momogram.util.ReflectUtil;
 import tw.nekomimi.nekogram.config.ConfigItem;
 import tw.nekomimi.nekogram.helpers.EvilLeakerKiller;
 import tw.nekomimi.nekogram.transtale.Translator;
@@ -107,7 +99,7 @@ public class NekoConfig {
     public static ConfigItem transparentStatusBar = addConfig(R.string.TransparentStatusBar, "TransparentStatusBar", configTypeBool, GENERAL, true);
     public static ConfigItem enableAvatarBlur = addConfig(R.string.EnableAvatarBlur, "EnableAvatarBlur", configTypeBool, GENERAL, true);
     public static ConfigItem forceBlurInChat = addConfig(R.string.forceBlurInChat, "forceBlurInChat", configTypeBool, GENERAL, false);
-    public static ConfigItem chatBlueAlphaValue = addConfig("forceBlurInChatAlphaValue", configTypeInt, GENERAL, 127);
+    public static ConfigItem chatBlurAlphaValue = addConfig("forceBlurInChatAlphaValue", configTypeInt, GENERAL, 127);
     public static ConfigItem actionBarDecoration = addConfig(R.string.ActionBarDecoration, "ActionBarDecoration", configTypeInt, GENERAL, 0);
     public static ConfigItem newYear = addConfig(R.string.ChristmasHat, "ChristmasHat", configTypeBool, GENERAL, false);
     public static ConfigItem openArchiveOnPull = addConfig(R.string.OpenArchiveOnPull, "OpenArchiveOnPull", configTypeBool, GENERAL, false);

@@ -2659,7 +2659,7 @@ public class ChatActivity extends BaseFragment implements
         super(args);
 
         navbarContentSourceWallpaper = new BlurredBackgroundSourceWrapped();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && SharedConfig.chatBlurEnabled()) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && (SharedConfig.chatBlurEnabled() || NekoConfig.forceBlurInChat.Bool())) {
             scrollableViewNoiseSuppressor = new DownscaleScrollableNoiseSuppressor();
             recommendedAdditionalSizeY = dp(48);
 
@@ -18641,7 +18641,7 @@ public class ChatActivity extends BaseFragment implements
 
             blurredViewTopOffset = 0;
             blurredViewBottomOffset = 0;
-            if (SharedConfig.chatBlurEnabled() && !isInsideContainer) {
+            if ((SharedConfig.chatBlurEnabled() || NekoConfig.forceBlurInChat.Bool()) && !isInsideContainer) {
                 if (scrollableViewNoiseSuppressor != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                     blurredViewTopOffset = actionBarHeight + recommendedAdditionalSizeY;
                     blurredViewBottomOffset = recommendedAdditionalSizeY;

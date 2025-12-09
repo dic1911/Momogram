@@ -35,7 +35,6 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.text.MeasuredText;
 import android.os.Build;
-import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
 
@@ -55,7 +54,6 @@ import org.telegram.ui.BlurSettingsBottomSheet;
 import org.telegram.ui.ChatBackgroundDrawable;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 
 import tw.nekomimi.nekogram.NekoConfig;
 
@@ -622,12 +620,12 @@ public class SizeNotifierFrameLayout extends FrameLayout {
     final BlurBackgroundTask blurBackgroundTask = new BlurBackgroundTask();
 
     public void startBlur() {
-        if (!blurIsRunning || blurGeneratingTuskIsRunning || !invalidateBlur || !SharedConfig.chatBlurEnabled() || DRAW_USING_RENDERNODE()) {
+        if (!blurIsRunning || blurGeneratingTuskIsRunning || !invalidateBlur || !(SharedConfig.chatBlurEnabled() || NekoConfig.forceBlurInChat.Bool()) || DRAW_USING_RENDERNODE()) {
             return;
         }
 
         int blurAlpha = Color.alpha(Theme.getColor(Theme.key_chat_BlurAlphaSlow));
-        if (NekoConfig.forceBlurInChat.Bool()) blurAlpha = NekoConfig.chatBlueAlphaValue.Int();
+        if (NekoConfig.forceBlurInChat.Bool()) blurAlpha = NekoConfig.chatBlurAlphaValue.Int();
         if (blurAlpha == 255) {
             return;
         }
@@ -975,8 +973,9 @@ public class SizeNotifierFrameLayout extends FrameLayout {
 
     public void drawBlurRect(Canvas canvas, float y, Rect rectTmp, Paint blurScrimPaint, boolean top) {
         int blurAlpha = Color.alpha(Theme.getColor(DRAW_USING_RENDERNODE() && SharedConfig.getDevicePerformanceClass() == SharedConfig.PERFORMANCE_CLASS_HIGH ? Theme.key_chat_BlurAlpha : Theme.key_chat_BlurAlphaSlow, getResourceProvider()));
-        if (NekoConfig.forceBlurInChat.Bool()) blurAlpha = NekoConfig.chatBlueAlphaValue.Int();
-        if (!SharedConfig.chatBlurEnabled()) {
+        boolean chatBlurEnabled = NekoConfig.forceBlurInChat.Bool() || SharedConfig.chatBlurEnabled();
+        if (chatBlurEnabled) blurAlpha = NekoConfig.chatBlurAlphaValue.Int();
+        if (!chatBlurEnabled) {
             canvas.drawRect(rectTmp, blurScrimPaint);
             return;
         }
