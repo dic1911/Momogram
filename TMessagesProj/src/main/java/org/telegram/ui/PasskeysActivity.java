@@ -105,6 +105,7 @@ public class PasskeysActivity extends BaseFragment {
         if (passkeys.size() + 1 <= getMessagesController().config.passkeysAccountPasskeysMax.get()) {
             items.add(UItem.asButton(-1, R.drawable.menu_passkey_add, getString(R.string.PasskeyAdd)).accent());
         }
+        items.add(UItem.asButton(-2, R.drawable.menu_settings, getString(R.string.Settings)).accent());
         items.add(UItem.asShadow(AndroidUtilities.replaceArrows(AndroidUtilities.replaceSingleTag(getString(R.string.PasskeyInfo), () -> {
             showLearnSheet(getContext(), currentAccount, resourceProvider, passkeys.size() + 1 <= getMessagesController().config.passkeysAccountPasskeysMax.get());
         }), true)));
@@ -165,6 +166,8 @@ public class PasskeysActivity extends BaseFragment {
                     added(passkey);
                 }
             });
+        } else if (item.id == -2) {
+            PasskeysController.openSettings(getParentActivity());
         } else if (item.object != null) {
             openMenu(view);
         }
