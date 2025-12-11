@@ -3562,8 +3562,15 @@ public class LoginActivity extends BaseFragment implements NotificationCenter.No
                         }
                     }
                 }
-                if (activityMode == MODE_LOGIN) {
-                    requestPasskey(false);
+                if (activityMode == MODE_LOGIN && BuildVars.SUPPORTS_PASSKEYS) {
+                    // isGServicesCompiled is always false for us = never request passkey automatically
+                    if (BuildVars.isGServicesCompiled) {
+                        requestPasskey(false);
+                    } else if (Build.VERSION.SDK_INT > 33) {
+                        subtitleView.setText(AndroidUtilities.replaceArrows(AndroidUtilities.replaceSingleTag(getString(R.string.StartTextPasskey), () -> {
+                            requestPasskey(true);
+                        }), true));
+                    }
                 }
             }, SHOW_DELAY);
         }
