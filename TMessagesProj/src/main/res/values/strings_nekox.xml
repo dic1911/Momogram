@@ -307,4 +307,6 @@
     <string name="UseSlowWhisperModelDesc">Requires large amount of RAM, disable this option if the app crashes on transcribe</string>
     <string name="ConfirmDismissAllJoinRequests">Dismiss all join requests?</string>
     <string name="ConfirmBanAllJoinRequests">Ban all join requests?</string>
+    <string name="PasskeyWarning">Note. Unofficial Implementation</string>
+    <string name="PasskeyWarningDesc">The passkey implementation is different from official Telegram, which is less secure, by continuing, you agree that you understand and accept the risks.</string>
 </resources>

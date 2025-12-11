@@ -335,6 +335,10 @@ public class PasskeysActivity extends BaseFragment {
         f.set(R.drawable.menu_privacy, getString(R.string.PasskeyFeature3Title), getString(R.string.PasskeyFeature3Subtitle));
         linearLayout.addView(f, LayoutHelper.createLinear(LayoutHelper.MATCH_PARENT, LayoutHelper.WRAP_CONTENT, 0, 0, 0, 8));
 
+        f = new ExplainStarsSheet.FeatureCell(context, ExplainStarsSheet.FeatureCell.STYLE_SHEET, resourcesProvider);
+        f.set(R.drawable.warning_sign, getString(R.string.PasskeyWarning), getString(R.string.PasskeyWarningDesc));
+        linearLayout.addView(f, LayoutHelper.createLinear(LayoutHelper.MATCH_PARENT, LayoutHelper.WRAP_CONTENT, 0, 0, 0, 8));
+
         BottomSheet sheet = b.create();
 
         ButtonWithCounterView button = new ButtonWithCounterView(context, resourcesProvider);
