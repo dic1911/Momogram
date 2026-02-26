@@ -1097,8 +1097,10 @@ public class TranslateController extends BaseController {
                         TranslateAlert2.alternativeTranslate(_text, null, toLanguage, (result, rateLimit) -> {
                             if (result != null) {
                                 final TLRPC.TL_textWithEntities resultWithEntities = new TLRPC.TL_textWithEntities();
+
+                                TranslateAlert2.alternativeTranslateWithEntities(sourceEntity, null, toLanguage, (result, rateLimit) -> {
                                 resultWithEntities.text = result;
-                                _callback.run(isTranscription, id, resultWithEntities, toLanguage);
+                                _callback.run(isTranscription, id, result, toLanguage);
                             } else {
                                 toggleTranslatingDialog(dialogId, false);
                                 NotificationCenter.getGlobalInstance().postNotificationName(NotificationCenter.showBulletin, Bulletin.TYPE_ERROR, LocaleController.getString(rateLimit ? R.string.TranslationFailedAlert1 : R.string.TranslationFailedAlert2));
@@ -1173,12 +1175,10 @@ public class TranslateController extends BaseController {
                         for (int i = 0; i < ids.size(); ++i) {
                             final int id = ids.get(i);
                             final Utilities.Callback4<Boolean, Integer, TLRPC.TL_textWithEntities, String> _callback = callbacks.get(i);
-                            final String _text = texts.get(i).text;
-                            TranslateAlert2.alternativeTranslate(_text, null, toLanguage, (result, rateLimit) -> {
+                            final TLRPC.TL_textWithEntities sourceEntity = texts.get(i);
+                            TranslateAlert2.alternativeTranslateWithEntities(sourceEntity, null, toLanguage, (result, rateLimit) -> {
                                 if (result != null) {
-                                    final TLRPC.TL_textWithEntities resultWithEntities = new TLRPC.TL_textWithEntities();
-                                    resultWithEntities.text = result;
-                                    _callback.run(isTranscription, id, resultWithEntities, toLanguage);
+                                    _callback.run(isTranscription, id, result, toLanguage);
                                 } else {
                                     toggleTranslatingDialog(dialogId, false);
                                     NotificationCenter.getGlobalInstance().postNotificationName(NotificationCenter.showBulletin, Bulletin.TYPE_ERROR, LocaleController.getString(rateLimit ? R.string.TranslationFailedAlert1 : R.string.TranslationFailedAlert2));
