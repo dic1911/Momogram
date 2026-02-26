@@ -79,7 +79,11 @@ import java.io.Reader;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.List;
 import java.util.Locale;
 
@@ -376,10 +380,15 @@ public class TranslateAlert2 extends BottomSheet implements NotificationCenter.N
         }
         final String toLng = _toLng;
 
-        alternativeTranslate(text, fromLng, toLng, (res, rateLimit) -> {
+        TLRPC.TL_textWithEntities source = new TLRPC.TL_textWithEntities();
+        source.text = text;
+        source.entities = reqMessageEntities;
+        alternativeTranslateWithEntities(source, fromLng, toLng, (res, rateLimit) -> {
             if (res != null) {
                 firstTranslation = false;
-                textView.setText(preprocessText(res));
+                CharSequence translated = SpannableStringBuilder.valueOf(res.text);
+                MessageObject.addEntitiesToText(translated, res.entities, false, true, false, false);
+                textView.setText(preprocessText(translated));
                 adapter.updateMainView(textViewContainer);
             } else {
                 if (isDismissed()) return;
@@ -402,6 +411,127 @@ public class TranslateAlert2 extends BottomSheet implements NotificationCenter.N
     private static int lastIndexOfSafe(String text, String target, int start, int end) {
         int idx = text.lastIndexOf(target, end - 1);
         return (idx >= start) ? idx : -1;
+    }
+
+    private static class PlaceholderLink {
+        final String placeholder;
+        final String visibleText;
+        final TLRPC.MessageEntity source;
+
+        PlaceholderLink(String placeholder, String visibleText, TLRPC.MessageEntity source) {
+            this.placeholder = placeholder;
+            this.visibleText = visibleText;
+            this.source = source;
+        }
+    }
+
+    private static int[] findPlaceholderRange(String text, String placeholder) {
+        if (TextUtils.isEmpty(text) || TextUtils.isEmpty(placeholder)) {
+            return null;
+        }
+
+        int exactIndex = text.indexOf(placeholder);
+        if (exactIndex >= 0) {
+            return new int[] {exactIndex, exactIndex + placeholder.length()};
+        }
+
+        String escaped = Pattern.quote(placeholder).replace("_", "\\\\s*_\\\\s*");
+        Matcher matcher = Pattern.compile(escaped).matcher(text);
+        if (matcher.find()) {
+            return new int[] {matcher.start(), matcher.end()};
+        }
+
+        return null;
+    }
+
+    private static boolean isLinkEntity(TLRPC.MessageEntity entity) {
+        return entity instanceof TLRPC.TL_messageEntityTextUrl ||
+            entity instanceof TLRPC.TL_messageEntityUrl ||
+            entity instanceof TLRPC.TL_messageEntityEmail ||
+            entity instanceof TLRPC.TL_messageEntityMentionName;
+    }
+
+    private static TLRPC.MessageEntity cloneLinkEntity(TLRPC.MessageEntity entity, int offset, int length) {
+        if (entity == null) {
+            return null;
+        }
+        TLRPC.MessageEntity cloned;
+        if (entity instanceof TLRPC.TL_messageEntityTextUrl) {
+            TLRPC.TL_messageEntityTextUrl textUrl = new TLRPC.TL_messageEntityTextUrl();
+            textUrl.url = entity.url;
+            cloned = textUrl;
+        } else if (entity instanceof TLRPC.TL_messageEntityUrl) {
+            cloned = new TLRPC.TL_messageEntityUrl();
+        } else if (entity instanceof TLRPC.TL_messageEntityEmail) {
+            cloned = new TLRPC.TL_messageEntityEmail();
+        } else if (entity instanceof TLRPC.TL_messageEntityMentionName) {
+            TLRPC.TL_messageEntityMentionName mentionName = new TLRPC.TL_messageEntityMentionName();
+            mentionName.user_id = ((TLRPC.TL_messageEntityMentionName) entity).user_id;
+            cloned = mentionName;
+        } else {
+            return null;
+        }
+        cloned.offset = offset;
+        cloned.length = length;
+        return cloned;
+    }
+
+    public static void alternativeTranslateWithEntities(TLRPC.TL_textWithEntities source, String fromLng, String toLng, Utilities.Callback2<TLRPC.TL_textWithEntities, Boolean> done) {
+        if (done == null) {
+            return;
+        }
+        if (source == null || TextUtils.isEmpty(source.text)) {
+            TLRPC.TL_textWithEntities empty = new TLRPC.TL_textWithEntities();
+            empty.text = "";
+            done.run(empty, false);
+            return;
+        }
+
+        final String originalText = source.text;
+        final ArrayList<PlaceholderLink> placeholders = new ArrayList<>();
+        String maskedText = originalText;
+        if (source.entities != null && !source.entities.isEmpty()) {
+            ArrayList<TLRPC.MessageEntity> sorted = new ArrayList<>(source.entities);
+            sorted.sort(Comparator.comparingInt(a -> -a.offset));
+            for (int i = 0; i < sorted.size(); ++i) {
+                TLRPC.MessageEntity entity = sorted.get(i);
+                if (!isLinkEntity(entity)) {
+                    continue;
+                }
+                if (entity.offset < 0 || entity.length <= 0 || entity.offset + entity.length > originalText.length()) {
+                    continue;
+                }
+                String visible = originalText.substring(entity.offset, entity.offset + entity.length);
+                String token = "__SG_LINK_" + placeholders.size() + "__";
+                placeholders.add(new PlaceholderLink(token, visible, entity));
+                maskedText = maskedText.substring(0, entity.offset) + token + maskedText.substring(entity.offset + entity.length);
+            }
+            Collections.reverse(placeholders);
+        }
+
+        alternativeTranslate(maskedText, fromLng, toLng, (translated, rateLimit) -> {
+            if (translated == null) {
+                done.run(null, rateLimit);
+                return;
+            }
+            TLRPC.TL_textWithEntities result = new TLRPC.TL_textWithEntities();
+            result.text = translated;
+            result.entities = new ArrayList<>();
+            for (int i = 0; i < placeholders.size(); ++i) {
+                PlaceholderLink link = placeholders.get(i);
+                int[] range = findPlaceholderRange(result.text, link.placeholder);
+                if (range == null) {
+                    continue;
+                }
+                int index = range[0];
+                result.text = result.text.substring(0, range[0]) + link.visibleText + result.text.substring(range[1]);
+                TLRPC.MessageEntity linkEntity = cloneLinkEntity(link.source, index, link.visibleText.length());
+                if (linkEntity != null) {
+                    result.entities.add(linkEntity);
+                }
+            }
+            done.run(preprocess(source, result), false);
+        });
     }
 
     public static ArrayList<String> cut(String encodedText, int maxLength) {
