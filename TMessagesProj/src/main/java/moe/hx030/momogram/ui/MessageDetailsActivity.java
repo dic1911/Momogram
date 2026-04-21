@@ -42,12 +42,14 @@ import org.telegram.messenger.LocaleController;
 import org.telegram.messenger.MessageObject;
 import org.telegram.messenger.NotificationCenter;
 import org.telegram.messenger.R;
+import org.telegram.messenger.Utilities;
 import org.telegram.tgnet.TLRPC;
 import org.telegram.tgnet.tl.TL_stories;
 import org.telegram.ui.ActionBar.ActionBar;
 import org.telegram.ui.ActionBar.BaseFragment;
 import org.telegram.ui.ActionBar.Theme;
 import org.telegram.ui.ActionBar.ThemeDescription;
+import org.telegram.ui.Cells.ChatMessageCell;
 import org.telegram.ui.Cells.EmptyCell;
 import org.telegram.ui.Cells.HeaderCell;
 import org.telegram.ui.Cells.NotificationsCheckCell;
@@ -59,6 +61,7 @@ import org.telegram.ui.Components.LayoutHelper;
 import org.telegram.ui.Components.QuoteSpan;
 import org.telegram.ui.Components.RecyclerListView;
 import org.telegram.ui.Components.UndoView;
+import org.telegram.ui.Components.spoilers.SpoilerEffect;
 import org.telegram.ui.ProfileActivity;
 
 import java.io.File;
@@ -77,6 +80,11 @@ import java.util.Map;
 import java.util.Set;
 
 public class MessageDetailsActivity extends BaseFragment implements NotificationCenter.NotificationCenterDelegate {
+    private static final int MAX_SERIALIZE_DEPTH = 32;
+    private static final int MAX_COLLECTION_ITEMS = 512;
+    private static final int MAX_ARRAY_ITEMS = 256;
+    private static final int MAX_MAP_ENTRIES = 1024;
+    private static final int MAX_OBJECT_FIELDS = 65535;
 
     private RecyclerListView listView;
     private ListAdapter listAdapter;
@@ -92,6 +100,7 @@ public class MessageDetailsActivity extends BaseFragment implements Notification
     private String messageDetailsPrettyJsonHead;
     private String messageDetailsPrettyJson;
     private boolean detailExpanded = false;
+    private final Object jsonSource;
 
     private int rowCount;
 
@@ -165,24 +174,31 @@ public class MessageDetailsActivity extends BaseFragment implements Notification
 
     public MessageDetailsActivity(MessageObject messageObject) {
         this.messageObject = messageObject;
+        this.jsonSource = messageObject;
         initFromPeer(messageObject.messageOwner.from_id);
         initFile();
-        generateJson(messageObject);
+        initJsonState();
     }
 
     public MessageDetailsActivity(TL_stories.StoryItem story) {
         this.storyItem = story;
+        this.jsonSource = story;
         initFromPeer(story.from_id);
         initFile();
-        generateJson(story);
+        initJsonState();
+    }
+
+    private void initJsonState() {
+        messageDetailsJson = LocaleController.getString(R.string.Loading);
+        messageDetailsPrettyJson = messageDetailsJson;
+        messageDetailsPrettyJsonHead = messageDetailsJson;
     }
 
     @Override
     public boolean onFragmentCreate() {
         super.onFragmentCreate();
-
-//        NotificationCenter.getGlobalInstance().addObserver(this, NotificationCenter.emojiDidLoad);
         updateRows();
+        generateJsonAsync(jsonSource);
 
         return true;
     }
@@ -436,59 +452,52 @@ public class MessageDetailsActivity extends BaseFragment implements Notification
         }
     }
 
+    private void generateJsonAsync(Object obj) {
+        Utilities.globalQueue.postRunnable(() -> generateJson(obj));
+    }
+
     private void generateJson(Object obj) {
         try {
-            messageDetailsJson = "failed to generate json";
+            String generatedJson = "failed to generate json";
+            String generatedPrettyJson = generatedJson;
+            String generatedPrettyJsonHead = generatedJson;
             try {
-                messageDetailsJson = safeToJson(obj);
-                messageDetailsPrettyJson = safeToPrettyJson(obj);
-                String[] spl = messageDetailsPrettyJson.split("\n");
+                Object safeCopy = buildSafeCopy(obj, Collections.newSetFromMap(new IdentityHashMap<>()), 0, MAX_SERIALIZE_DEPTH);
+                generatedJson = gson.toJson(safeCopy);
+                generatedPrettyJson = prettyGson.toJson(safeCopy);
+                String[] spl = generatedPrettyJson.split("\n");
                 StringBuilder sb = new StringBuilder();
                 for (int i = 0; i < Math.min(3, spl.length); ++i) sb.append(spl[i]).append("\n");
                 sb.append("...");
-                messageDetailsPrettyJsonHead = sb.toString();
+                generatedPrettyJsonHead = sb.toString();
             } catch (Exception e) {
-                messageDetailsJson += (", " + e.getMessage());
-                messageDetailsPrettyJson = messageDetailsJson;
+                generatedJson += (", " + e.getMessage());
+                generatedPrettyJson = generatedJson;
+                generatedPrettyJsonHead = generatedPrettyJson;
                 FileLog.e(e);
             }
+            final String finalJson = generatedJson;
+            final String finalPrettyJson = generatedPrettyJson;
+            final String finalPrettyJsonHead = generatedPrettyJsonHead;
+            AndroidUtilities.runOnUIThread(() -> {
+                messageDetailsJson = finalJson;
+                messageDetailsPrettyJson = finalPrettyJson;
+                messageDetailsPrettyJsonHead = finalPrettyJsonHead;
+                if (listAdapter != null) {
+                    listAdapter.notifyItemChanged(rawRow);
+                }
+            });
         } catch (Exception e) {
             FileLog.e(e);
         }
     }
-    
-    // Safe JSON serialization methods with circular reference protection
+
     private String safeToJson(Object obj) {
-        return safeToJson(obj, false);
-    }
-    
-    private String safeToPrettyJson(Object obj) {
-        return safeToJson(obj, true);
-    }
-    
-    private String safeToJson(Object obj, boolean pretty) {
-        Set<Object> visited = Collections.newSetFromMap(new IdentityHashMap<>());
         try {
-            return serializeObjectSafely(obj, visited, pretty);
-        } catch (Exception e) {
-            return "{\"error\": \"Serialization failed: " + e.getMessage() + "\"}";
-        }
-    }
-    
-    private String serializeObjectSafely(Object obj, Set<Object> visited, boolean pretty) {
-        if (obj == null) return "null";
-        if (visited.contains(obj)) return "\"[CIRCULAR]\"";
-        Object safeCopy = buildSafeCopy(obj, visited, 0, 10);
-        try {
-            if (pretty) {
-                return prettyGson.toJson(safeCopy);
-            } else {
-                return gson.toJson(safeCopy);
-            }
-        } catch (StackOverflowError | OutOfMemoryError e) {
-            return "\"[OBJECT:" + obj.getClass().getSimpleName() + "@" + System.identityHashCode(obj) + "]\"";
-        } finally {
-            visited.remove(obj);
+            Object safeCopy = buildSafeCopy(obj, Collections.newSetFromMap(new IdentityHashMap<>()), 0, Math.min(4, MAX_SERIALIZE_DEPTH));
+            return gson.toJson(safeCopy);
+        } catch (Throwable t) {
+            return "[ERROR:" + t.getClass().getSimpleName() + "]";
         }
     }
 
@@ -501,14 +510,29 @@ public class MessageDetailsActivity extends BaseFragment implements Notification
         if (obj instanceof String || obj instanceof Number || obj instanceof Boolean || obj instanceof Character) {
             return obj;
         }
+        if (obj instanceof Enum<?>) {
+            return ((Enum<?>) obj).name();
+        }
+        if (obj instanceof Class<?>) {
+            return ((Class<?>) obj).getName();
+        }
+        if (shouldSummarizeObject(obj)) {
+            return summarizeObject(obj);
+        }
 
         // Collections
         if (obj instanceof Collection<?>) {
             visited.add(obj);
             Collection<?> col = (Collection<?>) obj;
-            List<Object> copy = new ArrayList<>(col.size());
+            List<Object> copy = new ArrayList<>(Math.min(col.size(), MAX_COLLECTION_ITEMS) + 1);
+            int index = 0;
             for (Object item : col) {
+                if (index >= MAX_COLLECTION_ITEMS) {
+                    copy.add("[TRUNCATED:" + col.size() + "]");
+                    break;
+                }
                 copy.add(buildSafeCopy(item, visited, depth + 1, maxDepth));
+                index++;
             }
             visited.remove(obj);
             return copy;
@@ -518,11 +542,17 @@ public class MessageDetailsActivity extends BaseFragment implements Notification
         if (obj instanceof Map<?, ?>) {
             visited.add(obj);
             Map<Object, Object> copy = new LinkedHashMap<>();
+            int index = 0;
             for (Map.Entry<?, ?> entry : ((Map<?, ?>) obj).entrySet()) {
+                if (index >= MAX_MAP_ENTRIES) {
+                    copy.put("[TRUNCATED]", ((Map<?, ?>) obj).size());
+                    break;
+                }
                 Object key = entry.getKey();
                 Object value = entry.getValue();
                 copy.put(buildSafeCopy(key, visited, depth + 1, maxDepth),
                         buildSafeCopy(value, visited, depth + 1, maxDepth));
+                index++;
             }
             visited.remove(obj);
             return copy;
@@ -532,9 +562,12 @@ public class MessageDetailsActivity extends BaseFragment implements Notification
         if (obj.getClass().isArray()) {
             visited.add(obj);
             int len = Array.getLength(obj);
-            List<Object> copy = new ArrayList<>(len);
-            for (int i = 0; i < len; i++) {
+            List<Object> copy = new ArrayList<>(Math.min(len, MAX_ARRAY_ITEMS) + 1);
+            for (int i = 0; i < Math.min(len, MAX_ARRAY_ITEMS); i++) {
                 copy.add(buildSafeCopy(Array.get(obj, i), visited, depth + 1, maxDepth));
+            }
+            if (len > MAX_ARRAY_ITEMS) {
+                copy.add("[TRUNCATED:" + len + "]");
             }
             visited.remove(obj);
             return copy;
@@ -544,22 +577,60 @@ public class MessageDetailsActivity extends BaseFragment implements Notification
         visited.add(obj);
         Map<String, Object> copy = new LinkedHashMap<>();
         Class<?> cls = obj.getClass();
+        int fieldCount = 0;
         while (cls != null) {
+            if (shouldStopReflectingAt(cls)) {
+                break;
+            }
             Field[] fields = cls.getDeclaredFields();
             for (Field f : fields) {
                 if (Modifier.isStatic(f.getModifiers())) continue; // skip static
+                if (fieldCount >= MAX_OBJECT_FIELDS) {
+                    copy.put("[TRUNCATED_FIELDS]", cls.getName());
+                    visited.remove(obj);
+                    return copy;
+                }
                 f.setAccessible(true);
                 try {
                     Object value = f.get(obj);
                     copy.put(f.getName(), buildSafeCopy(value, visited, depth + 1, maxDepth));
                 } catch (IllegalAccessException e) {
                     copy.put(f.getName(), "[ACCESS_ERROR]");
+                } catch (Throwable t) {
+                    copy.put(f.getName(), "[ERROR:" + t.getClass().getSimpleName() + "]");
                 }
+                fieldCount++;
             }
             cls = cls.getSuperclass();
         }
         visited.remove(obj);
         return copy;
+    }
+
+    private boolean shouldSummarizeObject(Object obj) {
+        return obj instanceof SpoilerEffect ||
+                obj instanceof ChatMessageCell ||
+                obj instanceof Context ||
+                obj instanceof View ||
+                obj instanceof ViewGroup ||
+                obj instanceof Bundle ||
+                obj instanceof Throwable ||
+                obj instanceof Thread ||
+                obj instanceof ClassLoader;
+    }
+
+    private boolean shouldStopReflectingAt(Class<?> cls) {
+        String name = cls.getName();
+        return name.startsWith("java.lang.Class") ||
+                name.startsWith("java.lang.ClassLoader") ||
+                name.startsWith("java.lang.Thread") ||
+                name.startsWith("android.") ||
+                name.startsWith("androidx.") ||
+                name.startsWith("java.lang.reflect.");
+    }
+
+    private String summarizeObject(Object obj) {
+        return "[OBJECT:" + obj.getClass().getSimpleName() + "@" + System.identityHashCode(obj) + "]";
     }
 
 
