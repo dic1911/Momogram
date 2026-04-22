@@ -408,7 +408,7 @@ public class MomoConfig {
     public static ConfigItem autoDismissDummy = addConfig(R.string.AutoDismissReqDummy, "AutoDismissReqDummy", configTypeBool, EXPERIMENTAL, false);
     public static String autoDismissRegexString;
     public static Pattern autoDismissRegexPattern;
-    public static ConfigItem bufferCleaner = addConfig(R.string.BufferCleaner, "BufferCleaner", configTypeBool, EXPERIMENTAL, false);
+    public static ConfigItem bufferCleaner = addConfig(R.string.BufferCleaner, "BufferCleaner", configTypeBool, EXPERIMENTAL, true);
     public static ConfigItem tempDebug = addConfig(R.string.SettingsDebug, "TempDebug", configTypeBool, EXPERIMENTAL, false);
 
     // internal
@@ -549,7 +549,7 @@ public class MomoConfig {
         }
 
         if (migrate030.Int() < 6) {
-            if (migrate030.Int() < 6) migrate030.setConfigInt(6);
+            if (migrate030.Int() < 6) migrate030.setConfigInt(7);
             // ShowVoteCountBeforeVote -> KeepVoteCountAfterRetractVote
             if (preferences.getBoolean("ShowVoteCountBeforeVote", false)) {
                 keepVoteCountAfterRetractVote.setConfigBool(true);
@@ -557,6 +557,11 @@ public class MomoConfig {
             if (ignoreTopicTabView.Bool()) {
                 overrideForumStyle.setConfigInt(NekoXConfig.ForumViewOverride.CLASSIC.value);
             }
+        }
+
+        if (migrate030.Int() < 7) {
+            migrate030.setConfigInt(7);
+            bufferCleaner.setConfigBool(true);
         }
 
 
