@@ -4,21 +4,24 @@ import java.nio.Buffer
 import java.nio.ByteBuffer
 import java.nio.FloatBuffer
 import java.nio.IntBuffer
+import java.nio.ShortBuffer
 import java.util.Arrays
 import moe.hx030.momogram.MomoConfig
 
 object BufferUtil {
     @JvmStatic
     fun clear(buffer: Buffer?) {
-        if (buffer == null || !buffer.hasArray() || buffer.isReadOnly || !MomoConfig.bufferCleaner.Bool()) return
+        if (buffer == null) return
 
         buffer.clear()
 
-        when (buffer.javaClass) {
-            ByteBuffer::class.java -> Arrays.fill(buffer.array() as ByteArray, 0)
-            FloatBuffer::class.java -> Arrays.fill(buffer.array() as FloatArray, 0.0f)
-            IntBuffer::class.java -> Arrays.fill(buffer.array() as IntArray, 0)
-            StringBuffer::class.java -> Arrays.fill(buffer.array() as Array<*>, null)
+        if (!buffer.hasArray() || buffer.isReadOnly || !MomoConfig.bufferCleaner.Bool()) return
+
+        when (buffer) {
+            is ByteBuffer -> Arrays.fill(buffer.array(), 0)
+            is FloatBuffer -> Arrays.fill(buffer.array(), 0.0f)
+            is IntBuffer -> Arrays.fill(buffer.array(), 0)
+            is ShortBuffer -> Arrays.fill(buffer.array(), 0.toShort())
         }
     }
 }
