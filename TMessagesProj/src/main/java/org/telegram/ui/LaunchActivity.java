@@ -6388,7 +6388,7 @@ public class LaunchActivity extends BasePermissionsActivity implements INavigati
                         getActionBarLayout().presentFragment(fragment, dialogsFragment != null, withoutAnimation, true, false);
                         presentedFragmentWithRemoveLast = dialogsFragment != null;
                         if (videoPath != null && topicId == 0) {
-                            fragment.openVideoEditor(videoPath, sendingText);
+                            fragment.openVideoEditor(videoPath, !TextUtils.isEmpty(message) ? message.toString() : sendingText);
                             videoEditorOpened = true;
                             sendingText = null;
                         } else if (photoPathsArray != null && !photoPathsArray.isEmpty() && topicId == 0) {
