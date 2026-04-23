@@ -97,6 +97,7 @@ import androidx.recyclerview.widget.LinearSmoothScroller;
 import androidx.recyclerview.widget.RecyclerView;
 
 import moe.hx030.momogram.utils.EnvUtil;
+import moe.hx030.momogram.utils.StrUtil;
 
 public class ChatAttachAlertDocumentLayout extends ChatAttachAlert.AttachAlertLayout {
 
@@ -984,7 +985,7 @@ public class ChatAttachAlertDocumentLayout extends ChatAttachAlert.AttachAlertLa
         if (files != null) {
             for (int a = 0; a < files.length; a++) {
                 File file = files[a];
-                if (file.isDirectory() && file.getName().equals("NekoX")) {
+                if (file.isDirectory() && file.getName().equals(StrUtil.getShortAppName())) {
                     checkDirectory(file);
                     continue;
                 }
