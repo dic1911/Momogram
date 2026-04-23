@@ -12,6 +12,8 @@ import org.telegram.messenger.R;
 import java.util.HashMap;
 import java.util.Map;
 
+import moe.hx030.momogram.MomoConfig;
+
 public class ChatActivityEnterViewAnimatedIconView extends RLottieImageView {
     private State currentState;
 
@@ -49,6 +51,11 @@ public class ChatActivityEnterViewAnimatedIconView extends RLottieImageView {
         if (animate && state == currentState) {
             return;
         }
+        if ((state == State.VOICE || state == State.VIDEO) && MomoConfig.useChatAttachMediaMenu.Bool()) {
+            Log.e("030-?", "fix state", new Exception());
+            state = State.MENU;
+        }
+
         State fromState = currentState;
         currentState = state;
         if (!animate || fromState == null || getState(fromState, currentState) == null) {
