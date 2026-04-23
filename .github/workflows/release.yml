@@ -258,6 +258,9 @@ jobs:
       - name: Release Build
         run: |
           export LOCAL_PROPERTIES="${{ secrets.LOCAL_PROPERTIES }}"
+          export APK_CERT="${{ secrets.APK_CERT }}"
+          printf "%s" "$APK_CERT" > /tmp/ci.jks.b64
+          base64 -d /tmp/ci.jks.b64 > /tmp/ci.jks
           ./gradlew TMessagesProj:assemble${{ matrix.flavor }}
 
           APK=$(find TMessagesProj/build/outputs/apk -name '*arm64-v8a*.apk')
