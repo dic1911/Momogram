@@ -229,6 +229,7 @@ public class ShareAlert extends BottomSheet implements NotificationCenter.Notifi
     private SizeNotifierFrameLayout sizeNotifierFrameLayout;
     private ArrayList<DialogsSearchAdapter.RecentSearchObject> recentSearchObjects = new ArrayList<>();
     private ArrayList<DialogsSearchAdapter.RecentSearchObject> recentSearchObjectsReal = new ArrayList<>();
+    private LongSparseArray<ArrayList<DialogsSearchAdapter.RecentSearchObject>> recentSearchObjectsByFilterId = new LongSparseArray<>();
     private LongSparseArray<DialogsSearchAdapter.RecentSearchObject> recentSearchObjectsById = new LongSparseArray<>();
     TL_stories.StoryItem storyItem;
     GraySectionCell recentCell;
@@ -1882,31 +1883,124 @@ public class ShareAlert extends BottomSheet implements NotificationCenter.Notifi
         AndroidUtilities.updateViewVisibilityAnimated(searchGridView, false, 1f, false);
     }
 
+    private void setDisplayedRecentSearchObjects(ArrayList<DialogsSearchAdapter.RecentSearchObject> arrayList, @Nullable LongSparseArray<DialogsSearchAdapter.RecentSearchObject> hashMap) {
+        recentSearchObjects = arrayList != null ? arrayList : new ArrayList<>();
+        if (hashMap != null) {
+            recentSearchObjectsById = hashMap;
+        }
+        for (int a = 0; a < recentSearchObjects.size(); a++) {
+            DialogsSearchAdapter.RecentSearchObject recentSearchObject = recentSearchObjects.get(a);
+            if (recentSearchObject.object instanceof TLRPC.User) {
+                MessagesController.getInstance(currentAccount).putUser((TLRPC.User) recentSearchObject.object, true);
+            } else if (recentSearchObject.object instanceof TLRPC.Chat) {
+                MessagesController.getInstance(currentAccount).putChat((TLRPC.Chat) recentSearchObject.object, true);
+            } else if (recentSearchObject.object instanceof TLRPC.EncryptedChat) {
+                MessagesController.getInstance(currentAccount).putEncryptedChat((TLRPC.EncryptedChat) recentSearchObject.object, true);
+            }
+        }
+        searchAdapter.notifyDataSetChanged();
+    }
+
+    private ArrayList<DialogsSearchAdapter.RecentSearchObject> buildRecentSearchObjectsFromDialogs(List<TLRPC.Dialog> dialogs) {
+        ArrayList<DialogsSearchAdapter.RecentSearchObject> result = new ArrayList<>();
+        if (dialogs == null) {
+            return result;
+        }
+        for (TLRPC.Dialog dialog : dialogs) {
+            DialogsSearchAdapter.RecentSearchObject recentSearchObject = new DialogsSearchAdapter.RecentSearchObject();
+            recentSearchObject.did = dialog.id;
+            recentSearchObject.date = dialog.last_message_date;
+            if (DialogObject.isChatDialog(dialog.id)) {
+                TLRPC.Chat chat = messagesController.getChat(-dialog.id);
+                if (chat == null || !ChatObject.canWriteToChat(chat)) {
+                    continue;
+                }
+                recentSearchObject.object = chat;
+            } else if (DialogObject.isUserDialog(dialog.id)) {
+                TLRPC.User user = messagesController.getUser(dialog.id);
+                if (user == null) {
+                    continue;
+                }
+                recentSearchObject.object = user;
+            } else {
+                continue;
+            }
+            result.add(recentSearchObject);
+        }
+        return result;
+    }
+
+    private ArrayList<DialogsSearchAdapter.RecentSearchObject> buildRecentSearchObjectsForFilter(MessagesController.DialogFilter filter) {
+        if (filter == null) {
+            return new ArrayList<>();
+        }
+        if (filter.isDefault()) {
+            return new ArrayList<>(recentSearchObjectsReal);
+        }
+        ArrayList<TLRPC.Dialog> dialogs = new ArrayList<>();
+        ArrayList<TLRPC.Dialog> allDialogs = messagesController.getAllDialogs();
+        for (int a = 0, N = allDialogs.size(); a < N; a++) {
+            TLRPC.Dialog dialog = allDialogs.get(a);
+            if (!(dialog instanceof TLRPC.TL_dialog)) {
+                continue;
+            }
+            long dialogId = dialog.id;
+            if (DialogObject.isEncryptedDialog(dialogId)) {
+                TLRPC.EncryptedChat encryptedChat = messagesController.getEncryptedChat(DialogObject.getEncryptedChatId(dialogId));
+                if (encryptedChat != null) {
+                    dialogId = encryptedChat.user_id;
+                }
+            }
+            if (filter.includesDialog(AccountInstance.getInstance(currentAccount), dialogId, dialog)) {
+                dialogs.add(dialog);
+            }
+        }
+        return buildRecentSearchObjectsFromDialogs(dialogs);
+    }
+
+    private List<MessagesController.DialogFilter> getDialogFilters() {
+        return messagesController.getDialogFilters();
+    }
+
+    @Nullable
+    private MessagesController.DialogFilter getSelectedFilter() {
+        if (filterTabsView == null) {
+            return null;
+        }
+        int selectedTabId = filterTabsView.getCurrentTabId();
+        List<MessagesController.DialogFilter> filters = getDialogFilters();
+        if (selectedTabId < 0 || selectedTabId >= filters.size()) {
+            return null;
+        }
+        return filters.get(selectedTabId);
+    }
+
     DialogsSearchAdapter.OnRecentSearchLoaded recentSearchLoaded = new DialogsSearchAdapter.OnRecentSearchLoaded() {
         @Override
         public void setRecentSearch(ArrayList<DialogsSearchAdapter.RecentSearchObject> arrayList, LongSparseArray<DialogsSearchAdapter.RecentSearchObject> hashMap) {
             if (arrayList != null) {
                 arrayList.removeIf(x ->
                         (x.object instanceof TLRPC.Chat) && !ChatObject.canWriteToChat((TLRPC.Chat) x.object));
+                recentSearchObjectsReal = new ArrayList<>(arrayList);
+            } else {
+                recentSearchObjectsReal = new ArrayList<>();
             }
-            recentSearchObjects = arrayList;
-            if (hashMap != null) recentSearchObjectsById = hashMap;
-            for (int a = 0; a < recentSearchObjects.size(); a++) {
-                DialogsSearchAdapter.RecentSearchObject recentSearchObject = recentSearchObjects.get(a);
-                if (recentSearchObject.object instanceof TLRPC.User) {
-                    MessagesController.getInstance(currentAccount).putUser((TLRPC.User) recentSearchObject.object, true);
-                } else if (recentSearchObject.object instanceof TLRPC.Chat) {
-                    MessagesController.getInstance(currentAccount).putChat((TLRPC.Chat) recentSearchObject.object, true);
-                } else if (recentSearchObject.object instanceof TLRPC.EncryptedChat) {
-                    MessagesController.getInstance(currentAccount).putEncryptedChat((TLRPC.EncryptedChat) recentSearchObject.object, true);
+            recentSearchObjectsByFilterId.clear();
+            if (selectedTab) {
+                MessagesController.DialogFilter selectedFilter = getSelectedFilter();
+                if (selectedFilter != null) {
+                    searchAdapter.filterDialogs(selectedFilter);
                 }
+            } else {
+                setDisplayedRecentSearchObjects(new ArrayList<>(recentSearchObjectsReal), hashMap);
             }
-            searchAdapter.notifyDataSetChanged();
+            if (hashMap != null && selectedTab) {
+                recentSearchObjectsById = hashMap;
+            }
         }
     };
 
     MessagesController messagesController = MessagesController.getInstance(currentAccount);
-    List<MessagesController.DialogFilter> filters = messagesController.getDialogFilters();
     private View createFilterDropdownView(final ViewGroup parent) {
         FrameLayout container = new FrameLayout(parent.getContext());
 
@@ -1940,12 +2034,13 @@ public class ShareAlert extends BottomSheet implements NotificationCenter.Notifi
             @Override
             public void onPageSelected(FilterTabsView.Tab tab, boolean forward) {
                 Log.d("030-share", String.format("tab %s selected", tab.title));
+                List<MessagesController.DialogFilter> filters = getDialogFilters();
                 if (!tab.isDefault && (tab.id < 0 || tab.id >= filters.size())) {
                     return;
                 }
                 MessagesController.DialogFilter selected = filters.get(tab.id);
-                searchAdapter.filterDialogs(selected);
                 selectedTab = !tab.isDefault;
+                searchAdapter.filterDialogs(selected);
                 if (recentCell != null) {
                     recentCell.setVisibility(selectedTab ? View.GONE : View.VISIBLE);
                 }
@@ -1978,6 +2073,7 @@ public class ShareAlert extends BottomSheet implements NotificationCenter.Notifi
             public void onDeletePressed(int id) {}
         });
 
+        List<MessagesController.DialogFilter> filters = getDialogFilters();
         for (int a = 0, N = filters.size(); a < N; a++) {
             MessagesController.DialogFilter filter = filters.get(a);
             if (filter.isDefault()) {
@@ -2773,6 +2869,11 @@ public class ShareAlert extends BottomSheet implements NotificationCenter.Notifi
         if (id == NotificationCenter.dialogsNeedReload) {
             if (listAdapter != null) {
                 listAdapter.fetchDialogs();
+            }
+            recentSearchObjectsByFilterId.clear();
+            MessagesController.DialogFilter selectedFilter = selectedTab ? getSelectedFilter() : null;
+            if (selectedFilter != null) {
+                searchAdapter.filterDialogs(selectedFilter);
             }
             NotificationCenter.getInstance(currentAccount).removeObserver(this, NotificationCenter.dialogsNeedReload);
         }
@@ -3590,32 +3691,17 @@ public class ShareAlert extends BottomSheet implements NotificationCenter.Notifi
         }
 
         public void filterDialogs(final MessagesController.DialogFilter filter) {
+            searchResult.clear();
             if (filter.isDefault()) {
-                recentSearchObjects.clear();
-                recentSearchObjects.addAll(recentSearchObjectsReal);
-                recentSearchLoaded.setRecentSearch(recentSearchObjects, null);
+                setDisplayedRecentSearchObjects(new ArrayList<>(recentSearchObjectsReal), null);
                 return;
             }
-            searchResult.clear();
-            ArrayList<DialogsSearchAdapter.RecentSearchObject> dialogs = new ArrayList<>();
-            Log.d("030-?", String.format("%s contains %d dlgs", filter.name, filter.dialogs.size()));
-            for (TLRPC.Dialog dialog : filter.dialogs) {
-                DialogsSearchAdapter.RecentSearchObject r = new DialogsSearchAdapter.RecentSearchObject();
-                r.did = dialog.id;
-                r.date = dialog.last_message_date;
-                if (DialogObject.isChatDialog(dialog.id)) {
-                    TLRPC.Chat chat = messagesController.getChat(-dialog.id);
-                    if (chat == null) continue;
-                    r.object = chat;
-                } else if (DialogObject.isUserDialog(dialog.id)) {
-                    TLRPC.User user = messagesController.getUser(dialog.id);
-                    if (user == null) continue;
-                    r.object = user;
-                }
-                dialogs.add(r);
+            ArrayList<DialogsSearchAdapter.RecentSearchObject> dialogs = recentSearchObjectsByFilterId.get(filter.id);
+            if (dialogs == null) {
+                dialogs = buildRecentSearchObjectsForFilter(filter);
+                recentSearchObjectsByFilterId.put(filter.id, dialogs);
             }
-            if (recentSearchObjectsReal.isEmpty()) recentSearchObjectsReal.addAll(recentSearchObjects);
-            recentSearchLoaded.setRecentSearch(dialogs, null);
+            setDisplayedRecentSearchObjects(new ArrayList<>(dialogs), null);
         }
 
         int lastItemCont;
@@ -3632,8 +3718,10 @@ public class ShareAlert extends BottomSheet implements NotificationCenter.Notifi
 
             firstEmptyViewCell = itemsCount++;
             if (TextUtils.isEmpty(lastSearchText)) {
-                if (filters.size() > 1) dialogFilterRow = itemsCount++;
-                hintsCell = itemsCount++;
+                if (getDialogFilters().size() > 1) dialogFilterRow = itemsCount++;
+                if (!selectedTab) {
+                    hintsCell = itemsCount++;
+                }
 
                 if (!recentSearchObjects.isEmpty()) {
                     resentTitleCell = itemsCount++;
