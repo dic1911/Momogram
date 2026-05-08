@@ -443,6 +443,7 @@ public class ChatActivity extends BaseFragment implements
     private final static int nkheaderbtn_recent_actions = 3001;
     private final static int nkheaderbtn_bot_app = 3002;
     private final static int nkheaderbtn_pinned_msgs = 3003;
+    private final static int nkheaderbtn_ch_direct_msg = 3004;
 
     public boolean ignoreKeepPosition = false;
     public boolean pressedNoPreview = false;
@@ -4769,6 +4770,7 @@ public class ChatActivity extends BaseFragment implements
             }
             // NekoX - start
             headerItem.addSubItem(nkheaderbtn_pinned_msgs, R.drawable.menu_pinnedlist, LocaleController.getString(R.string.PinnedMessages));
+            headerItem.lazilyAddSubItem(nkheaderbtn_ch_direct_msg, R.drawable.input_message, LocaleController.getString(R.string.ChannelOpenDirect));
 
             if (currentChat != null && (currentChat.has_link || (chatInfo != null && chatInfo.linked_chat_id != 0))) {
                 String text;
@@ -28150,6 +28152,7 @@ public class ChatActivity extends BaseFragment implements
         updateBottomOverlay(animated, false);
     }
 
+    private boolean needDirectMsgButton = false;
     private void updateBottomOverlay(boolean animated, boolean force) {
         if (!force && (bottomOverlayChatText == null || chatMode == MODE_SCHEDULED || getContext() == null)) {
             return;
@@ -28539,6 +28542,11 @@ public class ChatActivity extends BaseFragment implements
         if (shouldHideBottomOverlay()) {
             bottomChannelButtonsLayout.setTotalVisibilityFactor(0f);
             bottomChannelButtonsLayout.setVisibility(View.INVISIBLE);
+            needDirectMsgButton = showSuggestButton;
+            if (headerItem.isSubItemVisible(nkheaderbtn_ch_direct_msg) != needDirectMsgButton) {
+                if (needDirectMsgButton) headerItem.showSubItem(nkheaderbtn_ch_direct_msg);
+                else headerItem.hideSubItem(nkheaderbtn_ch_direct_msg);
+            }
         }
     }
 
@@ -44740,6 +44748,16 @@ public class ChatActivity extends BaseFragment implements
             }
         } else if (id == nkheaderbtn_pinned_msgs) {
             openPinnedMessagesList(false);
+        } else if (id == nkheaderbtn_ch_direct_msg) {
+            MessagesController.getGlobalMainSettings().edit().putInt("channelsuggesthint", 3).apply();
+            if (currentChat != null && currentChat.linked_monoforum_id != 0) {
+                getMessagesController().putMonoForumLinkedChat(currentChat.id, currentChat.linked_monoforum_id);
+                Bundle bundle = new Bundle();
+                bundle.putLong("chat_id", currentChat.linked_monoforum_id);
+                bundle.putInt("chatMode", MODE_SUGGESTIONS);
+                bundle.putBoolean("isSubscriberSuggestions", true);
+                presentFragment(new ChatActivity(bundle));
+            }
         }
     }
 
