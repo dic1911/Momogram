@@ -293,4 +293,4 @@ jobs:
           find artifacts -name "*.apk" -exec cp {} apks \;
           echo $PWD
           ls */*/*
-          ./ghr -delete -prerelease -u dic1911 -r Momogram -c ${{ github.sha }} -t "${{ github.token }}" -n "${{ github.event.inputs.tag }}" "${{ github.event.inputs.tag }}" apks
+          ./ghr -delete -prerelease -u dic1911 -r Momogram -c ${{ github.sha }} -t "${{ github.token }}" -n "${{ github.event.inputs.tag }}" -b "$(git log --oneline -1 | cat)\n\nNote. CI build has different signature, if you don't understand what this means, use normal builds instead, do not spam the discussion group or get warned and muted." "${{ github.event.inputs.tag }}" apks
