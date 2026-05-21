@@ -2,27 +2,29 @@ package org.telegram.ui.Components.chat.layouts;
 
 import static org.telegram.messenger.AndroidUtilities.dp;
 import static org.telegram.messenger.AndroidUtilities.lerp;
+import static org.telegram.messenger.LocaleController.getString;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Outline;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.view.Gravity;
 import android.view.View;
-import android.view.ViewOutlineProvider;
 import android.widget.FrameLayout;
 
 import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 
+import org.telegram.messenger.AndroidUtilities;
 import org.telegram.messenger.R;
+import org.telegram.messenger.utils.ViewOutlineProviderImpl;
 import org.telegram.ui.ActionBar.Theme;
 import org.telegram.ui.Components.CubicBezierInterpolator;
 import org.telegram.ui.Components.LayoutHelper;
 import org.telegram.ui.Components.ScaleStateListAnimator;
 import org.telegram.ui.Components.blur3.BlurredBackgroundDrawableViewFactory;
+import org.telegram.ui.Components.blur3.drawable.BlurredBackgroundDrawable;
 import org.telegram.ui.Components.blur3.drawable.color.BlurredBackgroundColorProvider;
 import org.telegram.ui.Components.chat.buttons.ChatActivityBlurredRoundButton;
 
@@ -38,7 +40,8 @@ public class ChatActivityChannelButtonsLayout extends FrameLayout implements Fac
     public static final int BUTTON_GIFT = 1;
     public static final int BUTTON_DIRECT = 2;
     public static final int BUTTON_GIGA_GROUP_INFO = 3;
-    private static final int BUTTONS_COUNT = 4;
+    public static final int BUTTON_RECENT_ACTIONS_INFO = 4;
+    private static final int BUTTONS_COUNT = 5;
 
     private final ButtonHolder[] buttonHolders = new ButtonHolder[BUTTONS_COUNT];
     private final OnClickListener[] onClickListeners = new OnClickListener[BUTTONS_COUNT];
@@ -52,6 +55,7 @@ public class ChatActivityChannelButtonsLayout extends FrameLayout implements Fac
         R.drawable.msg_search,
         R.drawable.input_gift_s,
         R.drawable.input_message,
+        R.drawable.msg_help,
         R.drawable.msg_help
     };
     private static final int[] buttonsOrderLeft = new int[] {
@@ -60,7 +64,8 @@ public class ChatActivityChannelButtonsLayout extends FrameLayout implements Fac
     private static final int[] buttonsOrderRight = new int[] {
         BUTTON_GIFT,
         BUTTON_DIRECT,
-        BUTTON_GIGA_GROUP_INFO
+        BUTTON_GIGA_GROUP_INFO,
+        BUTTON_RECENT_ACTIONS_INFO
     };
 
     private final Theme.ResourcesProvider resourcesProvider;
@@ -79,14 +84,9 @@ public class ChatActivityChannelButtonsLayout extends FrameLayout implements Fac
         container = new FrameLayout(context);
         container.setClipToOutline(true);
         if (!MomoConfig.unroundedChatBottomView.Bool()) {
-            container.setOutlineProvider(new ViewOutlineProvider() {
-                @Override
-                public void getOutline(View view, Outline outline) {
-                    outline.setRoundRect(0, 0, view.getMeasuredWidth(), view.getMeasuredHeight(), dp((float) ChatActivityBlurredRoundButton.BUTTON_SIZE / 2));
-                }
-            });
+            container.setOutlineProvider(ViewOutlineProviderImpl.boundsWithPaddingRoundRect(0, dp(22)));
         }
-        addView(container, LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, LayoutHelper.MATCH_PARENT, Gravity.CENTER_VERTICAL));
+        addView(container, LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, 44, Gravity.CENTER_VERTICAL));
     }
 
     public void updateColors() {
@@ -130,6 +130,16 @@ public class ChatActivityChannelButtonsLayout extends FrameLayout implements Fac
                 48
             );
 
+            if (buttonId == BUTTON_GIFT) {
+                button.setContentDescription(getString(R.string.ProfileActionsGift));
+            } else if (buttonId == BUTTON_DIRECT) {
+                button.setContentDescription(getString(R.string.ChannelOpenDirect));
+            } else if (buttonId == BUTTON_SEARCH) {
+                button.setContentDescription(getString(R.string.Search));
+            } else if (buttonId == BUTTON_GIGA_GROUP_INFO) {
+                button.setContentDescription(getString(R.string.BroadcastGroupInfo));
+            }
+
             ScaleStateListAnimator.apply(button, .13f, 2f);
             button.setVisibility(GONE);
             button.setOnClickListener(v -> {
@@ -145,6 +155,14 @@ public class ChatActivityChannelButtonsLayout extends FrameLayout implements Fac
         }
 
         buttonHolders[buttonId].visibilityAnimator.setValue(show, animated);
+    }
+
+    private BlurredBackgroundDrawable containerDrawable;
+    public void setupDrawableForContainer() {
+        containerDrawable = blurredBackgroundDrawableViewFactory.create(this)
+            .setColorProvider(colorProvider)
+            .setRadius(dp(22))
+            .setPadding(dp(6));
     }
 
     public boolean isButtonVisible(final int buttonId) {
@@ -405,6 +423,22 @@ public class ChatActivityChannelButtonsLayout extends FrameLayout implements Fac
 
     public interface OnButtonFullyVisibleListener {
         void onButtonFullyVisible(View v, int buttonId, boolean firstTime);
+    }
+
+    @Override
+    protected boolean drawChild(@NonNull Canvas canvas, View child, long drawingTime) {
+        if (child == container && containerDrawable != null) {
+            tmpRect.set(
+                totalWidthLeft + dp(1), 0,
+                getMeasuredWidth() - dp(1) - totalWidthRight,
+                getMeasuredHeight());
+
+            tmpRect.round(AndroidUtilities.rectTmp2);
+            containerDrawable.setBounds(AndroidUtilities.rectTmp2);
+            containerDrawable.draw(canvas);
+        }
+
+        return super.drawChild(canvas, child, drawingTime);
     }
 
     @Override

@@ -94,7 +94,7 @@ def nativeTarget = System.getenv("NATIVE_TARGET")
 if (nativeTarget == null) nativeTarget = ""
 
 android {
-    compileSdk 36
+    compileSdkVersion 36
     buildToolsVersion "36.0.0"
     ndkVersion = rootProject.ext.ndkVersion
 
@@ -380,6 +380,13 @@ dependencies {
 //    implementation 'com.airbnb.android:lottie:6.4.0' // 030: removed from upstream
 //    implementation 'com.google.android.play:integrity:1.3.0'
 //    implementation 'com.google.android.gms:play-services-safetynet:18.0.1'
+
+    implementation "io.noties.markwon:core:4.6.2"
+    implementation "io.noties.markwon:ext-strikethrough:4.6.2"
+    implementation "io.noties.markwon:ext-tables:4.6.2"
+    implementation "io.noties.markwon:html:4.6.2"
+    implementation "io.noties.markwon:inline-parser:4.6.2"
+    implementation "io.noties.markwon:ext-latex:4.6.2"
 
     compileOnly 'org.yaml:snakeyaml:2.6'
 //    fullImplementation 'org.yaml:snakeyaml:2.3'

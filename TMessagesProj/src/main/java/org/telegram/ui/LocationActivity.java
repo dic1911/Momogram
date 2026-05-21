@@ -24,7 +24,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.BitmapShader;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -130,7 +129,6 @@ import org.telegram.ui.Components.SizeNotifierFrameLayout;
 import org.telegram.ui.Components.UndoView;
 import org.telegram.ui.Stories.recorder.HintView2;
 
-import java.io.File;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -279,6 +277,7 @@ public class LocationActivity extends BaseFragment implements NotificationCenter
         public MapPin marker;
         public MapPin directionMarker;
         public boolean hasRotation;
+        public ImageReceiver avatarReceiver;
     }
 
     private static class SearchButton extends TextView {
@@ -518,6 +517,13 @@ public class LocationActivity extends BaseFragment implements NotificationCenter
         if (markAsReadRunnable != null) {
             AndroidUtilities.cancelRunOnUIThread(markAsReadRunnable);
             markAsReadRunnable = null;
+        }
+        for (int a = 0, N = markers.size(); a < N; a++) {
+            LiveLocation liveLocation = markers.get(a);
+            if (liveLocation.avatarReceiver != null) {
+                liveLocation.avatarReceiver.onDetachedFromWindow();
+                liveLocation.avatarReceiver = null;
+            }
         }
     }
 
@@ -1523,12 +1529,6 @@ public class LocationActivity extends BaseFragment implements NotificationCenter
     private Bitmap createUserBitmap(LiveLocation liveLocation) {
         Bitmap result = null;
         try {
-            TLRPC.FileLocation photo = null;
-            if (liveLocation.user != null && liveLocation.user.photo != null) {
-                photo = liveLocation.user.photo.photo_small;
-            } else if (liveLocation.chat != null && liveLocation.chat.photo != null) {
-                photo = liveLocation.chat.photo.photo_small;
-            }
             result = Bitmap.createBitmap(dp(62), dp(85), Bitmap.Config.ARGB_8888);
             result.eraseColor(Color.TRANSPARENT);
             Canvas canvas = new Canvas(result);
@@ -1556,23 +1556,20 @@ public class LocationActivity extends BaseFragment implements NotificationCenter
             avatarDrawable.draw(canvas);
             canvas.restore();
 
-            if (photo != null) {
-                File path = ImageReceiver.getAvatarLocalFile(currentAccount, liveLocation.user != null ? liveLocation.user : liveLocation.chat);
-                Bitmap bitmap = BitmapFactory.decodeFile(path.toString());
-                if (bitmap != null) {
-                    BitmapShader shader = new BitmapShader(bitmap, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP);
-                    Matrix matrix = new Matrix();
-                    float scale = edge / (float) bitmap.getWidth();
-                    matrix.postScale(scale, scale);
-                    matrix.postTranslate(start, start);
-                    roundPaint.setShader(shader);
-                    shader.setLocalMatrix(matrix);
-                    bitmapRect.set(start, start, edge + start, edge + start);
-                    if (squareAvatar)
-                        canvas.drawRect(bitmapRect, roundPaint);
-                    else
-                        canvas.drawRoundRect(bitmapRect, dp(25), dp(25), roundPaint);
-                }
+            Bitmap bitmap = liveLocation.avatarReceiver != null && liveLocation.avatarReceiver.hasImageLoaded() ? liveLocation.avatarReceiver.getBitmap() : null;
+            if (bitmap != null && !bitmap.isRecycled()) {
+                BitmapShader shader = new BitmapShader(bitmap, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP);
+                Matrix matrix = new Matrix();
+                float scale = edge / (float) bitmap.getWidth();
+                matrix.postTranslate(start, start);
+                matrix.postScale(scale, scale);
+                roundPaint.setShader(shader);
+                shader.setLocalMatrix(matrix);
+                bitmapRect.set(start, start, edge + start, edge + start);
+                if (squareAvatar)
+                    canvas.drawRect(bitmapRect, roundPaint);
+                else
+                    canvas.drawRoundRect(bitmapRect, dp(25), dp(25), roundPaint);
             }
 
             canvas.restore();
@@ -1819,6 +1816,34 @@ public class LocationActivity extends BaseFragment implements NotificationCenter
         }
     }
 
+    private void setupAvatarReceiver(LiveLocation liveLocation) {
+        if (liveLocation.avatarReceiver != null) return;
+        final TLRPC.User user = liveLocation.user;
+        final TLRPC.Chat chat = liveLocation.chat;
+        if (user == null && chat == null) return;
+
+        AvatarDrawable avatarDrawable = new AvatarDrawable();
+        if (user != null) {
+            avatarDrawable.setInfo(currentAccount, user);
+        } else {
+            avatarDrawable.setInfo(currentAccount, chat);
+        }
+
+        final ImageReceiver receiver = new ImageReceiver();
+        receiver.setCurrentAccount(currentAccount);
+        receiver.setDelegate((imageReceiver, set, thumb, memCache) -> {
+            if (!set || thumb) return;
+            if (liveLocation.marker == null) return;
+            Bitmap bitmap = createUserBitmap(liveLocation);
+            if (bitmap != null) {
+                liveLocation.marker.setIcon(bitmap);
+            }
+        });
+        receiver.onAttachedToWindow();
+        receiver.setForUserOrChat(user != null ? user : chat, avatarDrawable);
+        liveLocation.avatarReceiver = receiver;
+    }
+
     private LiveLocation addUserMarker(TLRPC.Message message) {
         LiveLocation liveLocation;
         LatLng latLng = new LatLng(message.media.geo.lat, message.media.geo._long);
@@ -1837,6 +1862,7 @@ public class LocationActivity extends BaseFragment implements NotificationCenter
                 }
                 liveLocation.id = did;
             }
+            setupAvatarReceiver(liveLocation);
 
             try {
                 Bitmap bitmap = createUserBitmap(liveLocation);
@@ -1892,6 +1918,7 @@ public class LocationActivity extends BaseFragment implements NotificationCenter
             liveLocation.chat = getMessagesController().getChat(-dialogId);
         }
         liveLocation.id = dialogId;
+        setupAvatarReceiver(liveLocation);
 
         try {
             Bitmap bitmap = createUserBitmap(liveLocation);

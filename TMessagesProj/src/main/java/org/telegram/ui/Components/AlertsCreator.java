@@ -151,12 +151,16 @@ import org.telegram.ui.Stars.StarsController;
 import org.telegram.ui.Stars.StarsIntroActivity;
 import org.telegram.ui.Stories.DarkThemeResourceProvider;
 import org.telegram.ui.Stories.recorder.ButtonWithCounterView;
+import org.telegram.ui.Stories.recorder.HintView2;
 import org.telegram.ui.ThemePreviewActivity;
 import org.telegram.ui.TooManyCommunitiesActivity;
 
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.YearMonth;
+import java.time.ZoneId;
 import java.time.ZoneOffset;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -445,7 +449,7 @@ public class AlertsCreator {
                 }
                 return null;
             } else if (fragment != null) {
-                showAddUserAlert(error.text, fragment, args != null && args.length > 0 ? (Boolean) args[0] : false, request);
+                showAddUserAlert(error, fragment, args != null && args.length > 0 ? (Boolean) args[0] : false, request);
             } else {
                 if (error.text.equals("PEER_FLOOD")) {
                     NotificationCenter.getInstance(currentAccount).postNotificationName(NotificationCenter.needShowAlert, 1);
@@ -465,7 +469,7 @@ public class AlertsCreator {
             } else if (error.text.startsWith("FLOOD_WAIT")) {
                 showFloodWaitAlert(error.text, fragment);
             } else {
-                showAddUserAlert(error.text, fragment, false, request);
+                showAddUserAlert(error, fragment, false, request);
             }
         } else if (request instanceof TLRPC.TL_channels_createChannel) {
             if (fragment == null) {
@@ -481,7 +485,7 @@ public class AlertsCreator {
             } else if (error.text.startsWith("FLOOD_WAIT")) {
                 showFloodWaitAlert(error.text, fragment);
             } else {
-                showAddUserAlert(error.text, fragment, false, request);
+                showAddUserAlert(error, fragment, false, request);
             }
         } else if (request instanceof TLRPC.TL_messages_editMessage) {
             if (!error.text.equals("MESSAGE_NOT_MODIFIED")) {
@@ -3789,7 +3793,7 @@ public class AlertsCreator {
 
         BottomSheet[] sheet = new BottomSheet[1];
 
-        ButtonWithCounterView button = new ButtonWithCounterView(context, null);
+        ButtonWithCounterView button = new ButtonWithCounterView(context, null).setRound();
         button.setText(LocaleController.getString(R.string.Select), false);
         button.setOnClickListener(v -> sheet[0].dismiss());
         container.addView(button, LayoutHelper.createLinear(LayoutHelper.MATCH_PARENT, 48, 0, 16, 12, 16, 12));
@@ -3905,7 +3909,11 @@ public class AlertsCreator {
             calendar.set(Calendar.HOUR_OF_DAY, maxHour = 23);
             calendar.set(Calendar.MINUTE, maxMinute = 59);
             calendar.set(Calendar.SECOND, 59);
-            maxDay = (int) TimeUnit.MILLISECONDS.toDays(maxDate); // ???
+            calendar.set(Calendar.MILLISECOND, 0);
+            maxDay = (int) ChronoUnit.DAYS.between(
+                Instant.ofEpochMilli(systemTime).atZone(ZoneId.systemDefault()).toLocalDate(),
+                Instant.ofEpochMilli(calendar.getTimeInMillis()).atZone(ZoneId.systemDefault()).toLocalDate()
+            );
             maxDate = calendar.getTimeInMillis();
         }
 
@@ -3916,11 +3924,13 @@ public class AlertsCreator {
         int minHour = calendar.get(Calendar.HOUR_OF_DAY);
         int minMinute = calendar.get(Calendar.MINUTE);
 
-        calendar.setTimeInMillis(System.currentTimeMillis() + (long) day * 24 * 3600 * 1000);
+        calendar.setTimeInMillis(System.currentTimeMillis());
+        calendar.add(Calendar.DAY_OF_YEAR, day);
         calendar.set(Calendar.HOUR_OF_DAY, hour);
         calendar.set(Calendar.MINUTE, minute);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
         long currentTime = calendar.getTimeInMillis();
-        calendar.setTimeInMillis(currentTime);
 
         dayPicker.setMinValue(0);
         if (maxDate > 0) {
@@ -3946,9 +3956,12 @@ public class AlertsCreator {
         }
         int selectedYear = calendar.get(Calendar.YEAR);
 
-        calendar.setTimeInMillis(System.currentTimeMillis() + (long) day * 24 * 3600 * 1000);
+        calendar.setTimeInMillis(System.currentTimeMillis());
+        calendar.add(Calendar.DAY_OF_YEAR, day);
         calendar.set(Calendar.HOUR_OF_DAY, hour);
         calendar.set(Calendar.MINUTE, minute);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
 
         long time = calendar.getTimeInMillis();
         if (button != null) {
@@ -4191,6 +4204,8 @@ public class AlertsCreator {
                 super.requestLayout();
             }
         };
+        container.setClipToPadding(false);
+        container.setClipChildren(false);
         container.setOrientation(LinearLayout.VERTICAL);
         frameLayout.addView(container, LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, LayoutHelper.MATCH_PARENT));
 
@@ -4214,6 +4229,8 @@ public class AlertsCreator {
         titleLayout.addView(titleView, LayoutHelper.createFrame(LayoutHelper.WRAP_CONTENT, LayoutHelper.WRAP_CONTENT, Gravity.LEFT | Gravity.TOP, 0, 12, 0, 0));
         titleView.setOnTouchListener((v, event) -> true);
 
+        final boolean[] notify = new boolean[] { true };
+        ActionBarMenuItem optionsButton = null;
         if (DialogObject.isUserDialog(dialogId) && dialogId != selfUserId) {
             TLRPC.User user = MessagesController.getInstance(UserConfig.selectedAccount).getUser(dialogId);
             if (user != null && !user.bot && user.status != null && user.status.expires > 0) {
@@ -4222,38 +4239,51 @@ public class AlertsCreator {
                     name = name.substring(0, 10) + "\u2026";
                 }
 
-                ActionBarMenuItem optionsButton = new ActionBarMenuItem(context, null, 0, datePickerColors.iconColor, false, resourcesProvider);
+                optionsButton = new ActionBarMenuItem(context, null, 0, datePickerColors.textColor, false, resourcesProvider);
                 optionsButton.setLongClickEnabled(false);
                 optionsButton.setSubMenuOpenSide(2);
                 optionsButton.setIcon(R.drawable.ic_ab_other);
-                optionsButton.setBackgroundDrawable(Theme.createSelectorDrawable(datePickerColors.iconSelectorColor, 1));
+                optionsButton.setBackground(Theme.createSelectorDrawable(datePickerColors.iconSelectorColor, 1));
                 titleLayout.addView(optionsButton, LayoutHelper.createFrame(40, 40, Gravity.TOP | Gravity.RIGHT, 0, 8, 5, 0));
                 optionsButton.addSubItem(1, LocaleController.formatString(R.string.ScheduleWhenOnline, name));
-                optionsButton.setOnClickListener(v -> {
-                    optionsButton.toggleSubMenu();
-                    optionsButton.setPopupItemsColor(datePickerColors.subMenuTextColor, false);
-                    optionsButton.setupPopupRadialSelectors(datePickerColors.subMenuSelectorColor);
-                    optionsButton.redrawPopup(datePickerColors.subMenuBackgroundColor);
-                });
-                optionsButton.setDelegate(id -> {
-                    if (id == 1) {
-                        datePickerDelegate.didSelectDate(true, 0x7ffffffe, 0);
-                        builder.getDismissRunnable().run();
-                    }
-                });
                 optionsButton.setContentDescription(LocaleController.getString(R.string.AccDescrMoreOptions));
             }
         }
+        final ActionBarMenuItem finalOptionsButton = optionsButton;
+        if (finalOptionsButton != null) {
+            finalOptionsButton.setOnClickListener(v -> {
+                finalOptionsButton.toggleSubMenu();
+                finalOptionsButton.setPopupItemsColor(datePickerColors.subMenuTextColor, false);
+                finalOptionsButton.setupPopupRadialSelectors(datePickerColors.subMenuSelectorColor);
+                finalOptionsButton.redrawPopup(datePickerColors.subMenuBackgroundColor);
+            });
+            finalOptionsButton.setDelegate(id -> {
+                if (id == 1) {
+                    datePickerDelegate.didSelectDate(notify[0], 0x7ffffffe, 0);
+                    builder.getDismissRunnable().run();
+                }
+            });
+        }
+
+        final RLottieImageView notifyItem = new RLottieImageView(context);
+        final RLottieDrawable notifyIcon = new RLottieDrawable(R.raw.notify_toggle, "notify_toggle", dp(24), dp(24), true, null);
+        notifyIcon.setAllowDecodeSingleFrame(true);
+        notifyIcon.setPlayInDirectionOfCustomEndFrame(true);
+        notifyIcon.start();
+        notifyIcon.setCurrentFrame(40);
+        notifyIcon.setCustomEndFrame(40);
+        notifyItem.setScaleType(ImageView.ScaleType.CENTER);
+        notifyItem.setAnimation(notifyIcon);
+        notifyItem.setColorFilter(new PorterDuffColorFilter(datePickerColors.textColor, PorterDuff.Mode.SRC_IN));
+        notifyItem.setBackground(Theme.createSelectorDrawable(datePickerColors.iconSelectorColor, 1));
+        titleLayout.addView(notifyItem, LayoutHelper.createFrame(40, 40, Gravity.TOP | Gravity.RIGHT, 0, 8, 8 + (optionsButton != null ? 42 : 0), 0));
 
         LinearLayout linearLayout = new LinearLayout(context);
         linearLayout.setOrientation(LinearLayout.HORIZONTAL);
         linearLayout.setWeightSum(1.0f);
         container.addView(linearLayout, LayoutHelper.createLinear(LayoutHelper.MATCH_PARENT, LayoutHelper.WRAP_CONTENT, 1f, 0, 0, 12, 0, 12));
 
-        long currentTime = System.currentTimeMillis();
         Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(currentTime);
-        int currentYear = calendar.get(Calendar.YEAR);
 
         TextView buttonTextView = new TextView(context) {
             @Override
@@ -4270,10 +4300,12 @@ public class AlertsCreator {
             if (value == 0) {
                 return LocaleController.getString(R.string.MessageScheduleToday);
             } else {
-                long date = currentTime + (long) value * 86400000L;
-                calendar.setTimeInMillis(date);
-                int year = calendar.get(Calendar.YEAR);
-                if (year == currentYear) {
+                final Calendar c = Calendar.getInstance();
+                final int nowYear = c.get(Calendar.YEAR);
+                c.add(Calendar.DAY_OF_YEAR, value);
+                final long date = c.getTimeInMillis();
+                final int year = c.get(Calendar.YEAR);
+                if (year == nowYear) {
                     return (
                         LocaleController.getInstance().getFormatterWeek().format(date) +
                         ", " +
@@ -4433,13 +4465,15 @@ public class AlertsCreator {
         buttonTextView.setOnClickListener(v -> {
             canceled[0] = false;
             boolean setSeconds = checkScheduleDate(null, null, forcedTitle != null ? 3 : selfUserId == dialogId ? 1 : 0, dayPicker, hourPicker, minutePicker);
-            calendar.setTimeInMillis(System.currentTimeMillis() + (long) dayPicker.getValue() * 24 * 3600 * 1000);
+            calendar.setTimeInMillis(System.currentTimeMillis());
+            calendar.add(Calendar.DAY_OF_YEAR, dayPicker.getValue());
             calendar.set(Calendar.HOUR_OF_DAY, hourPicker.getValue());
             calendar.set(Calendar.MINUTE, minutePicker.getValue());
             if (setSeconds) {
                 calendar.set(Calendar.SECOND, 0);
+                calendar.set(Calendar.MILLISECOND, 0);
             }
-            datePickerDelegate.didSelectDate(true, (int) (calendar.getTimeInMillis() / 1000), repeat[0]);
+            datePickerDelegate.didSelectDate(notify[0], (int) (calendar.getTimeInMillis() / 1000), repeat[0]);
             builder.getDismissRunnable().run();
         });
 
@@ -4481,6 +4515,53 @@ public class AlertsCreator {
                 o.show();
             });
         }
+        final HintView2[] notifyHint = new HintView2[1];
+        notifyItem.setOnClickListener(v -> {
+            notify[0] = !notify[0];
+            if (notify[0]) {
+                if (notifyIcon.getCurrentFrame() >= 40) {
+                    notifyIcon.setCurrentFrame(0);
+                }
+                notifyIcon.setCustomEndFrame(40);
+                notifyIcon.start();
+            } else {
+                if (notifyIcon.getCurrentFrame() < 40) {
+                    notifyIcon.setCurrentFrame(40);
+                }
+                notifyIcon.setCustomEndFrame(80);
+                notifyIcon.start();
+            }
+            if (notifyHint[0] != null) {
+                notifyHint[0].hide();
+                notifyHint[0] = null;
+            }
+
+            final TLRPC.User user = MessagesController.getInstance(UserConfig.selectedAccount).getUser(dialogId);
+            final TLRPC.Chat chat = MessagesController.getInstance(UserConfig.selectedAccount).getChat(-dialogId);
+
+            final HintView2 hint = notifyHint[0] = new HintView2(context, HintView2.DIRECTION_BOTTOM);
+            hint.setRoundingWithCornerEffect(false);
+            hint.setPadding(dp(8), 0, dp(8), 0);
+
+            hint.setText(
+                ChatObject.isChannelAndNotMegaGroup(chat) ?
+                    getString(notify[0] ? R.string.ScheduleNotifyOnChannel : R.string.ScheduleNotifyOffChannel) :
+                chat != null || user == null ?
+                    getString(notify[0] ? R.string.ScheduleNotifyOnGroup : R.string.ScheduleNotifyOffGroup) :
+                dialogId == selfUserId ?
+                    getString(notify[0] ? R.string.ScheduleNotifyOnSelf : R.string.ScheduleNotifyOffSelf) :
+                    formatString(notify[0] ? R.string.ScheduleNotifyOnChat : R.string.ScheduleNotifyOffChat, UserObject.getForcedFirstName(user))
+            );
+            hint.setDuration(5_000L);
+            hint.setRounding(20);
+            hint.setJoint(1.0f, -(8 + (finalOptionsButton != null ? 42 : -8) + 20 - 8));
+            hint.setShadow(dp(12), 0, dp(4), Theme.multAlpha(0xFF000000, .25f));
+            hint.setOnHiddenListener(() -> AndroidUtilities.removeFromParent(hint));
+            bottomSheet.getContainerView().setClipToPadding(false);
+            bottomSheet.getContainerView().setClipChildren(false);
+            bottomSheet.getContainerView().addView(hint, LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, 200, Gravity.TOP, 0, -200 + 6, 0, 0));
+            hint.show();
+        });
 
         return builder;
     }
@@ -4567,10 +4648,7 @@ public class AlertsCreator {
         linearLayout.setWeightSum(1.0f);
         container.addView(linearLayout, LayoutHelper.createLinear(LayoutHelper.MATCH_PARENT, LayoutHelper.WRAP_CONTENT, 1f, 0, 0, 12, 0, 12));
 
-        long currentTime = System.currentTimeMillis();
         Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(currentTime);
-        int currentYear = calendar.get(Calendar.YEAR);
 
         TextView buttonTextView = new TextView(context) {
             @Override
@@ -4587,10 +4665,12 @@ public class AlertsCreator {
             if (value == 0) {
                 return LocaleController.getString(R.string.MessageScheduleToday);
             } else {
-                long date = currentTime + (long) value * 86400000L;
-                calendar.setTimeInMillis(date);
-                int year = calendar.get(Calendar.YEAR);
-                if (year == currentYear) {
+                Calendar c = Calendar.getInstance();
+                int nowYear = c.get(Calendar.YEAR);
+                c.add(Calendar.DAY_OF_YEAR, value);
+                long date = c.getTimeInMillis();
+                int year = c.get(Calendar.YEAR);
+                if (year == nowYear) {
                     return LocaleController.getInstance().getFormatterScheduleDay().format(date);
                 } else {
                     return LocaleController.getInstance().getFormatterScheduleYear().format(date);
@@ -4643,11 +4723,13 @@ public class AlertsCreator {
         container.addView(buttonTextView, LayoutHelper.createLinear(LayoutHelper.MATCH_PARENT, 48, Gravity.LEFT | Gravity.BOTTOM, 16, 15, 16, 16));
         buttonTextView.setOnClickListener(v -> {
             boolean setSeconds = checkScheduleDate(null, null, 0, dayPicker, hourPicker, minutePicker);
-            calendar.setTimeInMillis(System.currentTimeMillis() + (long) dayPicker.getValue() * 24 * 3600 * 1000);
+            calendar.setTimeInMillis(System.currentTimeMillis());
+            calendar.add(Calendar.DAY_OF_YEAR, dayPicker.getValue());
             calendar.set(Calendar.HOUR_OF_DAY, hourPicker.getValue());
             calendar.set(Calendar.MINUTE, minutePicker.getValue());
             if (setSeconds) {
                 calendar.set(Calendar.SECOND, 0);
+                calendar.set(Calendar.MILLISECOND, 0);
             }
             datePickerDelegate.didSelectDate(true, (int) (calendar.getTimeInMillis() / 1000), 0);
             builder.getDismissRunnable().run();
@@ -5179,11 +5261,13 @@ public class AlertsCreator {
         Calendar calendar = Calendar.getInstance();
 
         long systemTime = System.currentTimeMillis();
-        calendar.setTimeInMillis(System.currentTimeMillis() + (long) day * 24 * 3600 * 1000);
+        calendar.setTimeInMillis(systemTime);
+        calendar.add(Calendar.DAY_OF_YEAR, day);
         calendar.set(Calendar.HOUR_OF_DAY, hour);
         calendar.set(Calendar.MINUTE, minute);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
         long currentTime = calendar.getTimeInMillis();
-        calendar.setTimeInMillis(currentTime);
 
         if (button != null) {
             button.setText(formatPollCloseCustomDeadline((int)((currentTime - systemTime) / 1000)));
@@ -5288,10 +5372,7 @@ public class AlertsCreator {
         closesInTextView.setTextColor(Theme.getColor(Theme.key_dialogTextGray2, resourcesProvider));
         closesInTextView.setGravity(Gravity.CENTER);
 
-        long currentTime = System.currentTimeMillis();
         Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(currentTime);
-        int currentYear = calendar.get(Calendar.YEAR);
 
         TextView buttonTextView = new TextView(context) {
             @Override
@@ -5310,10 +5391,12 @@ public class AlertsCreator {
             if (value == 0) {
                 return LocaleController.getString(R.string.MessageScheduleToday);
             } else {
-                long date = currentTime + (long) value * 86400000L;
-                calendar.setTimeInMillis(date);
-                int year = calendar.get(Calendar.YEAR);
-                if (year == currentYear) {
+                Calendar c = Calendar.getInstance();
+                int nowYear = c.get(Calendar.YEAR);
+                c.add(Calendar.DAY_OF_YEAR, value);
+                long date = c.getTimeInMillis();
+                int year = c.get(Calendar.YEAR);
+                if (year == nowYear) {
                     return (
                             LocaleController.getInstance().getFormatterWeek().format(date) +
                                     ", " +
@@ -5374,11 +5457,13 @@ public class AlertsCreator {
             canceled[0] = false;
             boolean setSeconds = checkScheduleDate(null, null, maxDate, 3, dayPicker, hourPicker, minutePicker);
             checkPollCloseCustomDeadline(closesInTextView, dayPicker, hourPicker, minutePicker);
-            calendar.setTimeInMillis(System.currentTimeMillis() + (long) dayPicker.getValue() * 24 * 3600 * 1000);
+            calendar.setTimeInMillis(System.currentTimeMillis());
+            calendar.add(Calendar.DAY_OF_YEAR, dayPicker.getValue());
             calendar.set(Calendar.HOUR_OF_DAY, hourPicker.getValue());
             calendar.set(Calendar.MINUTE, minutePicker.getValue());
             if (setSeconds) {
                 calendar.set(Calendar.SECOND, 0);
+                calendar.set(Calendar.MILLISECOND, 0);
             }
             datePickerDelegate.didSelectDate(true, (int) (calendar.getTimeInMillis() / 1000), 0);
             builder.getDismissRunnable().run();
@@ -5481,11 +5566,7 @@ public class AlertsCreator {
         linearLayout.setWeightSum(1.0f);
         container.addView(linearLayout, LayoutHelper.createLinear(LayoutHelper.MATCH_PARENT, LayoutHelper.WRAP_CONTENT, 1f, 0, 0, 12, 0, 12));
 
-        long currentTime = System.currentTimeMillis();
         Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(currentTime);
-        int currentYear = calendar.get(Calendar.YEAR);
-        int currentDayYear = calendar.get(Calendar.DAY_OF_YEAR);
 
         TextView buttonTextView = new TextView(context) {
             @Override
@@ -5502,13 +5583,14 @@ public class AlertsCreator {
             if (value == 0) {
                 return LocaleController.getString(R.string.MessageScheduleToday);
             } else {
-                long date = currentTime + (long) value * 86400000L;
-                calendar.setTimeInMillis(date);
-                int year = calendar.get(Calendar.YEAR);
-                int yearDay = calendar.get(Calendar.DAY_OF_YEAR);
-                if (year == currentYear && yearDay < currentDayYear + 7) {
+                Calendar c = Calendar.getInstance();
+                int nowYear = c.get(Calendar.YEAR);
+                c.add(Calendar.DAY_OF_YEAR, value);
+                long date = c.getTimeInMillis();
+                int year = c.get(Calendar.YEAR);
+                if (year == nowYear && value < 7) {
                     return LocaleController.getInstance().getFormatterWeek().format(date) + ", " + LocaleController.getInstance().getFormatterScheduleDay().format(date);
-                } else if (year == currentYear) {
+                } else if (year == nowYear) {
                     return LocaleController.getInstance().getFormatterScheduleDay().format(date);
                 } else {
                     return LocaleController.getInstance().getFormatterScheduleYear().format(date);
@@ -5561,11 +5643,13 @@ public class AlertsCreator {
         container.addView(buttonTextView, LayoutHelper.createLinear(LayoutHelper.MATCH_PARENT, 48, Gravity.LEFT | Gravity.BOTTOM, 16, 15, 16, 16));
         buttonTextView.setOnClickListener(v -> {
             boolean setSeconds = checkScheduleDate(null, null, 0, dayPicker, hourPicker, minutePicker);
-            calendar.setTimeInMillis(System.currentTimeMillis() + (long) dayPicker.getValue() * 24 * 3600 * 1000);
+            calendar.setTimeInMillis(System.currentTimeMillis());
+            calendar.add(Calendar.DAY_OF_YEAR, dayPicker.getValue());
             calendar.set(Calendar.HOUR_OF_DAY, hourPicker.getValue());
             calendar.set(Calendar.MINUTE, minutePicker.getValue());
             if (setSeconds) {
                 calendar.set(Calendar.SECOND, 0);
+                calendar.set(Calendar.MILLISECOND, 0);
             }
             delegate.didSelectDate((int) (calendar.getTimeInMillis() / 1000));
             builder.getDismissRunnable().run();
@@ -6497,13 +6581,13 @@ public class AlertsCreator {
         fragment.showDialog(builder.create(), true, null);
     }
 
-    public static void showAddUserAlert(String error, final BaseFragment fragment, boolean isChannel, TLObject request) {
-        if (error == null || fragment == null || fragment.getParentActivity() == null) {
+    public static void showAddUserAlert(TLRPC.TL_error error, final BaseFragment fragment, boolean isChannel, TLObject request) {
+        if (error == null || error.code == 406 || error.text == null || fragment == null || fragment.getParentActivity() == null) {
             return;
         }
         AlertDialog.Builder builder = new AlertDialog.Builder(fragment.getParentActivity());
         builder.setTitle(LocaleController.getString(R.string.AppName));
-        switch (error) {
+        switch (error.text) {
             case "PEER_FLOOD":
                 builder.setMessage(LocaleController.getString(R.string.NobodyLikesSpam2));
                 builder.setNegativeButton(LocaleController.getString(R.string.MoreInfo), (dialogInterface, i) -> MessagesController.getInstance(fragment.getCurrentAccount()).openByUserName("spambot", fragment, 1));
@@ -6598,11 +6682,11 @@ public class AlertsCreator {
                 builder.setMessage(LocaleController.getString(R.string.VoipGroupInviteAlreadyParticipant));
                 break;
             default:
-                builder.setMessage(LocaleController.getString(R.string.ErrorOccurred) + "\n" + error);
+                builder.setMessage(LocaleController.getString(R.string.ErrorOccurred) + "\n" + error.text);
                 break;
         }
         builder.setPositiveButton(LocaleController.getString(R.string.OK), null);
-        fragment.showDialog(builder.create(), true, null);
+        builder.show();
     }
 
     public static Dialog createColorSelectDialog(Activity parentActivity, final long dialog_id, final int topicId, final int globalType, final Runnable onSelect) {
@@ -7727,7 +7811,7 @@ public class AlertsCreator {
                     }, 1000);
                     return;
                 }
-                DeleteMessagesBottomSheet deleteMessagesBottomSheet = new DeleteMessagesBottomSheet(fragment, chat, messages, actionParticipants, channelParticipants, mergeDialogId, topicId, mode, onDelete);
+                DeleteMessagesBottomSheet deleteMessagesBottomSheet = new DeleteMessagesBottomSheet(fragment, chat, messages, actionParticipants, channelParticipants, mergeDialogId, topicId, mode, false, onDelete);
                 if (hideDim != null) {
                     deleteMessagesBottomSheet.setOnHideListener(i -> {
                         hideDim.run();
@@ -8845,15 +8929,10 @@ public class AlertsCreator {
                     });
 
                     if (groupCall == null || LaunchActivity.instance == null) {
-//                        creatingCall = false;
                         button.setLoading(false);
                         return;
                     }
-//                    final TLRPC.TL_inputGroupCall inputGroupCall = new TLRPC.TL_inputGroupCall();
-//                    inputGroupCall.id = groupCall.id;
-//                    inputGroupCall.access_hash = groupCall.access_hash;
                     sheet.dismiss();
-//                    VoIPHelper.joinConference(LaunchActivity.instance, currentAccount, inputGroupCall, false, groupCall, null);
 
                     SendMessagesHelper.getInstance(currentAccount).sendMessage(SendMessagesHelper.SendMessageParams.of(groupCall.invite_link, dialogId));
 
