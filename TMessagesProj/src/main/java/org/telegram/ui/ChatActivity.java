@@ -9602,8 +9602,10 @@ public class ChatActivity extends BaseFragment implements
     }
 
     private void checkSendButtonBlockedByTyping(boolean animated) {
-        chatActivityEnterView.setBlockedByStreaming(BotForumHelper.getInstance(currentAccount)
-            .hasBotForumDrafts(dialog_id, (int) getTopicId()), animated);
+        if (chatActivityEnterView != null) {
+            chatActivityEnterView.setBlockedByStreaming(BotForumHelper.getInstance(currentAccount)
+                    .hasBotForumDrafts(dialog_id, (int) getTopicId()), animated);
+        }
     }
 
     private LongSparseArray<ArrayList<MessageObject>> filteredMessagesByDays;
@@ -23153,6 +23155,9 @@ public class ChatActivity extends BaseFragment implements
                 if (obj == null || obj.messageOwner == null || !obj.messageOwner.silent) {
                     getNotificationsController().playOutChatSound();
                 }
+                if (botDraftHeightController != null) {
+                    botDraftHeightController.onMessageIdChanged(msgId, newMsgId, obj != null ? obj.getGroupId() : 0);
+                }
             }
         } else if (id == NotificationCenter.messageReceivedByAck) {
             Integer msgId = (Integer) args[0];
@@ -25201,6 +25206,8 @@ public class ChatActivity extends BaseFragment implements
             replaceMessageObjects(arr, 0, true, true);
 
             if (!arr.isEmpty()) {
+                BotForumHelper.getInstance(currentAccount).saveIsStreamingTopic(getDialogId(), getTopicId(), true);
+
                 final int firstMessageGroupHeight = calculateFirstMessageGroupHeight(startRow);
                 botDraftHeightController.setPreviousMessageHeight(firstMessageGroupHeight);
                 processNewMessages(arr);
@@ -25250,10 +25257,13 @@ public class ChatActivity extends BaseFragment implements
         while (true) {
             final View view = chatListView.findViewByPosition(a);
             final MessageObject messageObject;
+            final int padding;
             if (view instanceof ChatMessageCell) {
                 messageObject = ((ChatMessageCell) view).getMessageObject();
+                padding = ((ChatMessageCell) view).getAdditionalPaddingHeight();
             } else if (view instanceof ChatActionCell) {
                 messageObject = ((ChatActionCell) view).getMessageObject();
+                padding = 0;
             } else {
                 break;
             }
@@ -25266,7 +25276,7 @@ public class ChatActivity extends BaseFragment implements
             }
 
             t = Math.min(t, view.getTop());
-            b = Math.max(b, view.getBottom());
+            b = Math.max(b, view.getBottom() - padding);
 
             if (msgGroupId == 0) {
                 break;
@@ -25939,6 +25949,16 @@ public class ChatActivity extends BaseFragment implements
     }
     private void processNewMessages(ArrayList<MessageObject> arr, final boolean animatedFromBottom) {
         FileLog.d("processNewMessages " + arr.size() + " messages");
+
+        if (arr.size() == 1 && UserObject.isBot(currentUser) && BotForumHelper.getInstance(currentAccount).isStreamingTopic(getDialogId(), getTopicId())) {
+            MessageObject message = arr.get(0);
+            if (message.getId() < 0 && message.isOutOwner()) {
+                botDraftHeightController.setPreviousMessageHeight(0);
+                botDraftHeightController.setMessageIdToOverride(message.getId(), message.getGroupId());
+            }
+        }
+
+
         long currentUserId = getUserConfig().getClientUserId();
         boolean updateChat = false;
         boolean hasFromMe = false;

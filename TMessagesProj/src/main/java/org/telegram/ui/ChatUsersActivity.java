@@ -2336,7 +2336,7 @@ public class ChatUsersActivity extends BaseFragment implements NotificationCente
         return currentChat.megagroup && !currentChat.gigagroup && ChatObject.canUserDoAdminAction(currentChat,ChatObject.ACTION_DELETE_MESSAGES) &&
                 (selectedSlowmode > 0 || defaultBannedRights.send_plain || defaultBannedRights.send_media || defaultBannedRights.send_photos || defaultBannedRights.send_videos
                         || defaultBannedRights.send_stickers || defaultBannedRights.send_audios || defaultBannedRights.send_docs
-                        || defaultBannedRights.send_voices || defaultBannedRights.send_roundvideos || defaultBannedRights.embed_links || defaultBannedRights.send_polls);
+                        || defaultBannedRights.send_voices || defaultBannedRights.send_roundvideos || defaultBannedRights.embed_links || defaultBannedRights.send_polls || defaultBannedRights.send_reactions);
     }
 
     public void setInfo(TLRPC.ChatFull chatFull) {
@@ -3714,7 +3714,7 @@ public class ChatUsersActivity extends BaseFragment implements NotificationCente
                     } else if (position == sendMediaEmbededLinksRow) {
                         checkBoxCell.setText(getString(R.string.SendMediaEmbededLinks), "", !defaultBannedRights.embed_links && !defaultBannedRights.send_plain, true, animated);
                     } else if (position == sendReactionsRow) {
-                        checkBoxCell.setText(getString(R.string.UserRestrictionsSendReactions), "", !defaultBannedRights.send_reactions, false);
+                        checkBoxCell.setText(getString(R.string.UserRestrictionsSendReactions), "", !defaultBannedRights.send_reactions, false, animated);
                     } else if (position == sendPollsRow) {
                         checkBoxCell.setText(getString(R.string.SendMediaPolls), "", !defaultBannedRights.send_polls, true, animated);
                     } else
@@ -3822,6 +3822,7 @@ public class ChatUsersActivity extends BaseFragment implements NotificationCente
         defaultBannedRights.send_roundvideos = !enabled;
         defaultBannedRights.embed_links = !enabled;
         defaultBannedRights.send_polls = !enabled;
+        defaultBannedRights.send_reactions = !enabled;
         AndroidUtilities.updateVisibleRows(listView);
         DiffCallback diffCallback = saveState();
         updateRows();
