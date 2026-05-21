@@ -15783,7 +15783,7 @@ public class ChatActivity extends BaseFragment implements
                 forbidForwardingWithDismiss = false;
                 chatActivityEnterView.setForceShowSendButton(true, false);
                 ArrayList<Long> uids = new ArrayList<>();
-                replyIconImageView.setImageResource(R.drawable.filled_forward);
+                replyIconImageView.setImageResource(R.drawable.filled_forward_settings);
                 replyIconImageView.setContentDescription(LocaleController.getString(R.string.AccDescrForwarding));
                 replyCloseImageView.setContentDescription(LocaleController.getString(R.string.AccDescrCancelForward));
                 MessageObject object = messageObjectsToForward.get(0);
@@ -45703,7 +45703,8 @@ public class ChatActivity extends BaseFragment implements
         final ScrimOptions dialog = new ScrimOptions(getContext(), themeDelegate);
         options.setOnDismiss(dialog::dismissFast);
 
-        final boolean customTabs = SharedConfig.inappBrowser && !str.startsWith("video?") && !Browser.isInternalUri(Uri.parse(str), null);
+        final boolean allowCustomTabs = !str.startsWith("video?") && !Browser.isInternalUri(Uri.parse(str), null);
+        final boolean customTabs = SharedConfig.inappBrowser && allowCustomTabs;
         final boolean isHashtag = str.startsWith("#") || str.startsWith("$");
         final boolean isMail = str.startsWith("mailto:");
 
@@ -45736,6 +45737,10 @@ public class ChatActivity extends BaseFragment implements
                 webViewSheet.setParentActivity(getParentActivity());
                 webViewSheet.requestWebView(this, props);
                 webViewSheet.show();
+            });
+        } else if (!isMail && !isHashtag && !customTabs && allowCustomTabs && !SharedConfig.inappBrowser) {
+            options.add(R.drawable.msg_language, getString(R.string.OpenInTelegramBrowser), () -> {
+                Browser.openInTelegramBrowser(getParentActivity(), str, null);
             });
         }
 

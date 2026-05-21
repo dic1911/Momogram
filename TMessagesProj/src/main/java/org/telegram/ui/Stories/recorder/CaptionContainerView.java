@@ -179,6 +179,7 @@ public class CaptionContainerView extends FrameLayout {
         keyboardNotifier = new KeyboardNotifier(rootView, this::updateKeyboard);
 
         createEditText(context);
+
         addView(editText, LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, LayoutHelper.WRAP_CONTENT, (isAtTop() ? Gravity.TOP : Gravity.BOTTOM) | Gravity.FILL_HORIZONTAL, 12, 8, 12 + additionalRightMargin(), 8));
 
         applyButton = new BounceableImageView(context);
@@ -191,11 +192,7 @@ public class CaptionContainerView extends FrameLayout {
         applyButton.setScaleType(ImageView.ScaleType.CENTER);
         applyButton.setAlpha(0f);
         applyButton.setVisibility(View.GONE);
-        applyButton.setOnClickListener(e -> {
-            closeKeyboard();
-            AndroidUtilities.cancelRunOnUIThread(textChangeRunnable);
-            textChangeRunnable.run();
-        });
+        applyButton.setOnClickListener(e -> done());
         addView(applyButton, LayoutHelper.createFrame(44, 44, Gravity.RIGHT | (isAtTop() ? Gravity.TOP : Gravity.BOTTOM), 8, 8, 8, 8));
 
         limitTextView = new AnimatedTextView(context, false, true, true);
@@ -213,6 +210,10 @@ public class CaptionContainerView extends FrameLayout {
         fadePaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.DST_OUT));
     }
 
+    protected void onLineCountChanged(int oldLineCount, int newLineCount) {
+
+    }
+
     public void setDialogId(long dialogId) {
         this.dialogId = dialogId;
         if (mentionContainer != null) {
@@ -226,6 +227,12 @@ public class CaptionContainerView extends FrameLayout {
 
     private final Runnable textChangeRunnable = () -> onTextChange();
     protected void onTextChange() {}
+
+    protected void done() {
+        closeKeyboard();
+        AndroidUtilities.cancelRunOnUIThread(textChangeRunnable);
+        textChangeRunnable.run();
+    }
 
     public void invalidateBlur() {
         invalidate();
@@ -1535,6 +1542,11 @@ public class CaptionContainerView extends FrameLayout {
                 }
                 return true;
             }
+
+            @Override
+            protected void onLineCountChanged(int oldLineCount, int newLineCount) {
+                CaptionContainerView.this.onLineCountChanged(oldLineCount, newLineCount);
+            }
         };
         editText.glassDesignForEmojiView = true;
         editText.getEditText().addTextChangedListener(new EditTextSuggestionsFix());
@@ -1616,6 +1628,85 @@ public class CaptionContainerView extends FrameLayout {
             }
         });
         editText.getEditText().setLinkTextColor(Color.WHITE);
+        editText.glassDesignForEmojiView = true;
+        editText.getEditText().addTextChangedListener(new EditTextSuggestionsFix());
+        editText.setFocusable(true);
+        editText.setFocusableInTouchMode(true);
+        editText.getEditText().hintLayoutYFix = true;
+        editText.getEditText().drawHint = this::drawHint;
+        editText.getEditText().setSupportRtlHint(true);
+        captionBlur = new BlurringShader.StoryBlurDrawer(blurManager, editText.getEditText(), customBlur() ? BlurringShader.StoryBlurDrawer.BLUR_TYPE_CAPTION : BlurringShader.StoryBlurDrawer.BLUR_TYPE_CAPTION_XFER);
+        editText.getEditText().setHintColor(0xffffffff);
+        editText.getEditText().setHintText(LocaleController.getString(R.string.AddCaption), false);
+        hintTextBitmapPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.DST_IN));
+        editText.getEditText().setTranslationX(AndroidUtilities.dp(-44 + 18));
+        if (isAtTop()) {
+            editText.getEditText().setGravity(Gravity.TOP);
+        }
+        editText.getEmojiButton().setAlpha(0f);
+        editText.getEmojiButton().setTranslationY(dp(isAtTop() ? 1 : -1));
+        editText.setTranslationY(dp(isAtTop() ? 1 : -1));
+        editText.getEditText().addTextChangedListener(new TextWatcher() {
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                if (scrollAnimator == null || !scrollAnimator.isRunning()) {
+                    beforeScrollY = editText.getEditText().getScrollY();
+                    waitingForScrollYChange = true;
+                }
+            }
+
+            @Override
+            public void onTextChanged(CharSequence text, int start, int before, int count) {
+                if (editText.getEditText().suppressOnTextChanged) {
+                    return;
+                }
+                if (mentionContainer == null) {
+                    createMentionsContainer();
+                }
+                if (mentionContainer.getAdapter() != null) {
+                    mentionContainer.getAdapter().setUserOrChat(MessagesController.getInstance(currentAccount).getUser(dialogId), MessagesController.getInstance(currentAccount).getChat(-dialogId));
+                    mentionContainer.getAdapter().searchUsernameOrHashtag(text, editText.getEditText().getSelectionStart(), null, false, false);
+                }
+            }
+
+            private int lastLength;
+            private boolean lastOverLimit;
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                codePointCount = Character.codePointCount(s, 0, s.length());
+                String limitText = null;
+                final int limit = getCaptionLimit();
+                if (codePointCount + 25 > limit) {
+                    limitText = "" + (limit - codePointCount);
+                }
+                limitTextView.cancelAnimation();
+                limitTextView.setText(limitText);
+                limitTextView.setTextColor(codePointCount >= limit ? 0xffEC7777 : 0xffffffff);
+                if (codePointCount > limit && !UserConfig.getInstance(currentAccount).isPremium() && codePointCount < getCaptionPremiumLimit() && codePointCount > lastLength && (captionLimitToast() || MessagesController.getInstance(currentAccount).premiumFeaturesBlocked())) {
+                    AndroidUtilities.shakeViewSpring(limitTextView, shiftDp = -shiftDp);
+                    BotWebViewVibrationEffect.APP_ERROR.vibrate();
+                }
+                lastLength = codePointCount;
+
+                final boolean overLimit = codePointCount > limit;
+                if (overLimit != lastOverLimit) {
+                    onCaptionLimitUpdate(overLimit);
+                }
+                lastOverLimit = overLimit;
+
+                if (!ignoreTextChange) {
+                    AndroidUtilities.cancelRunOnUIThread(textChangeRunnable);
+                    AndroidUtilities.runOnUIThread(textChangeRunnable, 1500);
+                }
+                ignoreTextChange = false;
+
+                AndroidUtilities.runOnUIThread(() -> {
+                    waitingForScrollYChange = false;
+                });
+            }
+        });
         captionBlur = new BlurringShader.StoryBlurDrawer(blurManager, editText.getEditText(), customBlur() ? BlurringShader.StoryBlurDrawer.BLUR_TYPE_CAPTION : BlurringShader.StoryBlurDrawer.BLUR_TYPE_CAPTION_XFER);
         hintTextBitmapPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.DST_IN));
     }
