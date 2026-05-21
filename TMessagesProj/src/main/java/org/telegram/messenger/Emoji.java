@@ -695,7 +695,7 @@ public class Emoji {
         if (!createNew && cs instanceof Spannable) {
             s = (Spannable) cs;
         } else {
-            s = Spannable.Factory.getInstance().newSpannable(cs.toString());
+            s = Spannable.Factory.getInstance().newSpannable(cs);
         }
         ArrayList<EmojiSpanRange> emojis = parseEmojis(s, emojiOnly);
         if (emojis.isEmpty()) {
@@ -758,6 +758,10 @@ public class Emoji {
     }
 
     public static CharSequence replaceWithRestrictedEmoji(CharSequence cs, Paint.FontMetricsInt fontMetrics, Runnable update) {
+        return replaceWithRestrictedEmoji(cs, fontMetrics, AnimatedEmojiDrawable.CACHE_TYPE_STANDARD_EMOJI, update);
+    }
+
+    public static CharSequence replaceWithRestrictedEmoji(CharSequence cs, Paint.FontMetricsInt fontMetrics, int cacheType, Runnable update) {
         if (MomoConfig.useSystemEmoji.Bool() || cs == null || cs.length() == 0) {
             return cs;
         }
@@ -814,7 +818,7 @@ public class Emoji {
                     animatedSpan = new AnimatedEmojiSpan(0, fontMetrics);
                 }
                 animatedSpan.emoji = (emojiRange.code).toString();
-                animatedSpan.cacheType = AnimatedEmojiDrawable.CACHE_TYPE_STANDARD_EMOJI;
+                animatedSpan.cacheType = cacheType;
                 s.setSpan(animatedSpan, emojiRange.start, emojiRange.end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             } catch (Exception e) {
                 FileLog.e(e);
