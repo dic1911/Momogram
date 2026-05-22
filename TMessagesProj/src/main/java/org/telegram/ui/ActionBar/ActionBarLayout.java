@@ -3497,7 +3497,7 @@ public class ActionBarLayout extends FrameLayout implements INavigationLayout, F
         if (lastWindowInsetsCompat != null) {
             dispatchApplyWindowInsetsInternal(child, lastWindowInsetsCompat);
         }
-        if (bottomSheetTabs != null && indexOfChild(bottomSheetTabs) < getChildCount() - 1) {
+        if (bottomSheetTabs != null && indexOfChild(bottomSheetTabs) < getChildCount() - 1 && !bottomSheetTabs.getTabs().isEmpty()) {
             bottomSheetTabs.bringToFront();
         }
     }
