@@ -59,6 +59,7 @@ import android.text.Spanned;
 import android.text.TextPaint;
 import android.text.TextUtils;
 import android.text.style.ImageSpan;
+import android.util.Log;
 import android.util.LongSparseArray;
 import android.util.Property;
 import android.util.SparseArray;
@@ -12095,33 +12096,8 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
     }
 
     private boolean onSendLongClick(View view) {
-        if (getParentActivity() == null) return false;
-
-        ActionBarMenuSubItem showSendersNameView = new ActionBarMenuSubItem(parentActivity, true, true, false, resourcesProvider);
-        showSendersNameView.setTextAndIcon(LocaleController.getString(R.string.ShowSendersName), 0);
-        showSendersNameView.setChecked(!ChatActivity.noForwardQuote);
-
-        ActionBarMenuSubItem hideSendersNameView = new ActionBarMenuSubItem(parentActivity, true, false, true, resourcesProvider);
-        hideSendersNameView.setTextAndIcon(LocaleController.getString(R.string.HideSendersName), 0);
-        hideSendersNameView.setChecked(ChatActivity.noForwardQuote);
-        showSendersNameView.setOnClickListener(e -> {
-            if (ChatActivity.noForwardQuote) {
-                ChatActivity.noForwardQuote = false;
-                showSendersNameView.setChecked(true);
-                hideSendersNameView.setChecked(false);
-            }
-        });
-        hideSendersNameView.setOnClickListener(e -> {
-            if (!ChatActivity.noForwardQuote) {
-                ChatActivity.noForwardQuote = true;
-                showSendersNameView.setChecked(false);
-                hideSendersNameView.setChecked(true);
-            }
-        });
-
-        sendPopupLayout2.addView(showSendersNameView, LayoutHelper.createLinear(LayoutHelper.MATCH_PARENT, 48));
-        sendPopupLayout2.addView(hideSendersNameView, LayoutHelper.createLinear(LayoutHelper.MATCH_PARENT, 48));
-        sendPopupLayout2.addView(sendWithoutSound, LayoutHelper.createLinear(LayoutHelper.MATCH_PARENT, 48));
+        Activity parentActivity = getParentActivity();
+        if (parentActivity == null) return false;
 
         boolean onlyMyself = false;
         boolean canSchedule = true;
@@ -12149,6 +12125,12 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
                 for (int i = 0; i < selectedDialogs.size(); i++)
                     topicKeys.add(MessagesStorage.TopicKey.of(selectedDialogs.get(i), 0));
                 delegate.didSelectDialogs(DialogsActivity.this, topicKeys, commentView.getFieldText(), false, notify, scheduleDate, scheduleRepeatPeriod, null);
+            })
+            .addIf(!ChatActivity.noForwardQuote, 0, getString(R.string.HideSendersName), () -> {
+                ChatActivity.noForwardQuote = true;
+            })
+            .addIf(ChatActivity.noForwardQuote, 0, getString(R.string.ShowSendersName), () -> {
+                ChatActivity.noForwardQuote = false;
             })
             .addIf(canSchedule, R.drawable.msg_calendar2, LocaleController.getString(R.string.ScheduleMessage), () -> {
                 AlertsCreator.createScheduleDatePickerDialog(getParentActivity(), onlyMyselfFinal ? getUserConfig().getClientUserId() : -1, new AlertsCreator.ScheduleDatePickerDelegate() {
