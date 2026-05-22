@@ -6899,6 +6899,7 @@ public class ChatActivity extends BaseFragment implements
                 if (!foundTopView) {
                     scrolled = super.scrollVerticallyBy(dy, recycler, state);
                 }
+                final boolean allowPullingDownScroll = !isInPollAddOptionMode() && !hasSelectedMessages();
                 if (!MomoConfig.disableSwipeToNext.Bool() && allowPullingDownScroll && dy > 0 && scrolled == 0 && (ChatObject.isChannel(currentChat) && !currentChat.megagroup || isTopic && !UserObject.isBotForum(currentUser)) && chatMode != MODE_SAVED && chatMode != MODE_SCHEDULED && chatListView.getScrollState() == RecyclerView.SCROLL_STATE_DRAGGING && !chatListView.isFastScrollAnimationRunning() && !chatListView.isMultiselect() && !isReport()) {
                     if (pullingDownOffset == 0 && pullingDownDrawable != null) {
                         if (nextChannels != null && !nextChannels.isEmpty()) {
@@ -8520,6 +8521,7 @@ public class ChatActivity extends BaseFragment implements
             }
         });
 
+        int suggestPanelMargin = removeBottomPadding ? 0 : 7;
         contentView.addView(
             suggestEmojiPanel = new SuggestEmojiView(context, currentAccount, chatActivityEnterView, themeDelegate),
             LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, 160, Gravity.LEFT | Gravity.BOTTOM, suggestPanelMargin, 0, suggestPanelMargin, 0)

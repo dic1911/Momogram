@@ -44,6 +44,7 @@ import org.telegram.messenger.AccountInstance;
 import org.telegram.messenger.AndroidUtilities;
 import org.telegram.messenger.ApplicationLoader;
 import org.telegram.messenger.BuildConfig;
+import org.telegram.messenger.BuildVars;
 import org.telegram.messenger.ContactsController;
 import org.telegram.messenger.DownloadController;
 import org.telegram.messenger.FileLoader;
@@ -221,7 +222,7 @@ public abstract class BaseFragment {
     public BaseFragment(Bundle args) {
         arguments = args;
         classGuid = ConnectionsManager.generateClassGuid();
-        if (BuildConfig.DEBUG_PRIVATE_VERSION) {
+        if (BuildVars.DEBUG_PRIVATE_VERSION) {
             LeakDetector.getInstance().add(this);
         }
     }

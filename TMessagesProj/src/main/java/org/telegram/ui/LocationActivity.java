@@ -71,6 +71,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import moe.hx030.momogram.maplibre.DeviceLocationController;
 import moe.hx030.momogram.maplibre.GeoUtils;
+import moe.hx030.momogram.maplibre.MapLibreBoundsHelper;
 import moe.hx030.momogram.maplibre.MapStyleFactory;
 import moe.hx030.momogram.maplibre.MapLibreView;
 import moe.hx030.momogram.maplibre.MapPin;
@@ -1484,10 +1485,10 @@ public class LocationActivity extends BaseFragment implements NotificationCenter
     }
 
     private boolean fitAllLiveLocations(boolean animated) {
-        if (map == null) {
+        if (mapView == null) {
             return false;
         }
-        ArrayList<IMapsProvider.LatLng> points = new ArrayList<>();
+        ArrayList<LatLng> points = new ArrayList<>();
         int date = getConnectionsManager() != null ? getConnectionsManager().getCurrentTime() : 0;
         for (int a = 0, N = markers.size(); a < N; a++) {
             LiveLocation loc = markers.get(a);
@@ -1500,39 +1501,13 @@ public class LocationActivity extends BaseFragment implements NotificationCenter
         }
         boolean myInMarkers = markersMap.get(getUserConfig().getClientUserId()) != null;
         if (myLocation != null && !myInMarkers) {
-            points.add(new IMapsProvider.LatLng(myLocation.getLatitude(), myLocation.getLongitude()));
+            points.add(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()));
         }
         if (points.size() < 2) {
             return false;
         }
         try {
-            IMapsProvider.ILatLngBoundsBuilder builder = ApplicationLoader.getMapsProvider().onCreateLatLngBoundsBuilder();
-            double minLat = Double.MAX_VALUE, maxLat = -Double.MAX_VALUE;
-            double minLon = Double.MAX_VALUE, maxLon = -Double.MAX_VALUE;
-            for (int i = 0, n = points.size(); i < n; i++) {
-                IMapsProvider.LatLng p = points.get(i);
-                builder.include(p);
-                if (p.latitude < minLat) minLat = p.latitude;
-                if (p.latitude > maxLat) maxLat = p.latitude;
-                if (p.longitude < minLon) minLon = p.longitude;
-                if (p.longitude > maxLon) maxLon = p.longitude;
-            }
-            IMapsProvider.LatLng center = new IMapsProvider.LatLng((minLat + maxLat) / 2, (minLon + maxLon) / 2);
-            double latSpanMeters = Math.toRadians(maxLat - minLat) * EARTHRADIUS;
-            double lonSpanMeters = Math.toRadians(maxLon - minLon) * EARTHRADIUS * Math.cos(Math.toRadians(center.latitude));
-            double minSpan = 30;
-            if (latSpanMeters < minSpan || lonSpanMeters < minSpan) {
-                builder.include(move(center, minSpan / 2, minSpan / 2));
-                builder.include(move(center, -minSpan / 2, -minSpan / 2));
-            }
-            IMapsProvider.ILatLngBounds bounds = builder.build();
-            IMapsProvider.ICameraUpdate update = ApplicationLoader.getMapsProvider().newCameraUpdateLatLngBounds(bounds, dp(60));
-            if (animated) {
-                map.animateCamera(update, 500, null);
-            } else {
-                map.moveCamera(update);
-            }
-            return true;
+            return MapLibreBoundsHelper.fitPoints(mapView, points, animated, dp(60), mapView.getMaxZoomLevel(), 500L, 30.0d);
         } catch (Exception e) {
             FileLog.e(e);
             return false;
@@ -1975,7 +1950,7 @@ public class LocationActivity extends BaseFragment implements NotificationCenter
             if (liveLocation.marker == null) return;
             Bitmap bitmap = createUserBitmap(liveLocation);
             if (bitmap != null) {
-                liveLocation.marker.setIcon(bitmap);
+                liveLocation.marker.setIcon(new BitmapDrawable(ApplicationLoader.applicationContext.getResources(), bitmap));
             }
         });
         receiver.onAttachedToWindow();

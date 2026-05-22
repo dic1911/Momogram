@@ -2369,7 +2369,7 @@ public class ChatEditActivity extends BaseFragment implements ImageUpdater.Image
                         blockCell.setTextAndValueAndIcon(getString(R.string.ChannelPermissions), String.format("%d/%d", count, totalCount), animated, R.drawable.msg_permissions, true);
                     }
                     if (memberRequestsCell != null) {
-                        memberRequestsCell.setTextAndValueAndIcon(getString(R.string.MemberRequests), String.format("%d", info.requests_pending), R.drawable.msg_invite, logCell != null && logCell.getVisibility() == View.VISIBLE);
+                        memberRequestsCell.setTextAndValueAndIcon(getString(R.string.MemberRequests), String.format("%d", info.requests_pending), R.drawable.menu_invite, logCell != null && logCell.getVisibility() == View.VISIBLE);
                     }
                 }
                 if (ChatObject.hasAdminRights(currentChat)) {
