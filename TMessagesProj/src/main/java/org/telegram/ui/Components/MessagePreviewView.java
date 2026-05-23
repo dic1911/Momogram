@@ -1037,7 +1037,7 @@ public class MessagePreviewView extends FrameLayout {
 
                 sendersNameButton.setState(messagePreviewParams.hideForwardSendersName, false);
                 sendersNameButton.setOnClickListener(view -> {
-                    messagePreviewParams.hideForwardSendersName = !messagePreviewParams.hideForwardSendersName;
+                    ChatActivity.noForwardQuote = messagePreviewParams.hideForwardSendersName = !messagePreviewParams.hideForwardSendersName;
                     returnSendersNames = false;
                     if (!messagePreviewParams.hideForwardSendersName) {
                         messagePreviewParams.hideCaption = false;
