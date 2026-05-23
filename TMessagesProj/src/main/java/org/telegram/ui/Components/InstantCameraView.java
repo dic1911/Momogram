@@ -2252,11 +2252,7 @@ public class InstantCameraView extends FrameLayout implements NotificationCenter
                             }
                             double amplitude = Math.sqrt(s / readResult / 2);
                             AndroidUtilities.runOnUIThread(() -> NotificationCenter.getInstance(currentAccount).postNotificationName(NotificationCenter.recordProgressChanged, recordingGuid, amplitude));
-                            if (MomoConfig.bufferCleaner.Bool()) {
-                                BufferUtil.clear(byteBuffer);
-                            } else {
-                                byteBuffer.position(0);
-                            }
+                            byteBuffer.position(0);
                         }
                         if (readResult <= 0) {
                             buffer.results = a;
