@@ -61,6 +61,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import moe.hx030.momogram.MomoConfig;
+
 public final class BulletinFactory {
 
     public static BulletinFactory of(BaseFragment fragment) {
@@ -909,6 +911,14 @@ public final class BulletinFactory {
             layout = new Bulletin.LottieLayout(getContext(), resourcesProvider, backgroundColor, textColor);
         } else {
             layout = new Bulletin.LottieLayout(getContext(), resourcesProvider);
+        }
+        if (MomoConfig.alwaysSaveToDownloads.Bool() &&
+                fileType != FileType.GIF &&
+                fileType != FileType.GIF_TO_DOWNLOADS &&
+                fileType != FileType.PHOTO_TO_DOWNLOADS &&
+                fileType != FileType.VIDEO_TO_DOWNLOADS
+        ) {
+            fileType = (filesAmount > 1) ? FileType.UNKNOWNS : FileType.UNKNOWN;
         }
         layout.setAnimation(fileType.icon.resId, fileType.icon.layers);
         layout.textView.setText(AndroidUtilities.replaceSingleTag(fileType.getText(filesAmount), () -> {

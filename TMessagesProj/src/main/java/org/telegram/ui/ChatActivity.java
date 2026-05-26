@@ -46924,6 +46924,7 @@ public class ChatActivity extends BaseFragment implements
         final MessageObject message = selectedObject;
         final MessageObject.GroupedMessages groupedMessages = selectedObjectGroup;
         final int type = getMessageType(message);
+        final boolean alwaysSaveToDownloads = MomoConfig.alwaysSaveToDownloads.Bool();
 
         boolean allowChatActions = true;
         boolean allowPin;
@@ -47252,9 +47253,9 @@ public class ChatActivity extends BaseFragment implements
                     if (!noforwardsOrPaidMedia && !selectedObject.hasRevealedExtendedMedia()) {
                         if (selectedObject.isVideo()) {
                             if (!selectedObject.needDrawBluredPreview()) {
-                                items.add(LocaleController.getString(R.string.SaveToGallery));
+                                items.add(LocaleController.getString(alwaysSaveToDownloads ? R.string.SaveToDownloads : R.string.SaveToGallery));
                                 options.add(OPTION_SAVE_TO_GALLERY);
-                                icons.add(R.drawable.baseline_image_24);
+                                icons.add(alwaysSaveToDownloads ? R.drawable.baseline_file_download_24 : R.drawable.baseline_image_24);
                                 items.add(LocaleController.getString(R.string.ShareFile));
                                 options.add(OPTION_SHARE);
                                 icons.add(R.drawable.baseline_share_24);
@@ -47285,9 +47286,9 @@ public class ChatActivity extends BaseFragment implements
                             icons.add(R.drawable.baseline_share_24);
                         } else {
                             if (!selectedObject.needDrawBluredPreview()) {
-                                items.add(LocaleController.getString(R.string.SaveToGallery));
+                                items.add(LocaleController.getString(alwaysSaveToDownloads ? R.string.SaveToDownloads : R.string.SaveToGallery));
                                 options.add(OPTION_SAVE_TO_GALLERY);
-                                icons.add(R.drawable.baseline_image_24);
+                                icons.add(alwaysSaveToDownloads ? R.drawable.baseline_file_download_24 : R.drawable.baseline_image_24);
 
                                 if (MomoConfig.showCopyPhoto.Bool()) {
                                     items.add(LocaleController.getString(R.string.CopyPhoto));
@@ -47323,9 +47324,11 @@ public class ChatActivity extends BaseFragment implements
                     }
                 } else if (type == 6 && !noforwardsOrPaidMedia && !selectedObject.hasRevealedExtendedMedia()) {
                     if (!selectedObject.needDrawBluredPreview() && !selectedObject.isVoiceOnce() && !selectedObject.isRoundOnce()) {
-                        items.add(LocaleController.getString(R.string.SaveToGallery));
-                        options.add(OPTION_SAVE_TO_GALLERY2);
-                        icons.add(R.drawable.baseline_image_24);
+                        if (!alwaysSaveToDownloads) {
+                            items.add(LocaleController.getString(alwaysSaveToDownloads ? R.string.SaveToDownloads : R.string.SaveToGallery));
+                            options.add(OPTION_SAVE_TO_GALLERY2);
+                            icons.add(alwaysSaveToDownloads ? R.drawable.baseline_file_download_24 : R.drawable.baseline_image_24);
+                        }
                         items.add(LocaleController.getString(R.string.SaveToDownloads));
                         options.add(OPTION_SAVE_TO_DOWNLOADS_OR_MUSIC);
                         icons.add(R.drawable.baseline_file_download_24);
@@ -47340,9 +47343,9 @@ public class ChatActivity extends BaseFragment implements
                         icons.add(R.drawable.deproko_baseline_stickers_24);
                     } else {
                         if (!selectedObject.isAnimatedSticker()) {
-                            items.add(LocaleController.getString(R.string.SaveToGallery));
+                            items.add(LocaleController.getString(alwaysSaveToDownloads ? R.string.SaveToDownloads : R.string.SaveToGallery));
                             options.add(nkbtn_stickerdl);
-                            icons.add(R.drawable.baseline_image_24);
+                            icons.add(alwaysSaveToDownloads ? R.drawable.baseline_file_download_24 : R.drawable.baseline_image_24);
 
                             if (MomoConfig.showCopyPhoto.Bool()) {
                                 items.add(LocaleController.getString(R.string.CopySticker));
@@ -47389,9 +47392,9 @@ public class ChatActivity extends BaseFragment implements
                     }
                 } else if (type == 9) {
                     if (!selectedObject.isAnimatedSticker()) {
-                        items.add(LocaleController.getString(R.string.SaveToGallery));
+                        items.add(LocaleController.getString(alwaysSaveToDownloads ? R.string.SaveToDownloads : R.string.SaveToGallery));
                         options.add(nkbtn_stickerdl);
-                        icons.add(R.drawable.baseline_image_24);
+                        icons.add(alwaysSaveToDownloads ? R.drawable.baseline_file_download_24 : R.drawable.baseline_image_24);
 
                         if (MomoConfig.showCopyPhoto.Bool()) {
                             items.add(LocaleController.getString(R.string.CopySticker));
@@ -47599,9 +47602,9 @@ public class ChatActivity extends BaseFragment implements
                 }
                 if (type == 4 && !selectedObject.needDrawBluredPreview()) {
                     if (selectedObject.isVideo()) {
-                        items.add(LocaleController.getString(R.string.SaveToGallery));
+                        items.add(LocaleController.getString(alwaysSaveToDownloads ? R.string.SaveToDownloads : R.string.SaveToGallery));
                         options.add(OPTION_SAVE_TO_GALLERY);
-                        icons.add(R.drawable.baseline_image_24);
+                        icons.add(alwaysSaveToDownloads ? R.drawable.baseline_file_download_24: R.drawable.baseline_image_24);
                         items.add(LocaleController.getString(R.string.ShareFile));
                         options.add(OPTION_SHARE);
                         icons.add(R.drawable.baseline_share_24);
@@ -47625,9 +47628,9 @@ public class ChatActivity extends BaseFragment implements
                         options.add(OPTION_SHARE);
                         icons.add(R.drawable.baseline_share_24);
                     } else {
-                        items.add(LocaleController.getString(R.string.SaveToGallery));
+                        items.add(LocaleController.getString(alwaysSaveToDownloads ? R.string.SaveToDownloads : R.string.SaveToGallery));
                         options.add(OPTION_SAVE_TO_GALLERY);
-                        icons.add(R.drawable.baseline_image_24);
+                        icons.add(alwaysSaveToDownloads ? R.drawable.baseline_file_download_24 : R.drawable.baseline_image_24);
 
                         if (selectedObject.isPhoto() && MomoConfig.showCopyPhoto.Bool()){
                             items.add(LocaleController.getString(R.string.CopyPhoto));

@@ -6328,7 +6328,10 @@ public class PhotoViewer implements NotificationCenter.NotificationCenterDelegat
             menuItem.toggleSubMenu();
         });
 
-        galleryButton = menuItem.addSwipeBackItem(R.drawable.msg_gallery, null, getString(R.string.SaveToGallery), chooseDownloadQualityLayout.layout).setColors(0xfffafafa, 0xfffafafa);
+        final boolean alwaysSaveToDownloads = MomoConfig.alwaysSaveToDownloads.Bool();
+        galleryButton = menuItem.addSwipeBackItem(alwaysSaveToDownloads ? R.drawable.msg_download : R.drawable.msg_gallery, null,
+                getString(alwaysSaveToDownloads ? R.string.SaveToDownloads : R.string.SaveToGallery),
+                chooseDownloadQualityLayout.layout).setColors(0xfffafafa, 0xfffafafa);
         galleryButton.setOnClickListener(v -> {
             if (currentMessageObject != null && currentMessageObject.hasVideoQualities() && chooseDownloadQualityLayout.update(currentMessageObject)) {
                 galleryButton.openSwipeBack();
