@@ -381,7 +381,7 @@ public class MomoSettingsActivity extends BaseFragment {
                 MessagesController.getInstance(currentAccount).openByUserName("momogram_update", this, 1);
                 break;
             case 7:
-                Browser.openUrl(getParentActivity(), "https://github.com/dic1911/Momogram");
+                Browser.openUrl(getParentActivity(), "https://github.com/im030/Momogram");
                 break;
             case 8:
                 Browser.openUrl(getParentActivity(), "https://hosted.weblate.org/engage/nekox_030/");

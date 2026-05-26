@@ -52,7 +52,7 @@ public class NekoXConfig {
 
     //  public static String FAQ_URL = "https://telegra.ph/NekoX-FAQ-03-31";
     //  public static String FAQ_URL = "https://github.com/NekoX-Dev/NekoX#faq";
-    public static String FAQ_URL = "https://github.com/dic1911/Momogram#faq";
+    public static String FAQ_URL = "https://github.com/im030/Momogram#faq";
     public static long releaseChannel = 2137047153;
     public static Long[] officialChats = {
             1305127566L, // NekoX Updates

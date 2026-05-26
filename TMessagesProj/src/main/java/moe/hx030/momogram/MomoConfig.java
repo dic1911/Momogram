@@ -1095,7 +1095,7 @@ public class MomoConfig {
                         .setTitle(LocaleController.getString(R.string.SetupUnifiedPush))
                         .setMessage(LocaleController.getString(R.string.SetupUnifiedPushInfo))
                         .setNeutralButton(LocaleController.getString(R.string.SettingsHelp), (__, ___) -> {
-                            Browser.openUrl(context, "https://github.com/dic1911/Momogram/tree/test?tab=readme-ov-file#how-do-i-get-notifications-working");
+                            Browser.openUrl(context, "https://github.com/im030/Momogram/tree/test?tab=readme-ov-file#how-do-i-get-notifications-working");
                         })
                         .setPositiveButton(LocaleController.getString(R.string.Close), null)
                         .create().show();

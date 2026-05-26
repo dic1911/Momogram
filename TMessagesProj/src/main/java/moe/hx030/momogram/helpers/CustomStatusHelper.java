@@ -60,7 +60,7 @@ public class CustomStatusHelper {
         new Thread(() -> {
             Call c = okHttpClient.newCall(new Request.Builder()
                     .get()
-                    .url("https://raw.githubusercontent.com/dic1911/Momogram/refs/heads/test/metadata/custom_status.json")
+                    .url("https://raw.githubusercontent.com/im030/Momogram/refs/heads/test/metadata/custom_status.json")
                     .build());
             try (Response r = c.execute()) {
                 String body = r.body().string();
