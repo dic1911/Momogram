@@ -25,6 +25,7 @@ import com.google.zxing.common.GlobalHistogramBinarizer
 import com.google.zxing.qrcode.QRCodeReader
 import com.google.zxing.qrcode.QRCodeWriter
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel
+import moe.hx030.momogram.MomoConfig
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import org.telegram.messenger.*
 import org.telegram.messenger.browser.Browser
@@ -160,7 +161,8 @@ object ProxyUtil {
 
                                 }
 
-                                val saveTo = File(Environment.getExternalStorageDirectory(), "${Environment.DIRECTORY_PICTURES}/share_${text.hashCode()}.jpg")
+                                val saveTo = File(Environment.getExternalStorageDirectory(),
+                                    "${if (MomoConfig.alwaysSaveToDownloads.Bool()) Environment.DIRECTORY_DOWNLOADS else Environment.DIRECTORY_PICTURES}/share_${text.hashCode()}.jpg")
 
                                 saveTo.parentFile?.mkdirs()
 

@@ -3708,8 +3708,9 @@ public class AndroidUtilities {
             return FileLoader.getDirectory(FileLoader.MEDIA_DIR_IMAGE);
         }
         File storageDir = null;
+        final boolean alwaysSaveToDownloads = MomoConfig.alwaysSaveToDownloads.Bool();
         if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
-            storageDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), StrUtil.getShortAppName());
+            storageDir = new File(Environment.getExternalStoragePublicDirectory(alwaysSaveToDownloads ? Environment.DIRECTORY_DOWNLOADS : Environment.DIRECTORY_PICTURES), StrUtil.getShortAppName());
             if (!storageDir.mkdirs()) {
                 if (!storageDir.exists()) {
                     if (BuildVars.LOGS_ENABLED) {
@@ -3818,7 +3819,8 @@ public class AndroidUtilities {
         try {
             File publicDir = FileLoader.getDirectory(FileLoader.MEDIA_DIR_IMAGE_PUBLIC);
             if (secretChat || publicDir == null) {
-                File storageDir = ApplicationLoader.applicationContext.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+                final boolean alwaysSaveToDownloads = MomoConfig.alwaysSaveToDownloads.Bool();
+                File storageDir = ApplicationLoader.applicationContext.getExternalFilesDir(alwaysSaveToDownloads ? Environment.DIRECTORY_DOWNLOADS : Environment.DIRECTORY_PICTURES);
                 return new File(storageDir, generateFileName(0, ext));
             } else {
                 return new File(publicDir, generateFileName(0, ext));

@@ -139,6 +139,7 @@ import moe.hx030.momogram.MomoConfig;
 import moe.hx030.momogram.SaveToDownloadReceiver;
 import moe.hx030.momogram.NekoXConfig;
 import moe.hx030.momogram.utils.BufferUtil;
+import moe.hx030.momogram.utils.StrUtil;
 
 public class MediaController implements AudioManager.OnAudioFocusChangeListener, NotificationCenter.NotificationCenterDelegate, SensorEventListener {
 
@@ -5118,7 +5119,7 @@ public class MediaController implements AudioManager.OnAudioFocusChangeListener,
                         }
                     } else {
                         File dir;
-                        if (isMusic) {
+                        if (isMusic && !MomoConfig.alwaysSaveToDownloads.Bool()) {
                             dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC);
                         } else {
                             dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
@@ -5274,7 +5275,7 @@ public class MediaController implements AudioManager.OnAudioFocusChangeListener,
             if (Build.VERSION.SDK_INT >= 29) {
                 final ContentValues cv = new ContentValues();
                 final Uri uriToInsert = MediaStore.Downloads.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY);
-                final File dirDest = new File(Environment.DIRECTORY_DOWNLOADS, "Telegram");
+                final File dirDest = new File(Environment.DIRECTORY_DOWNLOADS, MomoConfig.customSavePath.String());
                 cv.put(MediaStore.MediaColumns.RELATIVE_PATH, dirDest + File.separator);
                 cv.put(MediaStore.Downloads.DISPLAY_NAME, filename);
                 cv.put(MediaStore.MediaColumns.MIME_TYPE, outputMime);
@@ -5296,7 +5297,7 @@ public class MediaController implements AudioManager.OnAudioFocusChangeListener,
                     }
                 }
             } else {
-                final File destDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), "Telegram");
+                final File destDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), MomoConfig.customSavePath.String());
                 destDir.mkdirs();
                 File destFile = new File(destDir, filename);
                 if (!destFile.exists()) {
@@ -5371,7 +5372,8 @@ public class MediaController implements AudioManager.OnAudioFocusChangeListener,
                 if (!cancelled) {
                     if (isMusic) {
                         AndroidUtilities.addMediaToGallery(destFile);
-                    } else {
+                    }
+                    if (!isMusic || MomoConfig.alwaysSaveToDownloads.Bool()) {
                         DownloadManager downloadManager = (DownloadManager) ApplicationLoader.applicationContext.getSystemService(Context.DOWNLOAD_SERVICE);
                         String mimeType = mime;
                         if (TextUtils.isEmpty(mimeType)) {
@@ -5487,17 +5489,18 @@ public class MediaController implements AudioManager.OnAudioFocusChangeListener,
                         result = uri != null;
                     } else {
                         File destFile;
+                        final boolean alwaysSaveToDownloads = MomoConfig.alwaysSaveToDownloads.Bool();
                         if (type == 0) {
-                            destFile = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), folderName);
+                            destFile = new File(Environment.getExternalStoragePublicDirectory(alwaysSaveToDownloads ? Environment.DIRECTORY_DOWNLOADS : Environment.DIRECTORY_PICTURES), folderName);
                             destFile.mkdirs();
                             destFile = new File(destFile, AndroidUtilities.generateFileName(0, FileLoader.getFileExtension(sourceFile)));
                         } else if (type == 1) {
-                            destFile = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES), folderName);
+                            destFile = new File(Environment.getExternalStoragePublicDirectory(alwaysSaveToDownloads ? Environment.DIRECTORY_DOWNLOADS : Environment.DIRECTORY_MOVIES), folderName);
                             destFile.mkdirs();
                             destFile = new File(destFile, AndroidUtilities.generateFileName(1, FileLoader.getFileExtension(sourceFile)));
                         } else {
                             File dir;
-                            if (type == 2) {
+                            if (type == 2 || alwaysSaveToDownloads) {
                                 dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
                             } else {
                                 dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC);
@@ -5559,10 +5562,11 @@ public class MediaController implements AudioManager.OnAudioFocusChangeListener,
                             result = false;
                         }
                         if (result) {
-                            if (type == 2) {
+                            if (type == 2 || alwaysSaveToDownloads) {
                                 DownloadManager downloadManager = (DownloadManager) ApplicationLoader.applicationContext.getSystemService(Context.DOWNLOAD_SERVICE);
                                 downloadManager.addCompletedDownload(destFile.getName(), destFile.getName(), false, mime, destFile.getAbsolutePath(), destFile.length(), true);
-                            } else {
+                            }
+                            if (type != 2) {
                                 AndroidUtilities.addMediaToGallery(destFile.getAbsoluteFile());
                             }
                         }
@@ -5592,6 +5596,7 @@ public class MediaController implements AudioManager.OnAudioFocusChangeListener,
         if (TextUtils.isEmpty(fullPath) || TextUtils.isEmpty(liveVideoPath) || context == null) {
             return;
         }
+        final String folderName = MomoConfig.customSavePath.String();
         final File photoFile = new File(fullPath);
         final File videoFile = new File(liveVideoPath);
         if (!photoFile.exists() || !videoFile.exists()) {
@@ -5629,11 +5634,12 @@ public class MediaController implements AudioManager.OnAudioFocusChangeListener,
                 if (Build.VERSION.SDK_INT >= 29) {
                     final String filename = AndroidUtilities.generateFileName(0, "jpg");
                     final ContentValues cv = new ContentValues();
-                    final Uri uriToInsert = MediaStore.Images.Media.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY);
-                    final File dirDest = new File(Environment.DIRECTORY_PICTURES, "Telegram");
+                    final boolean alwaysSaveToDownloads = MomoConfig.alwaysSaveToDownloads.Bool();
+                    final Uri uriToInsert = alwaysSaveToDownloads ? MediaStore.Downloads.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY) :
+                            MediaStore.Images.Media.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY);
+                    final File dirDest = new File(alwaysSaveToDownloads ? Environment.DIRECTORY_DOWNLOADS : Environment.DIRECTORY_PICTURES, folderName);
                     cv.put(MediaStore.MediaColumns.RELATIVE_PATH, dirDest + File.separator);
-                    cv.put(MediaStore.Images.Media.DISPLAY_NAME, filename);
-                    cv.put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg");
+                    cv.put(MediaStore.MediaColumns.DISPLAY_NAME, filename);
                     cv.put(MediaStore.MediaColumns.MIME_TYPE, "image/jpeg");
                     final Uri dst = ApplicationLoader.applicationContext.getContentResolver().insert(uriToInsert, cv);
                     if (dst != null) {
@@ -5652,7 +5658,8 @@ public class MediaController implements AudioManager.OnAudioFocusChangeListener,
                         }
                     }
                 } else {
-                    final File destDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), "Telegram");
+                    final boolean alwaysSaveToDownloads = MomoConfig.alwaysSaveToDownloads.Bool();
+                    final File destDir = new File(Environment.getExternalStoragePublicDirectory(alwaysSaveToDownloads ? Environment.DIRECTORY_DOWNLOADS : Environment.DIRECTORY_PICTURES), folderName);
                     destDir.mkdirs();
                     File destFile = new File(destDir, AndroidUtilities.generateFileName(0, "jpg"));
                     if (!destFile.exists()) {
@@ -5779,23 +5786,25 @@ public class MediaController implements AudioManager.OnAudioFocusChangeListener,
                 }
             }
             final String folderName = MomoConfig.customSavePath.String();
+            final boolean alwaysSaveToDownloads = MomoConfig.alwaysSaveToDownloads.Bool();
             if (selectedType == 0) {
                 if (filename == null) {
                     filename = AndroidUtilities.generateFileName(0, extension);
                 }
-                uriToInsert = MediaStore.Images.Media.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY);
-                File dirDest = new File(Environment.DIRECTORY_PICTURES, folderName);
+                uriToInsert = alwaysSaveToDownloads ? MediaStore.Downloads.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY) :
+                        MediaStore.Images.Media.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY);
+                File dirDest = new File(alwaysSaveToDownloads ? Environment.DIRECTORY_DOWNLOADS : Environment.DIRECTORY_PICTURES, folderName);
                 contentValues.put(MediaStore.MediaColumns.RELATIVE_PATH, dirDest + File.separator);
-                contentValues.put(MediaStore.Images.Media.DISPLAY_NAME, filename);
-                contentValues.put(MediaStore.Images.Media.MIME_TYPE, mimeType);
+                contentValues.put(MediaStore.MediaColumns.DISPLAY_NAME, filename);
             } else if (selectedType == 1) {
                 if (filename == null) {
                     filename = AndroidUtilities.generateFileName(1, extension);
                 }
-                File dirDest = new File(Environment.DIRECTORY_MOVIES, folderName);
+                File dirDest = new File(alwaysSaveToDownloads ? Environment.DIRECTORY_DOWNLOADS : Environment.DIRECTORY_MOVIES, folderName);
                 contentValues.put(MediaStore.MediaColumns.RELATIVE_PATH, dirDest + File.separator);
-                uriToInsert = MediaStore.Video.Media.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY);
-                contentValues.put(MediaStore.Video.Media.DISPLAY_NAME, filename);
+                uriToInsert = alwaysSaveToDownloads ? MediaStore.Downloads.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY) :
+                        MediaStore.Video.Media.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY);
+                contentValues.put(MediaStore.MediaColumns.DISPLAY_NAME, filename);
             } else if (selectedType == 2) {
                 if (filename == null) {
                     filename = sourceFile.getName();
@@ -5803,15 +5812,16 @@ public class MediaController implements AudioManager.OnAudioFocusChangeListener,
                 File dirDest = new File(Environment.DIRECTORY_DOWNLOADS, folderName);
                 contentValues.put(MediaStore.MediaColumns.RELATIVE_PATH, dirDest + File.separator);
                 uriToInsert = MediaStore.Downloads.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY);
-                contentValues.put(MediaStore.Downloads.DISPLAY_NAME, filename);
+                contentValues.put(MediaStore.MediaColumns.DISPLAY_NAME, filename);
             } else {
                 if (filename == null) {
                     filename = sourceFile.getName();
                 }
-                File dirDest = new File(Environment.DIRECTORY_MUSIC, folderName);
+                File dirDest = new File(alwaysSaveToDownloads ? Environment.DIRECTORY_DOWNLOADS : Environment.DIRECTORY_MUSIC, folderName);
                 contentValues.put(MediaStore.MediaColumns.RELATIVE_PATH, dirDest + File.separator);
-                uriToInsert = MediaStore.Audio.Media.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY);
-                contentValues.put(MediaStore.Audio.Media.DISPLAY_NAME, filename);
+                uriToInsert = alwaysSaveToDownloads ? MediaStore.Downloads.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY) :
+                        MediaStore.Audio.Media.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY);
+                contentValues.put(MediaStore.MediaColumns.DISPLAY_NAME, filename);
             }
 
             contentValues.put(MediaStore.MediaColumns.MIME_TYPE, mimeType);

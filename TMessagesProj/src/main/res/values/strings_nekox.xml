@@ -356,4 +356,5 @@
     <string name="MomoSettingNotFound">Specified option does not exist</string>
     <string name="SendWithoutCaption">Send Without Caption</string>
     <string name="AlwaysTryHevcCodec">Always try to use HEVC when compressing video</string>
+    <string name="AlwaysSaveToDownloads">Always save to downloads</string>
 </resources>

@@ -177,6 +177,7 @@ public class MomoGeneralSettingsActivity extends MomoSettingsBaseActivity {
     private final AbstractConfigCell customSavePathRow = cellGroup.appendCell(new ConfigCellTextInput(null, MomoConfig.customSavePath,
             LocaleController.getString(R.string.customSavePathHint), null, null,
             (input) -> input.matches("^[A-za-z0-9.]{1,255}$") || input.isEmpty() ? input : (String) MomoConfig.customSavePath.defaultValue));
+    private final AbstractConfigCell alwaysSaveToDownloadsRow = cellGroup.appendCell(new ConfigCellTextCheck(MomoConfig.alwaysSaveToDownloads));
     private final AbstractConfigCell disableUndoRow = cellGroup.appendCell(new ConfigCellTextCheck(MomoConfig.disableUndo));
     private final AbstractConfigCell inappCameraRow = cellGroup.appendCell(new ConfigCellTextCheck(MomoConfig.inappCamera));
     private final AbstractConfigCell useCamera2Row = cellGroup.appendCell(new ConfigCellCustom(CellGroup.ITEM_TYPE_TEXT_CHECK, true));
