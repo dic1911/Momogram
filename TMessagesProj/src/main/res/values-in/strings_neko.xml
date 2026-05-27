@@ -316,4 +316,5 @@
     <string name="AllowTestingUpdate">Periksa pembuatan pengujian saat mencari pembaruan</string>
     <string name="enhancedFileLoaderWarning">Ini mungkin memiliki efek negatif pada kecepatan unduhan aktual, terutama ketika tidak pada akun premium, lanjutkan?</string>
     <string name="AllowBotInDirectShare">Izinkan bot sebagai target langsung</string>
+    <string name="DisablePullDownSearch">Nonaktifkan Tarik ke Bawah untuk Mencari</string>
 </resources>
